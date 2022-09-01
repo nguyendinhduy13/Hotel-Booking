@@ -1,17 +1,35 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native"
+import React, { useContext } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native"
 import { SocialIcon } from "react-native-elements";
 import Icon from "react-native-vector-icons/AntDesign"
 import COLORS from "../../../consts/colors";
-import {
-        GoogleSignin,
-        GoogleSigninButton,
-        statusCodes,
-      } from '@react-native-google-signin/google-signin';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import {SignInContext} from "../../../contexts/authContext"
+import auth from '@react-native-firebase/auth';
 
-      
+
+GoogleSignin.configure({
+        webClientId: '769620033857-f8q7uohvdpb5hcan4tlir04iusgc27jd.apps.googleusercontent.com',
+      });
 export default function SignInScreen({navigation}) {
-       
+        const {dispatchSignedIn}=useContext(SignInContext)
+              async function onGoogleButtonPress() {
+                      try{
+                      // Get the users ID token
+                      const { idToken } = await GoogleSignin.signIn();
+                    
+                      // Create a Google credential with the token
+                      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+                    
+                      // Sign-in the user with the credential
+                      const user= await auth().signInWithCredential(googleCredential);
+                      if(user){
+                              dispatchSignedIn({ type: "UPDATE_SIGN_IN", payload: { userToken: "signed-in" } })
+                      }
+                    }catch(error){
+                      Alert.alert("Error",error.message)
+                   }
+                    }
         return (
                 <View>
                         <Icon
@@ -40,6 +58,7 @@ export default function SignInScreen({navigation}) {
                                                 button
                                                 type="google"
                                                 style={styles.SocialIcon}
+                                                onPress={()=>{onGoogleButtonPress()}}
                                         />
                                 </View>
                                 
