@@ -4,7 +4,7 @@ const hotels=[
                 name:"Bamboo Hotel",
                 location:"Vũng Tàu",
                 price:"279.000",
-                image:"https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/247106889.jpg?k=1cfd3279ec42d59d9ad935a8aebad19af85e54bbf7c6de6b0152d573b79abc95&o=&hp=1",
+                image: "https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/247106889.jpg?k=1cfd3279ec42d59d9ad935a8aebad19af85e54bbf7c6de6b0152d573b79abc95&o=&hp=1",
                 detail:"Bamboo Hotel nằm ở thành phố Vũng Tàu, cách Bãi Sau 1,1 km và Khu du lịch sinh thái Hồ Mây 3,2 km. Khách sạn 1 sao này có sân hiên và phòng nghỉ gắn máy điều hòa với WiFi miễn phí cùng phòng tắm riêng. Chỗ nghỉ cung cấp dịch vụ lễ tân 24 giờ và dịch vụ tiền sảnh cho khách.\n\nTất cả phòng nghỉ tại khách sạn đều được trang bị TV và đồ vệ sinh cá nhân miễn phí."
         },
         {

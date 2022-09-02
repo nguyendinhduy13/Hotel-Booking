@@ -1,7 +1,10 @@
 import React from "react";
-import { ImageBackground, ScrollView,Text,StyleSheet, StatusBar,View } from "react-native";
+import { ImageBackground, ScrollView,Text,StyleSheet, StatusBar,View, TouchableOpacity,Image } from "react-native";
 import COLORS from "../../consts/colors";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import Icon1 from "react-native-vector-icons/FontAwesome5"
+import Icon2 from "react-native-vector-icons/MaterialCommunityIcons"
+import Icon3 from "react-native-vector-icons/FontAwesome"
 
 export default function DetailsScreen({navigation,route}) {
         const item=route.params
@@ -19,46 +22,110 @@ export default function DetailsScreen({navigation,route}) {
                         </View>
                 </ImageBackground>
                 <View>
-                        <View style={styles.iconContainer}>
-                                <Icon name="place" color={COLORS.white} size={28}/>
-                        </View>
-                        <View style={{marginTop:20,paddingHorizontal:20}}>
-                                <Text style={{fontSize:20,fontWeight:"bold",color:COLORS.dark}}>{item.name}</Text>
-                                <Text style={{fontSize:12,fontWeight:"400",color:COLORS.grey,marginTop:5}}>{item.location}</Text>
-                                <View style={{marginTop:10,justifyContent:"space-between",flexDirection:"row"}}>
-                                        <View style={{flexDirection:"row"}}>
-                                                <View style={{flexDirection:"row"}}>
-                                                <Icon name="star" color={COLORS.orange} size={20}/>
-                                                <Icon name="star" color={COLORS.orange} size={20}/>
-                                                <Icon name="star" color={COLORS.orange} size={20}/>
-                                                <Icon name="star" color={COLORS.orange} size={20}/>
-                                                <Icon name="star" color={COLORS.grey} size={20}/>
-                                                </View>
-                                                <Text style={{fontWeight:"bold",fontSize:18,marginLeft:5}}>4.0</Text>
-                                        </View>
-                                     <Text style={{fontSize:13,color:COLORS.grey}}>365 reviews</Text>
+                        <View style={{marginTop:15,paddingHorizontal:20}}>
+                                <Text style={{fontSize:27,fontWeight:"bold",color:COLORS.dark}}>{item.name}</Text>
+                                <View style={{flexDirection:"row",marginTop:10}}>
+                                 <Icon name="location-pin" size={25} color={COLORS.primary}/>
+                                <Text style={{fontSize:14,fontWeight:"600",color:COLORS.black,marginTop:4,marginHorizontal:7}}>{item.location}</Text>
                                 </View>
-                                <View style={{marginTop:20}}>
-                                        <Text style={{lineHeight:20,color:COLORS.grey}}>
+                                <View style={{height:0.25,backgroundColor:COLORS.grey,marginTop:20}}/>
+                                <View style={{paddingTop:"10%"}}>
+                                        <View style={{flexDirection:"row",justifyContent:"space-between"}}>
+                                                <Text style={{fontSize:18,color:COLORS.dark,fontWeight:"bold"}}>Gallery Photos</Text>
+                                                <TouchableOpacity onPress={()=>navigation.navigate("HotelPhotos",item)}>
+                                                <Text style={{fontSize:18,fontWeight:"bold",color:COLORS.primary}}>See All</Text>
+                                                </TouchableOpacity>
+                                        </View>
+                                        <View style={{paddingTop:"5%"}}>
+                                                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                                                        <Image
+                                                         source={{uri:"https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/180860451.jpg?k=e98d4a047c8584a9ab418262847c28037557561912cd72ea41a5fe8273755e3c&o=&hp=1"}}
+                                                         style={{width:160,height:115,borderRadius:20}}
+                                                        />
+                                                </ScrollView>
+                                        </View>
+                                </View>
+                                <View style={{paddingTop:"7%"}}>
+                                        <Text style={{fontSize:18,color:COLORS.dark,fontWeight:"bold"}}>Details</Text>
+                                </View>
+                                <View style={{flexDirection:"row",paddingTop:"5%",marginHorizontal:18,justifyContent:"space-between"}}>
+                                        <View style={{flexDirection:"column",alignItems:"center"}}>
+                                                <Icon1 
+                                                name="hotel"
+                                                size={30}
+                                                color={COLORS.primary}
+                                                />
+                                                <Text style={{fontWeight:"400",color:COLORS.black,fontSize:13,marginTop:5}}>Hotels</Text>
+                                        </View>
+                                        <View style={{flexDirection:"column",alignItems:"center"}}>
+                                                <Icon1 
+                                                name="bed"
+                                                size={30}
+                                                color={COLORS.primary}
+                                                />
+                                                <Text style={{fontWeight:"400",color:COLORS.black,fontSize:13,marginTop:5}}>Bedrooms</Text>
+                                        </View>
+                                        <View style={{flexDirection:"column",alignItems:"center"}}>
+                                                <Icon1 
+                                                name="bath"
+                                                size={30}
+                                                color={COLORS.primary}
+                                                />
+                                                <Text style={{fontWeight:"400",color:COLORS.black,fontSize:13,marginTop:5}}>Bathrooms</Text>
+                                        </View>
+                                        <View style={{flexDirection:"column",alignItems:"center"}}>
+                                                <Icon2 
+                                                name="social-distance-6-feet"
+                                                size={30}
+                                                color={COLORS.primary}
+                                                />
+                                                <Text style={{fontWeight:"400",color:COLORS.black,fontSize:13,marginTop:5}}>Hotels</Text>
+                                        </View>
+                                </View>
+                                <View style={{paddingTop:"5%"}}>
+                                      <View>
+                                        <Text style={{fontSize:18,color:COLORS.dark,fontWeight:"bold"}}>Description</Text>
+                                        </View>  
+                                        <View style={{marginTop:12}}>
+                                        <Text style={{lineHeight:20,color:COLORS.black}}>
                                                 {item.detail}
                                         </Text>
                                 </View>
-                        </View>
-                        <View style={{margintop:20,flexDirection:"row",justifyContent:"space-between",paddingLeft:20, alignItems:"center",paddingTop:15}}>
-                                <Text style={{fontSize:19,fontWeight:"bold",color:COLORS.dark}}>
-                                        Price per night
-                                </Text>
-                                <View style={styles.priceTag}>
-                                        <Text style={{fontSize:12,fontWeight:"bold",color:COLORS.grey}}>
-                                                VNĐ {item.price}
-                                        </Text>
-                                        <Text style={{fontSize:12,fontWeight:"bold",color:COLORS.grey}}>
-                                                +breakfast
-                                        </Text>
+                                </View>
+                        <View style={{paddingTop:10}}>
+                                <View>
+                                        <Text style={{fontSize:18,color:COLORS.dark,fontWeight:"bold"}}>Location</Text>
                                 </View>
                         </View>
-                        <View style={styles.btn}>
-                                <Text style={{color:COLORS.white,fontSize:18,fontWeight:"bold"}}>Book Now</Text>
+                        <View style={{paddingTop:10,flexDirection:"row",justifyContent:"space-between"}}>
+                                <View style={{flexDirection:"row"}}>
+                                        <Text style={{fontSize:18,color:COLORS.dark,fontWeight:"bold"}}>Review</Text>
+                                        <View style={{flexDirection:"row", marginHorizontal:10,marginTop:3}}>
+                                        <Icon3
+                                        name="star"
+                                        size={20}
+                                        style={{color:COLORS.orange}}
+                                        />    
+                                        <Text style={{color:COLORS.black,marginHorizontal:5}}>4.8 (4981 reviews)</Text>
+                                       </View>
+                                </View>
+                                <View>
+                                   <Text style={{fontSize:18,fontWeight:"bold",color:COLORS.primary}}>See All</Text>
+                                </View> 
+                        </View>
+                        <View style={{paddingTop:10,flexDirection:"row",justifyContent:"space-between"}}>
+                                <Text style={{fontSize:18,color:COLORS.dark,fontWeight:"bold",marginTop:2}}>
+                                        Price per night
+                                </Text>
+                                <Text style={{fontSize:22,fontWeight:"bold",color:COLORS.primary}}>
+                                        VNĐ {item.price}
+                                </Text> 
+                        </View>
+                        <TouchableOpacity style={{alignItems:"center",paddingTop:"4%"}}>
+                                <View style={{backgroundColor:COLORS.primary,width:"80%",height:47,justifyContent:"center",borderRadius:18}}>
+                                <Text style={{fontSize:18,color:COLORS.white,textAlign:"center",fontWeight:"bold"}}>Book Now !</Text>
+                                </View>
+                        </TouchableOpacity>
                         </View>
                 </View>
                 </ScrollView>

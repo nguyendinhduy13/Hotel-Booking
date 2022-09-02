@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {View,Text,TextInput,StyleSheet, TouchableOpacity} from "react-native"
+import {View,Text,TextInput,StyleSheet, TouchableOpacity, Alert} from "react-native"
 import {SocialIcon,Icon} from "react-native-elements"
 import Icon2 from "react-native-vector-icons/AntDesign"
 import Icon1 from "react-native-vector-icons/MaterialCommunityIcons"
@@ -99,7 +99,7 @@ export default function SignUpScreen({navigation}){
                                 </View>
                                 </View>
                         </View>
-                        <TouchableOpacity style={{alignItems:"center",paddingTop:10}} onPress={()=>signUp}>
+                        <TouchableOpacity style={{alignItems:"center",paddingTop:10}} onPress={()=>{signUp(),navigation.navigate("SignInScreenTT")}}>
                                 <View style={styles.button}>
                                         <Text style={{fontSize:16,fontWeight:"bold",color:COLORS.white}}>Sign up</Text>
                                 </View>
