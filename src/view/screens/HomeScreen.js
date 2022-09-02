@@ -1,18 +1,19 @@
 import React, { useRef, useState } from "react";
 import { SafeAreaView, Text, StyleSheet, View, ScrollView, TextInput, TouchableOpacity, FlatList, Dimensions, Image, Animated } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import Icon1 from "react-native-vector-icons/MaterialCommunityIcons";
 import COLORS from "../../consts/colors";
 import hotels from "../../consts/hotels";
 const { width } = Dimensions.get('screen');
 const cardWidth = width / 1.8
-export default function HomeScreen({navigation}) {
+export default function HomeScreen({ navigation }) {
         const categories = ['All', 'Popular', 'Top Rated', 'Featured', 'Luxury'];
         const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
         const [activeCardIndex, setActiveCardIndex] = useState(0);
         const scrollX = useRef(new Animated.Value(0)).current;
+        const [countShow, setCountShow] = useState(0);
 
-
-        const CategoryList = ({navigation}) => {
+        const CategoryList = ({ navigation }) => {
                 return (
                         <View style={styles.CategoryListContainer}>
                                 {categories.map((item, index) => (
@@ -22,9 +23,7 @@ export default function HomeScreen({navigation}) {
                                                                 {item}
                                                         </Text>
                                                         {selectedCategoryIndex == index && (
-                                                                <View style={{ height: 3, width: 30, backgroundColor: COLORS.primary, marginTop: 2 }}>
-
-                                                                </View>
+                                                                <View style={{ height: 3, backgroundColor: COLORS.primary, marginTop: 2 }}></View>
                                                         )}
                                                 </View>
                                         </TouchableOpacity>
@@ -32,74 +31,107 @@ export default function HomeScreen({navigation}) {
                         </View>
                 )
         }
-
         const Card = ({ hotel, index }) => {
                 const inputRange = [(index - 1) * cardWidth, index * cardWidth, (index + 1) * cardWidth];
                 const opacity = scrollX.interpolate({ inputRange, outputRange: [0.7, 0, 0.7] });
                 const scale = scrollX.interpolate({ inputRange, outputRange: [0.8, 1, 0.8] });
                 return (
-                        <TouchableOpacity disabled={activeCardIndex!=index} activeOpacity={1} onPress={()=>navigation.navigate("DetailsScreen",hotel)}>
+                        <View disabled={activeCardIndex != index} activeOpacity={1} onPress={() => navigation.navigate("DetailsScreen", hotel)}>
                                 <Animated.View style={{ ...styles.card, transform: [{ scale }] }}>
-                                <Animated.View style={{ ...styles.cardOverplay, opacity }} />
-                                <View style={styles.priceTag}>
-                                        <Text style={{ color: COLORS.white, fontSize: 20, fontWeight: "bold" }}>VNĐ {hotel.price}</Text>
-                                </View>
-                                <Image source={{ uri: hotel.image }} style={styles.cardImage} />
-                                <View style={styles.cardDetails}>
-                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                <View>
-                                                        <Text style={{ fontWeight: "bold", fontSize: 17, color: COLORS.dark }}>{hotel.name}</Text>
-                                                        <Text style={{ fontWeight: "bold", fontSize: 14, color: COLORS.grey }}>{hotel.location}</Text>
-                                                </View>
-                                                <Icon name="bookmark-border" size={26} color={COLORS.primary} />
+                                        <Animated.View style={{ ...styles.cardOverplay, opacity }} />
+                                        <View style={styles.priceTag}>
+                                                <Icon name="star" size={15} color={COLORS.orange} />
+                                                <Text style={{ color: 'white', fontWeight: 'bold' }}>4.8</Text>
                                         </View>
-                                        <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 10 }}>
-                                                <View style={{ flexDirection: "row" }}>
-                                                        <Icon name="star" size={15} color={COLORS.orange} />
-                                                        <Icon name="star" size={15} color={COLORS.orange} />
-                                                        <Icon name="star" size={15} color={COLORS.orange} />
-                                                        <Icon name="star" size={15} color={COLORS.orange} />
-                                                        <Icon name="star" size={15} color={COLORS.grey} />
+                                        <Image source={{ uri: hotel.image }} style={styles.cardImage} />
+                                        <View style={styles.cardDetails}>
+                                                <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 10 }}>
+                                                        <View>
+                                                                <View style={{ height: 20 }}><Text style={{ fontWeight: "bold", fontSize: 17, color: COLORS.white }}>{hotel.name}</Text></View>
+                                                                <View style={{ marginTop: 5 }}><Text style={{ fontSize: 14, color: COLORS.white }}>{hotel.location}</Text></View>
+                                                        </View>
                                                 </View>
-                                                <Text style={{ fontSize: 10, color: COLORS.grey }}>365 reviews</Text>
+                                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5, alignItems: 'center' }}>
+                                                        <Text style={{ fontWeight: "bold", fontSize: 16, color: COLORS.white }}>{hotel.price}<Text style={{ fontSize: 14 }}> VND/đêm</Text></Text>
+                                                        <Icon name="bookmark-border" size={26} style={{ marginRight: 20 }} color={COLORS.white} />
+                                                </View>
                                         </View>
-                                </View>
-                        </Animated.View>
-                        </TouchableOpacity>
+
+                                </Animated.View>
+                        </View>
                 )
         }
         const TopHotelCard = ({ hotel }) => {
                 return (
                         <View style={styles.topHotelCard}>
-                                <View style={{ position: "absolute", top: 5, right: 5, zIndex: 1, flexDirection: "row" }}>
+                                <View style={{ position: "absolute", top: 5, right: 10, zIndex: 1, flexDirection: "row", alignItems: 'center', }}>
                                         <Icon name="star" size={15} color={COLORS.orange} />
-                                        <Text style={{color:COLORS.white,fontWeight:"bold",fontSize:15}}>5.0</Text>
+                                        <Text style={{ color: COLORS.white, fontWeight: "bold", fontSize: 15, marginLeft: 3 }}>5.0</Text>
                                 </View>
                                 <Image style={styles.topHotelCardImage} source={{ uri: hotel.image }} />
-                                <View style={{ paddingVertical: 5, paddingHorizontal: 10 }}>
-                                        <Text style={{ fontsize: 10, fontWeight: "bold",color:COLORS.dark }}>{hotel.name}</Text>
-                                        <Text style={{ fontSize:10, fontWeight: "bold", color: COLORS.grey }}>{hotel.location}</Text>
+                                <View style={{ paddingHorizontal: 10 }}>
+                                        <Text style={{ fontsize: 10, fontWeight: "bold", color: COLORS.dark, height: 35 }}>{hotel.name}</Text>
+                                        <Text style={{ fontSize: 12, marginTop: 3, fontWeight: "bold", color: COLORS.grey }}>{hotel.location}</Text>
+                                </View>
+                        </View>
+                )
+        }
+        const RecentlyBookedCard = ({ hotel }) => {
+                return (
+                        <View style={styles.RecentlyBox}>
+                                <View style={{ width: 120, height: 120 }}>
+                                        <Image style={styles.IMGRecent} source={{ uri: hotel.image }} />
+                                </View>
+                                <View>
+                                        <View style={{ marginTop: 10, flexDirection: 'row' }}>
+                                                <View style={{ width: 130 }}>
+                                                        <View style={{ width: 120, height: 45 }}>
+                                                                <Text style={{ fontSize: 17, fontWeight: 'bold', color: "black" }}>{hotel.name}</Text>
+                                                        </View>
+                                                        <Text style={{ fontSize: 15 }}>{hotel.location}</Text>
+                                                </View>
+                                                <View style={{ width: 100, alignItems: 'center', marginTop: 10 }}>
+                                                        <Text style={{ fontSize: 16, color: COLORS.primary, fontWeight: 'bold' }}>{hotel.price}</Text>
+                                                        <Text>VND/đêm</Text>
+                                                </View>
+                                        </View>
+                                        <View style={{ flexDirection: 'row', width: 180, marginTop: 5 }}>
+                                                <View style={{ flexDirection: 'row', alignItems: 'center', width: 160 }}>
+                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                <Icon name="star" size={15} color={COLORS.orange} />
+                                                                <Text style={{ color: COLORS.primary, fontWeight: "bold", fontSize: 15, marginLeft: 5 }}>5.0</Text>
+                                                        </View>
+                                                        <Text style={{ marginLeft: 15, }}>(5 reviews)</Text>
+                                                </View>
+                                                <Icon name="bookmark-border" size={26} style={{ marginLeft: 30 }} color="black" />
+                                        </View>
                                 </View>
                         </View>
                 )
         }
         return (
                 <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
-                        <View style={styles.header}>
-                                <View style={{ paddingBottom: 15 }}>
-                                        <Text style={{ fontSize: 22, fontWeight: "bold", color: COLORS.dark }}>
-                                                Tìm khách sạn của bạn
-                                        </Text>
-                                        <View style={{ flexDirection: "row" }}>
-                                                <Text style={{ fontSize: 22, fontWeight: "bold", color: COLORS.dark }}>
-                                                        trong
-                                                </Text>
-                                                <Text style={{ fontSize: 22, fontWeight: "bold", color: COLORS.primary }}>
-                                                        {' '}Việt Nam
-                                                </Text>
+                        <View style={{ paddingHorizontal: 20, height: 100, }}>
+                                <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                <Image source={require("../../assets/logo.png")} style={{ width: 30, height: 30, resizeMode: 'cover' }} />
+                                                <Text style={{ marginLeft: 10, fontSize: 18, fontWeight: '700', color: 'black' }}>App Name</Text>
+                                        </View>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                <Icon1 name="bell-ring-outline" size={26} color={COLORS.grey} />
+                                                <Icon name="bookmark-border" size={26} style={{ marginLeft: 10 }} color={COLORS.grey} />
                                         </View>
                                 </View>
-                                <Icon name="person-outline" size={38} color={COLORS.grey} />
+                                <View style={{ marginTop: 15 }}>
+                                        <Text style={{ fontWeight: 'bold', fontSize: 28, color: 'black' }}>Hello, Huy
+                                                <Icon1
+                                                        name="hand-wave-outline"
+                                                        size={26}
+                                                        color={"#FF6347"}
+                                                        style={{ position: "absolute", bottom: 4, }}
+                                                />
+                                        </Text>
+                                </View>
                         </View>
                         <ScrollView showsHorizontalScrollIndicator={false}>
                                 <View style={styles.searchInputContainer}>
@@ -115,15 +147,15 @@ export default function HomeScreen({navigation}) {
                                 <CategoryList />
                                 <View>
                                         <Animated.FlatList
-                                                onMomentumScrollEnd={(e)=>{
-                                                      setActiveCardIndex(
-                                                        Math.round(e.nativeEvent.contentOffset.x / cardWidth)
-                                                      )
+                                                onMomentumScrollEnd={(e) => {
+                                                        setActiveCardIndex(
+                                                                Math.round(e.nativeEvent.contentOffset.x / cardWidth)
+                                                        )
                                                 }}
                                                 onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], { useNativeDriver: true })}
                                                 data={hotels}
                                                 horizontal
-                                                contentContainerStyle={{ paddingVertical: 30, paddingLeft: 20, paddingRight: cardWidth /2-40}}
+                                                contentContainerStyle={{ paddingVertical: 30, paddingLeft: 20, paddingRight: cardWidth / 2 - 40 }}
                                                 showsHorizontalScrollIndicator={false}
                                                 renderItem={({ item, index }) =>
                                                         <Card
@@ -135,18 +167,26 @@ export default function HomeScreen({navigation}) {
                                         />
                                 </View>
                                 <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: 20 }}>
-                                        <Text style={{ fontWeight: "bold", color: COLORS.grey }}>
-                                                Top hotels
-                                        </Text>
-                                        <Text style={{ fontWeight: "bold", color: COLORS.grey }}>
-                                                Show All
-                                        </Text>
+                                        <Text style={{ fontWeight: "bold", color: "black", fontSize: 16 }}>Top Hotels</Text>
+                                        <TouchableOpacity>
+                                                <Text style={{ fontWeight: "bold", color: COLORS.primary }}>See All</Text>
+                                        </TouchableOpacity>
                                 </View>
                                 <FlatList horizontal
                                         data={hotels}
                                         showsHorizontalScrollIndicator={false}
-                                        contentContainerStyle={{ paddingLeft: 20, marginTop: 20, paddingBottom: 30 }}
+                                        contentContainerStyle={{ paddingLeft: 10, marginTop: 20, paddingBottom: 30 }}
                                         renderItem={({ item }) => <TopHotelCard hotel={item} />}
+                                />
+                                <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: 20 }}>
+                                        <Text style={{ fontWeight: "bold", color: "black", fontSize: 16 }}>Recently Booked</Text>
+                                        <TouchableOpacity>
+                                                <Text style={{ fontWeight: "bold", color: COLORS.primary }}>See All</Text>
+                                        </TouchableOpacity>
+                                </View>
+                                <FlatList
+                                        data={hotels}
+                                        renderItem={({ item }) => <RecentlyBookedCard hotel={item} />}
                                 />
                         </ScrollView>
                 </SafeAreaView>
@@ -163,9 +203,10 @@ const styles = StyleSheet.create({
         searchInputContainer: {
                 height: 50,
                 backgroundColor: COLORS.light,
-                marginTop: 15,
+                marginTop: 5,
                 marginLeft: 20,
-                borderBottomLeftRadius: 30,
+                marginRight: 20,
+                borderRadius: 20,
                 flexDirection: "row",
                 alignItems: "center",
         },
@@ -185,31 +226,30 @@ const styles = StyleSheet.create({
                 width: cardWidth,
                 elevation: 15,
                 marginRight: 20,
-                borderRadius: 15,
+                borderRadius: 35,
                 backgroundColor: COLORS.white,
         },
         cardImage: {
-                height: 200,
+                height: "100%",
                 width: '100%',
-                borderTopRightRadius: 15,
-                borderTopLeftRadius: 15,
+                borderRadius: 35
         },
         priceTag: {
-                height: 60,
-                width: 80,
+                height: 27,
+                width: 65,
+                borderRadius: 35,
                 backgroundColor: COLORS.primary,
                 position: "absolute",
                 zIndex: 1,
-                right: 0,
-                borderTopRightRadius: 15,
-                borderBottomLeftRadius: 15,
-                justifyContent: "center",
+                right: 20,
+                top: 25,
+                justifyContent: "space-evenly",
                 alignItems: "center",
+                flexDirection: 'row',
         },
         cardDetails: {
                 height: 100,
                 borderRadius: 15,
-                backgroundColor: COLORS.white,
                 position: "absolute",
                 bottom: 0,
                 paddingLeft: 20,
@@ -221,20 +261,39 @@ const styles = StyleSheet.create({
                 position: "absolute",
                 zIndex: 100,
                 width: cardWidth,
-                borderRadius: 15,
+                borderRadius: 35,
         },
         topHotelCard: {
-                height: 140,
-                width: 120,
+                height: 150,
+                width: 140,
                 backgroundColor: COLORS.white,
                 elevation: 15,
                 marginHorizontal: 10,
-                borderRadius: 10,
+                borderRadius: 15,
         },
         topHotelCardImage: {
-                height: 80,
+                height: 90,
                 width: "100%",
-                borderTopRightRadius: 10,
-                borderTopLeftRadius: 10
+                borderTopRightRadius: 15,
+                borderTopLeftRadius: 15
+        },
+        RecentlyBox: {
+                width: "90%",
+                height: 120,
+                color: "black",
+                backgroundColor: COLORS.white,
+                marginBottom: 10,
+                marginTop: 10,
+                alignSelf: 'center',
+                borderRadius: 20,
+                elevation: 15,
+                flexDirection: 'row'
+        },
+        IMGRecent: {
+                height: 95,
+                width: 95,
+                borderRadius: 20,
+                alignSelf: 'center',
+                marginTop: 12,
         }
 })
