@@ -5,25 +5,28 @@ import Icon from "react-native-vector-icons/AntDesign"
 import COLORS from "../../consts/colors";
 import hotels from "../../consts/hotels";
 
-export default function HotelPhotos({route}){
+export default function HotelPhotos({route,navigation}){
         const [item,setItem]=useState(route.params)
-        const [itemzoom,setitemzoom]=useState("")
+        const [index,setIndex]=useState(0)
+        const [itemzoom,setitemzoom]=useState([])
         const [modalVisible,setModalVisible]=useState(false)
         const ListImage=({hotel})=>{
               if(hotel.id==item.id){
                 return (
                         <View>
-                                <TouchableOpacity onPress={()=>{setModalVisible(!modalVisible),setitemzoom(item)}}>
                                 {hotel.image.map((image,index)=>(
+                                <TouchableOpacity onPress={()=>{setModalVisible(!modalVisible),setitemzoom(item),setIndex(index)}}> 
                                 <Image
                                  source={{uri:image}}
                                  style={{width:160,height:150,marginTop:20,marginHorizontal:15,borderRadius:20}}
                                 /> 
-                                ))}
                                 </TouchableOpacity>
+                                 ))}
                         </View>
                 )
-        }}
+        }
+}
+        
 
         return(
                 <ScrollView contentContainerStyle={!modalVisible?{
@@ -37,6 +40,7 @@ export default function HotelPhotos({route}){
                                 <Icon
                                  name="arrowleft"
                                  size={30}
+                                 onPress={()=>navigation.goBack()}
                                 />  
                                 <Text style={{fontSize:19,fontWeight:"bold",color:COLORS.black,marginHorizontal:20,marginTop:2}}>
                                         Gallery Hotel Photos
@@ -48,7 +52,7 @@ export default function HotelPhotos({route}){
                                 data={!modalVisible?hotels:""}
                                 horizontal={false}
                                 showsHorizontalScrollIndicator={false}
-                                numColumns={1}
+                                numColumns={2}
                                 renderItem={({ item }) => <ListImage hotel={item} />}
                                 />
                         </View>   
@@ -61,7 +65,7 @@ export default function HotelPhotos({route}){
                      >
                         <View style={{alignItems:"center",marginTop:"50%"}}>
                         <Image
-                                 source={{uri:itemzoom.image}}
+                                 source={{uri:modalVisible?itemzoom.image[index]:item.image[0]}}
                                  style={{width:300,height:290,borderRadius:20}}
                                 /> 
                         </View>
