@@ -41,7 +41,7 @@ export default function DetailsScreen({navigation,route}) {
                                                         {item.image.map((image,index)=>(
                                                         <Image
                                                          source={{uri:image}}
-                                                         style={{width:160,height:115,borderRadius:20}}
+                                                         style={{width:160,height:115,borderRadius:20,marginHorizontal:10}}
                                                         />
                                                         ))}
                                                 </ScrollView>
