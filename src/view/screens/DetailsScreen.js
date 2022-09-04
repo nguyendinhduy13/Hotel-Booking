@@ -15,7 +15,7 @@ export default function DetailsScreen({navigation,route}) {
                 }}> 
                 <StatusBar barStyle="light-content" translucent backgroundColor="rgba(0,0,0,0)"/>
                 <ImageBackground style={styles.headerImage}
-                 source={{uri:item.image}}>
+                 source={{uri:item.image[0]}}>
                         <View style={styles.header}>
                                 <Icon name="arrow-back-ios" size={28} color={COLORS.white} onPress={navigation.goBack}/>
                                 <Icon name="bookmark-border" size={28} color={COLORS.white} />
@@ -38,10 +38,12 @@ export default function DetailsScreen({navigation,route}) {
                                         </View>
                                         <View style={{paddingTop:"5%"}}>
                                                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                                                        {item.image.map((image,index)=>(
                                                         <Image
-                                                         source={{uri:"https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/180860451.jpg?k=e98d4a047c8584a9ab418262847c28037557561912cd72ea41a5fe8273755e3c&o=&hp=1"}}
+                                                         source={{uri:image}}
                                                          style={{width:160,height:115,borderRadius:20}}
                                                         />
+                                                        ))}
                                                 </ScrollView>
                                         </View>
                                 </View>
