@@ -57,10 +57,10 @@ export default function HomeScreen({ navigation }) {
 
                                         </Animated.View>
                                 </TouchableOpacity>
-                                <View style={{ flexDirection: 'row', position: 'absolute',top:235,left:20, justifyContent: 'space-between', marginTop: 5, alignItems: 'center' }}>
+                                <View style={styles.PriceShow}>
                                         <Text style={{ fontWeight: "bold", fontSize: 16, color: COLORS.white }}>{hotel.price}<Text style={{ fontSize: 14 }}> VND/đêm</Text></Text>
                                         <TouchableOpacity
-                                        style={{marginLeft:20}}
+                                                style={{ marginLeft: 20 }}
                                                 onPress={() => console.log('aaaaa')}
                                         >
                                                 <Icon name="bookmark-border" size={26} color={COLORS.white} />
@@ -303,5 +303,15 @@ const styles = StyleSheet.create({
                 borderRadius: 20,
                 alignSelf: 'center',
                 marginTop: 12,
-        }
+        },
+        PriceShow:
+        {
+                flexDirection: 'row',
+                position: 'absolute',
+                top: cardWidth + 15,
+                left: cardWidth / 2 - 90,
+                justifyContent: 'space-between',
+                marginTop: 5,
+                alignItems: 'center'
+        },
 })
