@@ -44,7 +44,7 @@ export default function HomeScreen({ navigation }) {
                                                         <Icon name="star" size={15} color={COLORS.orange} />
                                                         <Text style={{ color: 'white', fontWeight: 'bold' }}>4.8</Text>
                                                 </View>
-                                                <Image source={{ uri: hotel.image }} style={styles.cardImage} />
+                                                <Image source={{ uri: hotel.image[0] }} style={styles.cardImage} />
                                                 <View style={styles.cardDetails}>
                                                         <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 10 }}>
                                                                 <View>
@@ -76,7 +76,7 @@ export default function HomeScreen({ navigation }) {
                                         <Icon name="star" size={15} color={COLORS.orange} />
                                         <Text style={{ color: COLORS.white, fontWeight: "bold", fontSize: 15, marginLeft: 3 }}>5.0</Text>
                                 </View>
-                                <Image style={styles.topHotelCardImage} source={{ uri: hotel.image }} />
+                                <Image style={styles.topHotelCardImage} source={{ uri: hotel.image[0] }} />
                                 <View style={{ paddingHorizontal: 10 }}>
                                         <Text style={{ fontsize: 10, fontWeight: "bold", color: COLORS.dark, height: 35 }}>{hotel.name}</Text>
                                         <Text style={{ fontSize: 12, marginTop: 3, fontWeight: "bold", color: COLORS.grey }}>{hotel.location}</Text>
@@ -88,7 +88,7 @@ export default function HomeScreen({ navigation }) {
                 return (
                         <View style={styles.RecentlyBox}>
                                 <View style={{ width: 120, height: 120 }}>
-                                        <Image style={styles.IMGRecent} source={{ uri: hotel.image }} />
+                                        <Image style={styles.IMGRecent} source={{ uri: hotel.image[0] }} />
                                 </View>
                                 <View>
                                         <View style={{ marginTop: 10, flexDirection: 'row' }}>

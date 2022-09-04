@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {View,Text,Image, TouchableOpacity, Modal} from "react-native"
+import {View,Text,Image, TouchableOpacity, Modal, ScrollView} from "react-native"
 import { FlatList } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/AntDesign"
 import COLORS from "../../consts/colors";
@@ -7,24 +7,32 @@ import hotels from "../../consts/hotels";
 
 export default function HotelPhotos({route}){
         const [item,setItem]=useState(route.params)
+        const [itemzoom,setitemzoom]=useState("")
         const [modalVisible,setModalVisible]=useState(false)
         const ListImage=({hotel})=>{
-                if(hotel.id==item.id){
+              if(hotel.id==item.id){
                 return (
                         <View>
-                                <TouchableOpacity onPress={()=>setModalVisible(!modalVisible)}>
+                                <TouchableOpacity onPress={()=>{setModalVisible(!modalVisible),setitemzoom(item)}}>
+                                {hotel.image.map((image,index)=>(
                                 <Image
-                                 source={{uri:hotel.image}}
+                                 source={{uri:image}}
                                  style={{width:160,height:150,marginTop:20,marginHorizontal:15,borderRadius:20}}
                                 /> 
+                                ))}
                                 </TouchableOpacity>
                         </View>
                 )
-        }
-        }
+        }}
 
         return(
-                <View>
+                <ScrollView contentContainerStyle={!modalVisible?{
+                        backgroundColor: COLORS.white,
+                        flex:1,
+                        paddingBottom:20,
+                }:{backgroundColor: COLORS.grey,
+                        flex:1,
+                        paddingBottom:20,}}>
                         <View style={{paddingTop:"10%",marginHorizontal:15,flexDirection:"row"}}>
                                 <Icon
                                  name="arrowleft"
@@ -37,7 +45,7 @@ export default function HotelPhotos({route}){
                         
                         <View>
                                 <FlatList
-                                data={hotels}
+                                data={!modalVisible?hotels:""}
                                 horizontal={false}
                                 showsHorizontalScrollIndicator={false}
                                 numColumns={1}
@@ -45,20 +53,19 @@ export default function HotelPhotos({route}){
                                 />
                         </View>   
                         <Modal
-                     
                      transparent={true}
                      visible={modalVisible}
                      onRequestClose={() => {
                         setModalVisible(!modalVisible);
                      }}
                      >
-                        <View>
+                        <View style={{alignItems:"center",marginTop:"50%"}}>
                         <Image
-                                 source={{uri:"https://pix10.agoda.net/hotelImages/338405/-1/0a8728c27c3139c4c1cc4b7b767db501.jpg?ca=0&ce=1&s=1024x768"}}
-                                 style={{width:300,height:290,marginTop:20,marginHorizontal:15,borderRadius:20}}
+                                 source={{uri:itemzoom.image}}
+                                 style={{width:300,height:290,borderRadius:20}}
                                 /> 
                         </View>
                      </Modal>                    
-                </View>
+                </ScrollView>
         )
 }
