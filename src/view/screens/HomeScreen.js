@@ -1,9 +1,13 @@
 import React, { useRef, useState } from "react";
-import { SafeAreaView, Text, StyleSheet, View, ScrollView, TextInput, TouchableOpacity, FlatList, Dimensions, Image, Animated } from "react-native";
+import { SafeAreaView, Text, StyleSheet, View, ScrollView, TextInput, TouchableOpacity, FlatList, Dimensions, Image, Animated, LogBox } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Icon1 from "react-native-vector-icons/MaterialCommunityIcons";
+import Icon2 from "react-native-vector-icons/Entypo";
+import Icon3 from "react-native-vector-icons/Feather";
+import Icon4 from "react-native-vector-icons/Ionicons";
 import COLORS from "../../consts/colors";
 import hotels from "../../consts/hotels";
+import { screensEnabled } from "react-native-screens";
 const { width } = Dimensions.get('screen');
 const cardWidth = width / 1.8
 export default function HomeScreen({ navigation }) {
@@ -14,19 +18,49 @@ export default function HomeScreen({ navigation }) {
         const [countShow, setCountShow] = useState(0);
         const CategoryList = ({ navigation }) => {
                 return (
-                        <View style={styles.CategoryListContainer}>
-                                {categories.map((item, index) => (
-                                        <TouchableOpacity key={index} activeOpacity={0.8} onPress={() => setSelectedCategoryIndex(index)}>
-                                                <View>
-                                                        <Text style={{ ...styles.categoryListText, color: setSelectedCategoryIndex == index ? COLORS.primary : COLORS.grey }}>
-                                                                {item}
-                                                        </Text>
-                                                        {selectedCategoryIndex == index && (
-                                                                <View style={{ height: 3, backgroundColor: COLORS.primary, marginTop: 2 }}></View>
-                                                        )}
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', backgroundColor: "#fff2cc", width: 360, height: 140, alignSelf: 'center', borderRadius: 20, paddingBottom: 5, marginTop: 20 }}>
+                                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                        <TouchableOpacity>
+                                                <View style={{ alignItems: 'center', paddingTop: 10 }}>
+                                                        <Icon2 name="hour-glass" size={25} color={COLORS.orange} />
+                                                        <Text style={{ paddingTop: 5, fontSize: 15, fontWeight: 'bold' }}>Theo giờ</Text>
                                                 </View>
                                         </TouchableOpacity>
-                                ))}
+                                        <TouchableOpacity>
+                                                <View style={{ alignItems: 'center', paddingTop: 10 }}>
+                                                        <Icon1 name="heart-multiple-outline" size={25} color={COLORS.orange} />
+                                                        <Text style={{ paddingTop: 5, fontSize: 15, fontWeight: 'bold' }}>Tình yêu</Text>
+                                                </View>
+                                        </TouchableOpacity>
+                                </View>
+                                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                        <TouchableOpacity>
+                                                <View style={{ alignItems: 'center', paddingTop: 10 }}>
+                                                        <Icon3 name="moon" size={25} color={COLORS.orange} />
+                                                        <Text style={{ paddingTop: 5, fontSize: 15, fontWeight: 'bold' }}>Theo đêm</Text>
+                                                </View>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity>
+                                                <View style={{ alignItems: 'center', paddingTop: 10 }}>
+                                                        <Icon1 name="airplane-marker" size={25} color={COLORS.orange} />
+                                                        <Text style={{ paddingTop: 5, fontSize: 15, fontWeight: 'bold' }}>Du lịch</Text>
+                                                </View>
+                                        </TouchableOpacity>
+                                </View>
+                                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                        <TouchableOpacity>
+                                                <View style={{ alignItems: 'center', paddingTop: 10 }}>
+                                                        <Icon4 name="today" size={25} color={COLORS.orange} />
+                                                        <Text style={{ paddingTop: 5, fontSize: 15, fontWeight: 'bold' }}>Theo ngày</Text>
+                                                </View>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity>
+                                                <View style={{ alignItems: 'center', paddingTop: 10 }}>
+                                                        <Icon2 name="dots-three-horizontal" size={25} color={COLORS.orange} />
+                                                        <Text style={{ paddingTop: 5, fontSize: 15, fontWeight: 'bold' }}>Tất cả</Text>
+                                                </View>
+                                        </TouchableOpacity>
+                                </View>
                         </View>
                 )
         }
@@ -49,6 +83,7 @@ export default function HomeScreen({ navigation }) {
                                                                 <View>
                                                                         <View style={{ height: 20 }}><Text style={{ fontWeight: "bold", fontSize: 17, color: COLORS.white }}>{hotel.name}</Text></View>
                                                                         <View style={{ marginTop: 5 }}><Text style={{ fontSize: 14, color: COLORS.white }}>{hotel.location}</Text></View>
+                                                                        <Text style={{ fontWeight: "bold", fontSize: 16, marginTop: 5, color: COLORS.white }}>{hotel.price}<Text style={{ fontSize: 14 }}> VND/đêm</Text></Text>
                                                                 </View>
                                                         </View>
 
@@ -56,21 +91,15 @@ export default function HomeScreen({ navigation }) {
 
                                         </Animated.View>
                                 </TouchableOpacity>
-                                <View style={{ flexDirection: 'row', position: 'absolute',top:235,left:20, justifyContent: 'space-between', marginTop: 5, alignItems: 'center' }}>
-                                        <Text style={{ fontWeight: "bold", fontSize: 16, color: COLORS.white }}>{hotel.price}<Text style={{ fontSize: 14 }}> VND/đêm</Text></Text>
-                                        <TouchableOpacity
-                                        style={{marginLeft:20}}
-                                                onPress={() => console.log('aaaaa')}
-                                        >
-                                                <Icon name="bookmark-border" size={26} color={COLORS.white} />
-                                        </TouchableOpacity>
-                                </View>
+                                <TouchableOpacity>
+                                        <Icon style={{ position: 'absolute', top: -42, left: 170 }} name="bookmark-border" size={26} color={COLORS.white} />
+                                </TouchableOpacity>
                         </View>
                 )
         }
         const TopHotelCard = ({ hotel }) => {
                 return (
-                        <View style={styles.topHotelCard}>
+                        <TouchableOpacity style={styles.topHotelCard} onPress={() => navigation.navigate("DetailsScreen", hotel)}>
                                 <View style={{ position: "absolute", top: 5, right: 10, zIndex: 1, flexDirection: "row", alignItems: 'center', }}>
                                         <Icon name="star" size={15} color={COLORS.orange} />
                                         <Text style={{ color: COLORS.white, fontWeight: "bold", fontSize: 15, marginLeft: 3 }}>5.0</Text>
@@ -80,39 +109,43 @@ export default function HomeScreen({ navigation }) {
                                         <Text style={{ fontsize: 10, fontWeight: "bold", color: COLORS.dark, height: 35 }}>{hotel.name}</Text>
                                         <Text style={{ fontSize: 12, marginTop: 3, fontWeight: "bold", color: COLORS.grey }}>{hotel.location}</Text>
                                 </View>
-                        </View>
+                        </TouchableOpacity>
                 )
         }
         const RecentlyBookedCard = ({ hotel }) => {
                 return (
-                        <View style={styles.RecentlyBox}>
-                                <View style={{ width: 120, height: 120 }}>
-                                        <Image style={styles.IMGRecent} source={{ uri: hotel.image[0] }} />
-                                </View>
-                                <View>
-                                        <View style={{ marginTop: 10, flexDirection: 'row' }}>
-                                                <View style={{ width: 130 }}>
-                                                        <View style={{ width: 120, height: 45 }}>
-                                                                <Text style={{ fontSize: 17, fontWeight: 'bold', color: "black" }}>{hotel.name}</Text>
+                        <View>
+                                <TouchableOpacity style={styles.RecentlyBox} onPress={() => navigation.navigate("DetailsScreen", hotel)}>
+                                        <View style={{ width: 120, height: 120 }}>
+                                                <Image style={styles.IMGRecent} source={{ uri: hotel.image[0] }} />
+                                        </View>
+                                        <View>
+                                                <View style={{ marginTop: 10, flexDirection: 'row' }}>
+                                                        <View style={{ width: 130 }}>
+                                                                <View style={{ width: 120, height: 45 }}>
+                                                                        <Text style={{ fontSize: 17, fontWeight: 'bold', color: "black" }}>{hotel.name}</Text>
+                                                                </View>
+                                                                <Text style={{ fontSize: 15 }}>{hotel.location}</Text>
                                                         </View>
-                                                        <Text style={{ fontSize: 15 }}>{hotel.location}</Text>
+                                                        <View style={{ width: 100, alignItems: 'center', marginTop: 10 }}>
+                                                                <Text style={{ fontSize: 16, color: COLORS.primary, fontWeight: 'bold' }}>{hotel.price}</Text>
+                                                                <Text>VND/đêm</Text>
+                                                        </View>
                                                 </View>
-                                                <View style={{ width: 100, alignItems: 'center', marginTop: 10 }}>
-                                                        <Text style={{ fontSize: 16, color: COLORS.primary, fontWeight: 'bold' }}>{hotel.price}</Text>
-                                                        <Text>VND/đêm</Text>
+                                                <View style={{ flexDirection: 'row', width: 180, marginTop: 10 }}>
+                                                        <View style={{ flexDirection: 'row', alignItems: 'center', width: 160 }}>
+                                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                        <Icon name="star" size={15} color={COLORS.orange} />
+                                                                        <Text style={{ color: COLORS.primary, fontWeight: "bold", fontSize: 15, marginLeft: 5 }}>5.0</Text>
+                                                                </View>
+                                                                <Text style={{ marginLeft: 15, }}>(5 reviews)</Text>
+                                                        </View>
                                                 </View>
                                         </View>
-                                        <View style={{ flexDirection: 'row', width: 180, marginTop: 5 }}>
-                                                <View style={{ flexDirection: 'row', alignItems: 'center', width: 160 }}>
-                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                <Icon name="star" size={15} color={COLORS.orange} />
-                                                                <Text style={{ color: COLORS.primary, fontWeight: "bold", fontSize: 15, marginLeft: 5 }}>5.0</Text>
-                                                        </View>
-                                                        <Text style={{ marginLeft: 15, }}>(5 reviews)</Text>
-                                                </View>
-                                                <Icon name="bookmark-border" size={26} style={{ marginLeft: 30 }} color="black" />
-                                        </View>
-                                </View>
+                                </TouchableOpacity>
+                                <TouchableOpacity>
+                                        <Icon name="bookmark-border" size={26} style={{ marginLeft: 30, top: -50, left: 300, position: 'absolute' }} color="black" />
+                                </TouchableOpacity>
                         </View>
                 )
         }
@@ -126,7 +159,6 @@ export default function HomeScreen({ navigation }) {
                                         </View>
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                 <Icon1 name="bell-ring-outline" size={26} color={COLORS.grey} />
-                                                <Icon name="bookmark-border" size={26} style={{ marginLeft: 10 }} color={COLORS.grey} />
                                         </View>
                                 </View>
                                 <View style={{ marginTop: 15 }}>
@@ -135,12 +167,12 @@ export default function HomeScreen({ navigation }) {
                                                         name="hand-wave-outline"
                                                         size={26}
                                                         color={"#FF6347"}
-                                                        style={{ position: "absolute", bottom: 4, }}
+                                                       
                                                 />
                                         </Text>
                                 </View>
                         </View>
-                        <ScrollView showsHorizontalScrollIndicator={false}>
+                        <ScrollView showsHorizontalScrollIndicator={false} style={{ height: "100%" }}>
                                 <View style={styles.searchInputContainer}>
                                         <Icon name="search"
                                                 size={30}
@@ -198,6 +230,13 @@ export default function HomeScreen({ navigation }) {
                                         renderItem={({ item }) => <RecentlyBookedCard hotel={item} />}
                                 />
                                
+                                <View>
+                                        {hotels.map((item, index) =>
+                                        (<View key={index}>
+                                                <RecentlyBookedCard hotel={item} />
+                                        </View>)
+                                        )}
+                                </View>
                         </ScrollView>
                 </SafeAreaView>
         )
@@ -219,17 +258,6 @@ const styles = StyleSheet.create({
                 borderRadius: 20,
                 flexDirection: "row",
                 alignItems: "center",
-        },
-        CategoryListContainer: {
-                flexDirection: "row",
-                justifyContent: "space-between",
-                marginHorizontal: 20,
-                marginTop: 30,
-        },
-        categoryListText: {
-                fontSize: 17,
-                fontWeight: "bold",
-                color: COLORS.dark
         },
         card: {
                 height: 280,
@@ -305,5 +333,15 @@ const styles = StyleSheet.create({
                 borderRadius: 20,
                 alignSelf: 'center',
                 marginTop: 12,
-        }
+        },
+        PriceShow:
+        {
+                flexDirection: 'row',
+                position: 'absolute',
+                top: cardWidth + 15,
+                left: cardWidth / 2 - 90,
+                justifyContent: 'space-between',
+                marginTop: 5,
+                alignItems: 'center'
+        },
 })
