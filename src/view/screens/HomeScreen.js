@@ -12,7 +12,6 @@ export default function HomeScreen({ navigation }) {
         const [activeCardIndex, setActiveCardIndex] = useState(0);
         const scrollX = useRef(new Animated.Value(0)).current;
         const [countShow, setCountShow] = useState(0);
-
         const CategoryList = ({ navigation }) => {
                 return (
                         <View style={styles.CategoryListContainer}>
@@ -192,10 +191,13 @@ export default function HomeScreen({ navigation }) {
                                                 <Text style={{ fontWeight: "bold", color: COLORS.primary }}>See All</Text>
                                         </TouchableOpacity>
                                 </View>
+                               
                                 <FlatList
                                         data={hotels}
+                                        showsVerticalScrollIndicator={false}
                                         renderItem={({ item }) => <RecentlyBookedCard hotel={item} />}
                                 />
+                               
                         </ScrollView>
                 </SafeAreaView>
         )
