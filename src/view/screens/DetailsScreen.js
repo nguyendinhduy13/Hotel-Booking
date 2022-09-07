@@ -15,18 +15,19 @@ export default function DetailsScreen({ navigation, route }) {
                 }}>
                         <StatusBar barStyle="light-content" translucent backgroundColor="rgba(0,0,0,0)" />
                         <ImageBackground style={styles.headerImage}
-                                source={{ uri: item.image[0] }}>
+                                source={{ uri: item.image }}>
                                 <View style={styles.header}>
                                         <Icon name="arrow-back-ios" size={28} color={COLORS.white} onPress={navigation.goBack} />
                                         <Icon name="bookmark-border" size={28} color={COLORS.white} />
                                 </View>
                         </ImageBackground>
                         <View>
-                                <View style={{ marginTop: 15, paddingHorizontal: 20 }}>
+                                {item.Room.map((item, index) =>(
+                                        <View key={index} style={{ marginTop: 15, paddingHorizontal: 20 }}>
                                         <Text style={{ fontSize: 27, fontWeight: "bold", color: COLORS.dark }}>{item.name}</Text>
                                         <View style={{ flexDirection: "row", marginTop: 10 }}>
                                                 <Icon name="location-pin" size={25} color={COLORS.primary} />
-                                                <Text style={{ fontSize: 14, fontWeight: "600", color: COLORS.black, marginTop: 4, marginHorizontal: 7 }}>{item.location}</Text>
+                                                <Text style={{ fontSize: 14, fontWeight: "600", color: COLORS.black, marginTop: 4, marginHorizontal: 7 }}></Text>
                                         </View>
                                         <View style={{ height: 0.25, backgroundColor: COLORS.grey, marginTop: 20 }} />
                                         <View style={{ paddingTop: "10%" }}>
@@ -90,7 +91,7 @@ export default function DetailsScreen({ navigation, route }) {
                                                 </View>
                                                 <View style={{ marginTop: 12 }}>
                                                         <Text style={{ lineHeight: 20, color: COLORS.black }}>
-                                                                {item.detail}
+                                                                {item.description}
                                                         </Text>
                                                 </View>
                                         </View>
@@ -129,6 +130,8 @@ export default function DetailsScreen({ navigation, route }) {
                                                 </View>
                                         </TouchableOpacity>
                                 </View>
+                                ) )}
+
                         </View>
                 </ScrollView>
         )

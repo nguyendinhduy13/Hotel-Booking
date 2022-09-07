@@ -3,8 +3,7 @@ import { View, Text, Image, TouchableOpacity, Modal, ScrollView } from "react-na
 import { FlatList } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/AntDesign"
 import COLORS from "../../consts/colors";
-import hotels from "../../consts/hotels";
-
+import hotellist from "../../consts/hotellist"
 export default function HotelPhotos({ route, navigation }) {
         const [item, setItem] = useState(route.params)
         const [index, setIndex] = useState(0)
@@ -49,9 +48,9 @@ export default function HotelPhotos({ route, navigation }) {
                                 </Text>
                         </View>
 
-                        <View>
+                        {/* <View>
                                 <FlatList
-                                        data={!modalVisible ? hotels : ""}
+                                        data={!modalVisible ? hotellist : ""}
                                         horizontal={false}
                                         showsHorizontalScrollIndicator={false}
                                         numColumns={2}
@@ -71,7 +70,7 @@ export default function HotelPhotos({ route, navigation }) {
                                                 style={{ width: 300, height: 290, borderRadius: 20 }}
                                         />
                                 </View>
-                        </Modal>
+                        </Modal> */}
                 </ScrollView>
         )
 }

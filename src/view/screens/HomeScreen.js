@@ -6,8 +6,7 @@ import Icon2 from "react-native-vector-icons/Entypo";
 import Icon3 from "react-native-vector-icons/Feather";
 import Icon4 from "react-native-vector-icons/Ionicons";
 import COLORS from "../../consts/colors";
-import hotels from "../../consts/hotels";
-import { screensEnabled } from "react-native-screens";
+import { ListItemHotel } from "../../consts/hotellist";
 const { width } = Dimensions.get('screen');
 const cardWidth = width / 1.8
 export default function HomeScreen({ navigation }) {
@@ -77,13 +76,12 @@ export default function HomeScreen({ navigation }) {
                                                         <Icon name="star" size={15} color={COLORS.orange} />
                                                         <Text style={{ color: 'white', fontWeight: 'bold' }}>4.8</Text>
                                                 </View>
-                                                <Image source={{ uri: hotel.image[0] }} style={styles.cardImage} />
+                                                <Image source={{ uri: hotel.image }} style={styles.cardImage} />
                                                 <View style={styles.cardDetails}>
                                                         <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 10 }}>
                                                                 <View>
                                                                         <View style={{ height: 20 }}><Text style={{ fontWeight: "bold", fontSize: 17, color: COLORS.white }}>{hotel.name}</Text></View>
                                                                         <View style={{ marginTop: 5 }}><Text style={{ fontSize: 14, color: COLORS.white }}>{hotel.location}</Text></View>
-                                                                        <Text style={{ fontWeight: "bold", fontSize: 16, marginTop: 5, color: COLORS.white }}>{hotel.price}<Text style={{ fontSize: 14 }}> VND/đêm</Text></Text>
                                                                 </View>
                                                         </View>
 
@@ -104,7 +102,7 @@ export default function HomeScreen({ navigation }) {
                                         <Icon name="star" size={15} color={COLORS.orange} />
                                         <Text style={{ color: COLORS.white, fontWeight: "bold", fontSize: 15, marginLeft: 3 }}>5.0</Text>
                                 </View>
-                                <Image style={styles.topHotelCardImage} source={{ uri: hotel.image[0] }} />
+                                <Image style={styles.topHotelCardImage} source={{ uri: hotel.image }} />
                                 <View style={{ paddingHorizontal: 10 }}>
                                         <Text style={{ fontsize: 10, fontWeight: "bold", color: COLORS.dark, height: 35 }}>{hotel.name}</Text>
                                         <Text style={{ fontSize: 12, marginTop: 3, fontWeight: "bold", color: COLORS.grey }}>{hotel.location}</Text>
@@ -117,7 +115,7 @@ export default function HomeScreen({ navigation }) {
                         <View>
                                 <TouchableOpacity style={styles.RecentlyBox} onPress={() => navigation.navigate("DetailsScreen", hotel)}>
                                         <View style={{ width: 120, height: 120 }}>
-                                                <Image style={styles.IMGRecent} source={{ uri: hotel.image[0] }} />
+                                                <Image style={styles.IMGRecent} source={{ uri: hotel.image }} />
                                         </View>
                                         <View>
                                                 <View style={{ marginTop: 10, flexDirection: 'row' }}>
@@ -128,8 +126,7 @@ export default function HomeScreen({ navigation }) {
                                                                 <Text style={{ fontSize: 15 }}>{hotel.location}</Text>
                                                         </View>
                                                         <View style={{ width: 100, alignItems: 'center', marginTop: 10 }}>
-                                                                <Text style={{ fontSize: 16, color: COLORS.primary, fontWeight: 'bold' }}>{hotel.price}</Text>
-                                                                <Text>VND/đêm</Text>
+                                                                
                                                         </View>
                                                 </View>
                                                 <View style={{ flexDirection: 'row', width: 180, marginTop: 10 }}>
@@ -192,7 +189,7 @@ export default function HomeScreen({ navigation }) {
                                                         )
                                                 }}
                                                 onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], { useNativeDriver: true })}
-                                                data={hotels}
+                                                data={ListItemHotel}
                                                 horizontal
                                                 contentContainerStyle={{ paddingVertical: 30, paddingLeft: 20, paddingRight: cardWidth / 2 - 40 }}
                                                 showsHorizontalScrollIndicator={false}
@@ -212,7 +209,7 @@ export default function HomeScreen({ navigation }) {
                                         </TouchableOpacity>
                                 </View>
                                 <FlatList horizontal
-                                        data={hotels}
+                                        data={ListItemHotel}
                                         showsHorizontalScrollIndicator={false}
                                         contentContainerStyle={{ paddingLeft: 10, marginTop: 20, paddingBottom: 30 }}
                                         renderItem={({ item }) => <TopHotelCard hotel={item} />}
@@ -224,14 +221,9 @@ export default function HomeScreen({ navigation }) {
                                         </TouchableOpacity>
                                 </View>
                                
-                                <FlatList
-                                        data={hotels}
-                                        showsVerticalScrollIndicator={false}
-                                        renderItem={({ item }) => <RecentlyBookedCard hotel={item} />}
-                                />
                                
                                 <View>
-                                        {hotels.map((item, index) =>
+                                        {ListItemHotel.map((item, index) =>
                                         (<View key={index}>
                                                 <RecentlyBookedCard hotel={item} />
                                         </View>)
