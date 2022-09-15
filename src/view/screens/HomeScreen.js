@@ -7,6 +7,10 @@ import Icon3 from "react-native-vector-icons/Feather";
 import Icon4 from "react-native-vector-icons/Ionicons";
 import COLORS from "../../consts/colors";
 import { ListItemHotel } from "../../consts/hotellist";
+
+import firestore, { firebase } from '@react-native-firebase/firestore';
+import auth from "@react-native-firebase/auth"
+
 const { width } = Dimensions.get('screen');
 const cardWidth = width / 1.8
 export default function HomeScreen({ navigation }) {
@@ -15,6 +19,7 @@ export default function HomeScreen({ navigation }) {
         const [activeCardIndex, setActiveCardIndex] = useState(0);
         const scrollX = useRef(new Animated.Value(0)).current;
         const [countShow, setCountShow] = useState(0);
+        const user = auth().currentUser;
         const CategoryList = ({ navigation }) => {
                 return (
                         <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', backgroundColor: "#fff2cc", width: 360, height: 140, alignSelf: 'center', borderRadius: 20, paddingBottom: 5, marginTop: 20 }}>
@@ -126,7 +131,7 @@ export default function HomeScreen({ navigation }) {
                                                                 <Text style={{ fontSize: 15 }}>{hotel.location}</Text>
                                                         </View>
                                                         <View style={{ width: 100, alignItems: 'center', marginTop: 10 }}>
-                                                                
+
                                                         </View>
                                                 </View>
                                                 <View style={{ flexDirection: 'row', width: 180, marginTop: 10 }}>
@@ -158,16 +163,18 @@ export default function HomeScreen({ navigation }) {
                                                 <Icon1 name="bell-ring-outline" size={26} color={COLORS.grey} />
                                         </View>
                                 </View>
-                                <View style={{ marginTop: 15 }}>
-                                        <Text style={{ fontWeight: 'bold', fontSize: 28, color: 'black' }}>Hello, Huy
-                                                <Icon1
-                                                        name="hand-wave-outline"
-                                                        size={26}
-                                                        color={"#FF6347"}
-                                                       
-                                                />
-                                        </Text>
-                                </View>
+                                <TouchableOpacity onPress={() => { navigation.navigate("Test") }}>
+                                        <View style={{ marginTop: 15 }}>
+                                                <Text style={{ fontWeight: 'bold', fontSize: 28, color: 'black' }}>Hello, Huy
+                                                        <Icon1
+                                                                name="hand-wave-outline"
+                                                                size={26}
+                                                                color={"#FF6347"}
+
+                                                        />
+                                                </Text>
+                                        </View>
+                                </TouchableOpacity>
                         </View>
                         <ScrollView showsHorizontalScrollIndicator={false} style={{ height: "100%" }}>
                                 <View style={styles.searchInputContainer}>
@@ -220,8 +227,8 @@ export default function HomeScreen({ navigation }) {
                                                 <Text style={{ fontWeight: "bold", color: COLORS.primary }}>See All</Text>
                                         </TouchableOpacity>
                                 </View>
-                               
-                               
+
+
                                 <View>
                                         {ListItemHotel.map((item, index) =>
                                         (<View key={index}>

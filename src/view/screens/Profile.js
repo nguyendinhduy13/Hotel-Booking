@@ -38,8 +38,8 @@ export default function Profile() {
                                         rounded
                                         source={require("../../assets/logo.png")}
                                 />
-                                <Text style={{ fontSize: 20, marginTop: 7, fontWeight: "bold", color: COLORS.dark }}>Nguyen Dinh Duy</Text>
-                                <Text style={{ fontWeight: "600", marginTop: 5 }}>nguyendinhduy9602@gmail.com</Text>
+                                <Text style={{ fontSize: 20, marginTop: 7, fontWeight: "bold", color: COLORS.dark }}>{auth().currentUser.displayName}</Text>
+                                <Text style={{ fontWeight: "600", marginTop: 5 }}>{auth().currentUser.email}</Text>
                         </View>
                         <View style={{ paddingTop: "10%" }}>
                                 <TouchableOpacity style={{ flexDirection: "row", marginHorizontal: 20 }}>
