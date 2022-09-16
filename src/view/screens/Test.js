@@ -1,28 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
+import React, { useEffect, useState, useRef } from 'react'
+import { View, Text, TouchableOpacity, FlatList } from 'react-native'
 import firestore, { firebase } from '@react-native-firebase/firestore';
 import { createIconSetFromFontello } from 'react-native-vector-icons';
 export default function Test() {
     const [data, setData] = useState([])
-    const [item, setItem] = useState(false)
-    const a = [
-        {
-            "id": "1",
-            "name": "A",
-            "age": [
-                {
-                    "id": "1",
-                    "name": "A1",
-                    "age": [
-                        {
-                            "id": "1",
-                            "name": "A11",
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
+    const [a, setA] = useState([])
     useEffect(() => {
         firestore()
             .collection('Hotel')
@@ -32,6 +14,8 @@ export default function Test() {
                 if (documentSnapshot.exists) {
                     console.log(documentSnapshot.data())
                 }
+                const data = documentSnapshot.data();
+                setA(data.Room)
             });
     }, [])
 
@@ -46,6 +30,11 @@ export default function Test() {
             {item &&
                 console.log("aaaaaaaaa   ")
             }
+            <FlatList
+                data={a}
+                renderItem={({ item }) => <Text>{item.name}</Text>}
+                keyExtractor={item => item.id}
+            />
         </View>
     )
 }
