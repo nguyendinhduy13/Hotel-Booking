@@ -1,51 +1,27 @@
-import React, { useEffect, useState } from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
+import React, { useEffect, useState, useRef } from 'react'
+import { View, Text, TouchableOpacity, FlatList } from 'react-native'
 import firestore, { firebase } from '@react-native-firebase/firestore';
 export default function Test() {
     const [data, setData] = useState([])
-    const [item, setItem] = useState(false)
-    const a = [
-        {
-            "id": "1",
-            "name": "A",
-            "age": [
-                {
-                    "id": "1",
-                    "name": "A1",
-                    "age": [
-                        {
-                            "id": "1",
-                            "name": "A11",
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
+    const [a, setA] = useState([])
     useEffect(() => {
         firestore()
             .collection('Hotel')
             .doc('AaronHotel')
             .get()
             .then(documentSnapshot => {
-                if (documentSnapshot.exists) {
-                    setData(a)
-                    setItem(!item)
-                }
+                const data = documentSnapshot.data();
+                setA(data.Room)
             });
     }, [])
 
     return (
         <View>
-            <TouchableOpacity>
-                <Text>Load</Text>
-            </TouchableOpacity>
-            <TouchableOpacity>
-                <Text>Log</Text>
-            </TouchableOpacity>
-            {item &&
-                console.log("aaaaaaaaa   ", a.age.id)
-            }
+            <FlatList
+                data={a}
+                renderItem={({ item }) => <Text>{item.name}</Text>}
+                keyExtractor={item => item.id}
+            />
         </View>
     )
 }

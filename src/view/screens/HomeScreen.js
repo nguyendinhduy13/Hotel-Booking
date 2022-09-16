@@ -165,7 +165,7 @@ export default function HomeScreen({ navigation }) {
                                 </View>
                                 <TouchableOpacity onPress={() => { navigation.navigate("Test") }}>
                                         <View style={{ marginTop: 15 }}>
-                                                <Text style={{ fontWeight: 'bold', fontSize: 28, color: 'black' }}>Hello, Huy
+                                                <Text style={{ fontWeight: 'bold', fontSize: 28, color: 'black' }}>Hello, {auth().currentUser.displayName}
                                                         <Icon1
                                                                 name="hand-wave-outline"
                                                                 size={26}
