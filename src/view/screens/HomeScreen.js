@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState,useEffect } from "react";
 import { SafeAreaView, Text, StyleSheet, View, ScrollView, TextInput, TouchableOpacity, FlatList, Dimensions, Image, Animated, LogBox } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Icon1 from "react-native-vector-icons/MaterialCommunityIcons";
@@ -6,14 +6,23 @@ import Icon2 from "react-native-vector-icons/Entypo";
 import Icon3 from "react-native-vector-icons/Feather";
 import Icon4 from "react-native-vector-icons/Ionicons";
 import COLORS from "../../consts/colors";
-import { ListItemHotel } from "../../consts/hotellist";
-
 import firestore, { firebase } from '@react-native-firebase/firestore';
 import auth from "@react-native-firebase/auth"
 
 const { width } = Dimensions.get('screen');
 const cardWidth = width / 1.8
 export default function HomeScreen({ navigation }) {
+        const [ListHotelData, setListHotelData] = useState([])
+        useEffect(()=>{
+                firestore()
+                .collection("ListHotel")
+                .doc("ListHotel")
+                .get()
+                .then(documentSnapshot=>{
+                       setListHotelData(documentSnapshot.data().ListHotel)
+                })
+        },[])
+
         const categories = ['All', 'Popular', 'Top Rated', 'Featured', 'Luxury'];
         const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
         const [activeCardIndex, setActiveCardIndex] = useState(0);
@@ -21,6 +30,7 @@ export default function HomeScreen({ navigation }) {
         const [countShow, setCountShow] = useState(0);
         const user = auth().currentUser;
         const CategoryList = ({ navigation }) => {
+
                 return (
                         <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', backgroundColor: "#fff2cc", width: 360, height: 140, alignSelf: 'center', borderRadius: 20, paddingBottom: 5, marginTop: 20 }}>
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -74,7 +84,7 @@ export default function HomeScreen({ navigation }) {
                 const scale = scrollX.interpolate({ inputRange, outputRange: [0.8, 1, 0.8] });
                 return (
                         <View>
-                                <TouchableOpacity disabled={activeCardIndex != index} activeOpacity={1} onPress={() => navigation.navigate("DetailsScreen", hotel)}>
+                                <TouchableOpacity disabled={activeCardIndex != index} activeOpacity={1} onPress={() => navigation.navigate("DetailsScreen", hotel.id)}>
                                         <Animated.View style={{ ...styles.card, transform: [{ scale }] }}>
                                                 <Animated.View style={{ ...styles.cardOverplay, opacity }} />
                                                 <View style={styles.priceTag}>
@@ -102,7 +112,7 @@ export default function HomeScreen({ navigation }) {
         }
         const TopHotelCard = ({ hotel }) => {
                 return (
-                        <TouchableOpacity style={styles.topHotelCard} onPress={() => navigation.navigate("DetailsScreen", hotel)}>
+                        <TouchableOpacity style={styles.topHotelCard} onPress={() => navigation.navigate("DetailsScreen", hotel.id)}>
                                 <View style={{ position: "absolute", top: 5, right: 10, zIndex: 1, flexDirection: "row", alignItems: 'center', }}>
                                         <Icon name="star" size={15} color={COLORS.orange} />
                                         <Text style={{ color: COLORS.white, fontWeight: "bold", fontSize: 15, marginLeft: 3 }}>5.0</Text>
@@ -118,7 +128,7 @@ export default function HomeScreen({ navigation }) {
         const RecentlyBookedCard = ({ hotel }) => {
                 return (
                         <View>
-                                <TouchableOpacity style={styles.RecentlyBox} onPress={() => navigation.navigate("DetailsScreen", hotel)}>
+                                <TouchableOpacity style={styles.RecentlyBox} onPress={() => navigation.navigate("DetailsScreen", hotel.id)}>
                                         <View style={{ width: 120, height: 120 }}>
                                                 <Image style={styles.IMGRecent} source={{ uri: hotel.image }} />
                                         </View>
@@ -196,7 +206,7 @@ export default function HomeScreen({ navigation }) {
                                                         )
                                                 }}
                                                 onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], { useNativeDriver: true })}
-                                                data={ListItemHotel}
+                                                data={ListHotelData}
                                                 horizontal
                                                 contentContainerStyle={{ paddingVertical: 30, paddingLeft: 20, paddingRight: cardWidth / 2 - 40 }}
                                                 showsHorizontalScrollIndicator={false}
@@ -216,7 +226,7 @@ export default function HomeScreen({ navigation }) {
                                         </TouchableOpacity>
                                 </View>
                                 <FlatList horizontal
-                                        data={ListItemHotel}
+                                        data={ListHotelData}
                                         showsHorizontalScrollIndicator={false}
                                         contentContainerStyle={{ paddingLeft: 10, marginTop: 20, paddingBottom: 30 }}
                                         renderItem={({ item }) => <TopHotelCard hotel={item} />}
@@ -230,7 +240,7 @@ export default function HomeScreen({ navigation }) {
 
 
                                 <View>
-                                        {ListItemHotel.map((item, index) =>
+                                        {ListHotelData.map((item, index) =>
                                         (<View key={index}>
                                                 <RecentlyBookedCard hotel={item} />
                                         </View>)

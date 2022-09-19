@@ -1,13 +1,26 @@
-import React from "react";
+import React, { useEffect,useState } from "react";
 import { ImageBackground, ScrollView, Text, StyleSheet, StatusBar, View, TouchableOpacity, Image } from "react-native";
 import COLORS from "../../consts/colors";
+import firestore, { firebase } from '@react-native-firebase/firestore';
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Icon1 from "react-native-vector-icons/FontAwesome5"
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons"
 import Icon3 from "react-native-vector-icons/FontAwesome"
 
 export default function DetailsScreen({ navigation, route }) {
-        const item = route.params
+        const item = route.params;
+        
+        const [Room,setRoom]=useState([])
+        useEffect(()=>{
+                firestore()
+                .collection("HotelList")
+                .doc(item)
+                .get()
+                .then(documentSnapshot=>{
+                        setRoom(documentSnapshot.data().Room)
+                })
+                console.log(Room)
+        },[])
         return (
                 <ScrollView contentContainerStyle={{
                         backgroundColor: COLORS.white,
@@ -22,7 +35,7 @@ export default function DetailsScreen({ navigation, route }) {
                                 </View>
                         </ImageBackground>
                         <View>
-                                {item.Room.map((item, index) =>(
+                                {Room.map((item, index) =>(
                                         <View key={index} style={{ marginTop: 15, paddingHorizontal: 20 }}>
                                         <Text style={{ fontSize: 27, fontWeight: "bold", color: COLORS.dark }}>{item.name}</Text>
                                         <View style={{ flexDirection: "row", marginTop: 10 }}>
@@ -39,7 +52,7 @@ export default function DetailsScreen({ navigation, route }) {
                                                 </View>
                                                 <View style={{ paddingTop: "5%" }}>
                                                         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                                                                {item.image.map((image, index) => (
+                                                                {Room.image.map((image, index) => (
                                                                         <Image
                                                                                 source={{ uri: image }}
                                                                                 style={{ width: 160, height: 115, borderRadius: 20, marginHorizontal: 10 }}

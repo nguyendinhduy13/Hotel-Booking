@@ -1,22 +1,21 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { View, Text, TouchableOpacity, FlatList } from 'react-native'
 import firestore, { firebase } from '@react-native-firebase/firestore';
+import { ListHotel } from '../../consts/hotellist';
 import { createIconSetFromFontello } from 'react-native-vector-icons';
 export default function Test() {
     const [data, setData] = useState([])
     const [a, setA] = useState([])
     useEffect(() => {
         firestore()
-            .collection('Hotel')
-            .doc('AaronHotel')
-            .get()
-            .then(documentSnapshot => {
-                if (documentSnapshot.exists) {
-                    console.log(documentSnapshot.data())
+            .collection('ListHotel')
+            .doc('ListHotel')
+            .set(
+                {
+                    ListHotel
                 }
-                const data = documentSnapshot.data();
-                setA(data.Room)
-            });
+            )
+            
     }, [])
 
     return (
@@ -27,14 +26,14 @@ export default function Test() {
             <TouchableOpacity>
                 <Text>Log</Text>
             </TouchableOpacity>
-            {item &&
+            {/* {item &&
                 console.log("aaaaaaaaa   ")
             }
             <FlatList
                 data={a}
                 renderItem={({ item }) => <Text>{item.name}</Text>}
                 keyExtractor={item => item.id}
-            />
+            /> */}
         </View>
     )
 }
