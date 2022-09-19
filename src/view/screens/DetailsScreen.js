@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ImageBackground, ScrollView, Text, StyleSheet, StatusBar, View, TouchableOpacity, Image } from "react-native";
 import COLORS from "../../consts/colors";
 import firestore, { firebase } from '@react-native-firebase/firestore';
@@ -9,33 +9,32 @@ import Icon3 from "react-native-vector-icons/FontAwesome"
 
 export default function DetailsScreen({ navigation, route }) {
         const item = route.params;
-        
-        const [Room,setRoom]=useState([])
-        useEffect(()=>{
-                firestore()
-                .collection("HotelList")
-                .doc(item)
-                .get()
-                .then(documentSnapshot=>{
-                        setRoom(documentSnapshot.data().Room)
-                })
-                console.log(Room)
-        },[])
+        const [DataRoom, setDataRoom] = useState([])
+        useEffect(() => {
+                    firestore()
+                        .collection('HotelList')
+                        .doc(item)
+                        .get()
+                        .then(documentSnapshot => {
+                            const data = documentSnapshot.data();
+                            setDataRoom(data.Room)
+                        });
+                }, [])
         return (
                 <ScrollView contentContainerStyle={{
                         backgroundColor: COLORS.white,
                         paddingBottom: 20,
                 }}>
                         <StatusBar barStyle="light-content" translucent backgroundColor="rgba(0,0,0,0)" />
-                        <ImageBackground style={styles.headerImage}
-                                source={{ uri: item.image }}>
+                        {/* <ImageBackground style={styles.headerImage}
+                                source={{ uri: .image }}>
                                 <View style={styles.header}>
                                         <Icon name="arrow-back-ios" size={28} color={COLORS.white} onPress={navigation.goBack} />
                                         <Icon name="bookmark-border" size={28} color={COLORS.white} />
                                 </View>
-                        </ImageBackground>
-                        <View>
-                                {Room.map((item, index) =>(
+                        </ImageBackground>  */}
+                         <View>
+                                {DataRoom.map((item, index) =>(
                                         <View key={index} style={{ marginTop: 15, paddingHorizontal: 20 }}>
                                         <Text style={{ fontSize: 27, fontWeight: "bold", color: COLORS.dark }}>{item.name}</Text>
                                         <View style={{ flexDirection: "row", marginTop: 10 }}>
@@ -52,9 +51,10 @@ export default function DetailsScreen({ navigation, route }) {
                                                 </View>
                                                 <View style={{ paddingTop: "5%" }}>
                                                         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                                                                {Room.image.map((image, index) => (
+                                                                {DataRoom.map((data, index) => (
                                                                         <Image
-                                                                                source={{ uri: image }}
+                                                                        key={index}
+                                                                                source={{ uri: data.image }}
                                                                                 style={{ width: 160, height: 115, borderRadius: 20, marginHorizontal: 10 }}
                                                                         />
                                                                 ))}
@@ -79,7 +79,7 @@ export default function DetailsScreen({ navigation, route }) {
                                                                 size={30}
                                                                 color={COLORS.primary}
                                                         />
-                                                        <Text style={{ fontWeight: "400", color: COLORS.black, fontSize: 13, marginTop: 5 }}>Bedrooms</Text>
+                                                        <Text style={{ fontWeight: "400", color: COLORS.black, fontSize: 13, marginTop: 5 }}>BDataRoom</Text>
                                                 </View>
                                                 <View style={{ flexDirection: "column", alignItems: "center" }}>
                                                         <Icon1
