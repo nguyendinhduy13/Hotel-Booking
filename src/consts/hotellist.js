@@ -1,17 +1,52 @@
+export const Room= [
+        {
+                id:1,
+                name:"Phòng Đơn Hạng Bình Dân",
+                price:324000,
+                image:["https://cf.bstatic.com/xdata/images/hotel/max1024x768/359448233.jpg?k=c37dab27793bfcae5f04698e640ed4799bf617d2008c28b292df6e68ff953349&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/359448223.jpg?k=53f793c9929ab78b1480ecb9f583c18b74a8cdf779823dbd017af545ec266792&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/356724945.jpg?k=2a730d00dc011a554064f3e5f94619b538eadaca71b97ca05058e025b9b1743a&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/359448180.jpg?k=88fa56fda453b61a9b5a7b7eb9daea1b9fcb0ccbd0d848dca5feed85e330af43&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/359448228.jpg?k=1b149684ef4ad28714f192546f054c8241e79f58f4a1546f4343bec1c582c6ba&o="],
+                tienich:["Bồn tắm","Điều hòa không khí","TV màn hình phẳng","Hệ thống cách âm","Wifi miễn phí"],
+                icon:[" https://cdn0.iconfinder.com/data/icons/real-estate-and-homes-2/85/shower_bathroom-512.png","https://cdn0.iconfinder.com/data/icons/real-estate-and-homes-2/85/air_conditioning_conditioner_house_home_real_estate-512.png","https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/tv-512.png","https://cdn2.iconfinder.com/data/icons/squircle-ui/32/No_sound-512.png","https://cdn0.iconfinder.com/data/icons/essentials-solid-glyphs-vol-1/100/Wifi-Internet-Signal-512.png"],
+                date:1,
+                description:"Giường thoải mái, 8 – Dựa trên 14 đánh giá\nPhòng Đơn này có hệ thống cách âm, minibar và lối vào riêng.",
+        },
+        {
+                id:2,
+                name:"Studio",
+                price:838000,
+                image:["https://cf.bstatic.com/xdata/images/hotel/max1024x768/356724912.jpg?k=d3797b137d2efb7a5acd06758780b333fa9535643206b98f44d5a2da4113db35&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/364709485.jpg?k=95d36af084bf7fc49db7941d33fafc18a3f271b6a50ee92b514328c684ae79cd&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/356724908.jpg?k=4602e433f46d626a2cc306ac4fe8bbdbbcf3f728d51af7f7e3bf286b060839a7&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/337904405.jpg?k=70c76dd4b8cdc7c76563c2e5fee88e1579fdf9440eefb7e0d94343ff6ef37844&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/356724918.jpg?k=e5c3fba73ced4f15e559c0e3e2e295c4ccfc5cee4b5af9900424cb69bda9061c&o="],
+                tienich:["25 m²","Bếp riêng","Phòng tắm riêng","Nhìn ra thành phố","Điều hòa không khí","TV màn hình phẳng","Hệ thống cách âm"],
+                icon:["https://cdn1.iconfinder.com/data/icons/carbon-design-system-vol-4/32/fit-to-width-512.png","https://cdn4.iconfinder.com/data/icons/kitchen-and-cooking-1-2/85/oven_stove_kitchen_cooking_appliance-512.png","https://cdn0.iconfinder.com/data/icons/real-estate-and-homes-2/85/shower_bathroom-512.png","https://cdn2.iconfinder.com/data/icons/the-urban-hustle-and-bustle/60/office-512.png","https://cdn0.iconfinder.com/data/icons/real-estate-and-homes-2/85/air_conditioning_conditioner_house_home_real_estate-512.png","https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/tv-512.png","https://cdn2.iconfinder.com/data/icons/squircle-ui/32/No_sound-512.png"],
+                date:1,
+                description:"Giường thoải mái, 8 – Dựa trên 14 đánh giá\nStudio này có TV truyền hình vệ tinh, sàn lát gạch/đá cẩm thạch và khu vực ăn uống."
+        },
+        {
+                id:3,
+                name:"Studio Deluxe Có Giường Cỡ Queen",
+                price:1053000,
+                image:["https://cf.bstatic.com/xdata/images/hotel/max1024x768/356724913.jpg?k=f29078a179ebab8b437f03ee1c4588e2dd05d12a00ebe7833f4e5b0e8536212d&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/356724924.jpg?k=8d05049bb15303223653f973ea5e78a3389a7029e7792cb060ebfec59a534164&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/356728647.jpg?k=9b7e0540b9aaccd5ec019377dad6615233c7ad61d71f3c81259ae320f169d983&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/356724921.jpg?k=cfdd89393fbf20f8761c6e7d822448fe72093431f96d55de994e010efa03cdae&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/356724930.jpg?k=d5d8efdb6d36932a25fb7dea4126dd2dcb9cf9ed1a80fac62dbe0e1e38c61062&o="],
+                tienich:["35 m²","Bếp riêng","Phòng tắm riêng","Nhìn ra hồ","Nhìn ra thành phố","Nhìn ra sông","Điều hòa không khí","TV màn hình phẳng","Hệ thống cách âm"],
+                icon:["https://cdn1.iconfinder.com/data/icons/carbon-design-system-vol-4/32/fit-to-width-512.png","https://cdn4.iconfinder.com/data/icons/kitchen-and-cooking-1-2/85/oven_stove_kitchen_cooking_appliance-512.png","https://cdn0.iconfinder.com/data/icons/real-estate-and-homes-2/85/shower_bathroom-512.png","https://cdn3.iconfinder.com/data/icons/adventure-glyph-03/64/123_Water_2-512.png","https://cdn2.iconfinder.com/data/icons/the-urban-hustle-and-bustle/60/office-512.png","https://cdn3.iconfinder.com/data/icons/adventure-glyph-03/64/123_Water_2-512.png","https://cdn0.iconfinder.com/data/icons/real-estate-and-homes-2/85/air_conditioning_conditioner_house_home_real_estate-512.png","https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/tv-512.png","https://cdn2.iconfinder.com/data/icons/squircle-ui/32/No_sound-512.png"],
+                date:1,
+                description:"Giường thoải mái, 8 – Dựa trên 14 đánh giá\nStudio này có ấm đun nước điện, khu vực ăn uống và lối vào riêng."
+        },
+        {
+                id:4,
+                name:"Studio Gia Đình",
+                price:1300000,
+                image:["https://cf.bstatic.com/xdata/images/hotel/max1024x768/356724932.jpg?k=6f01b2391d4bb9c8255f665b38fdf41cc97a97f5aaac45219e0ca90e88781296&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/356724889.jpg?k=8d933f58b1a5b5c00152988c0970c2507d5bc8f3280471ceb87b3e24bcf519ba&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/356724931.jpg?k=0484ff7327630d471002ad7481dd510fe482f25be67e41a2cc378527ad53b704&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/356724885.jpg?k=fd24b3090d0d7b2e1276cc8fe4678eea1a6d573c2cd2959a3280280fa5da1069&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/356724884.jpg?k=ae1d29bff3356641000e5d4175a2c05af9a6d3a67185e15dbf2353531eaa57e9&o="],
+                tienich:["45 m²","Bếp riêng","Phòng tắm riêng","Nhìn ra hồ","Nhìn ra thành phố","Nhìn ra sông","Điều hòa không khí","TV màn hình phẳng","Hệ thống cách âm"],
+                icon:["https://cdn1.iconfinder.com/data/icons/carbon-design-system-vol-4/32/fit-to-width-512.png","https://cdn4.iconfinder.com/data/icons/kitchen-and-cooking-1-2/85/oven_stove_kitchen_cooking_appliance-512.png","https://cdn0.iconfinder.com/data/icons/real-estate-and-homes-2/85/shower_bathroom-512.png","https://cdn3.iconfinder.com/data/icons/adventure-glyph-03/64/123_Water_2-512.png","https://cdn2.iconfinder.com/data/icons/the-urban-hustle-and-bustle/60/office-512.png","https://cdn3.iconfinder.com/data/icons/adventure-glyph-03/64/123_Water_2-512.png","https://cdn0.iconfinder.com/data/icons/real-estate-and-homes-2/85/air_conditioning_conditioner_house_home_real_estate-512.png","https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/tv-512.png","https://cdn2.iconfinder.com/data/icons/squircle-ui/32/No_sound-512.png"],
+                date:1,
+                description:"Giường thoải mái, 8 – Dựa trên 14 đánh giá\nStudio này có sàn lát gạch/đá cẩm thạch, khu vực ăn uống và máy điều hòa."
+        }
+]
+
 export const ListItemHotel = [
         {
-                id: 1,
-                name: "Amis Hotel",
-                location: "147-149 Hoang Hoa Tham,Vũng Tàu",
-                description: "Chỉ cách Bãi biển Bãi Sau 200 m và có tầm nhìn tuyệt đẹp hướng ra biển, Amis Hotel cung cấp truy cập Wi-Fi miễn phí trong toàn bộ khuôn viên và có 1 nhà hàng trong nhà.\nVới đồ nội thất trang nhã, các phòng máy lạnh tại đây được trang bị truyền hình cáp màn hình phẳng cũng như minibar và bàn làm việc. Phòng tắm riêng đi kèm với máy sấy tóc và đồ vệ sinh cá nhân miễn phí.\nBộ phận lễ tân làm việc 24 giờ sẽ vui lòng hỗ trợ khách các dịch vụ để hành lý và giặt thường/giặt hấp. Để tạo sự thuận tiện cho khách, nơi đây cung cấp dịch vụ đưa đón sân bay kèm phụ phí.",
-                advantage: "Cách bãi biển 450m",
-                image: "https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/347750447.jpg?k=ee91a5954be973ce7ee01afbc5acca0a290e29d15bd340e30be2189a30ff47a1&o=&hp=1",
-                review: 4.5,
-                amount: 10,
                 Room: [
                         {
                                 id: 1,
-                                room: "Phòng 2 Giường Đơn",
+                                name: "Phòng 2 Giường Đơn",
                                 price: 437100,
                                 image: ["https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/347750636.jpg?k=d57af6fd034969b75ceebdadb844fdf19aa4e1f182ae05a4fa2d6544c881c975&o=&hp=1", "https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/347750898.jpg?k=a69eca2b3e0e487dccb4ad4189fdd0530ec787a87951366bb4285256e7efdb4d&o=&hp=1", "https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/347750633.jpg?k=e3d8fa12a9dcf732514c4d25509e4b8850c67cc5aeacaa90642320bde4cea7a5&o=&hp=1", "https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/384184149.jpg?k=dbeff7a927daa99ba8edaf8a1a70bed4a981f6deec4c1c2acf6c0cd600fa6350&o=&hp=1", "https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/384004835.jpg?k=7a22ab2fcb3ec76e2e858bd5a7ba2c683a2802d687969ef8855687d3c0cb5fbb&o=&hp=1", "https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/377711044.jpg?k=5f51b7c8de7343682f4d1be478a3b9bbd8759b93d7d328e29e71d9da043ff315&o=&hp=1", "https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/347754049.jpg?k=709b0ab4a6be58969090c69d4c7fefa7e3414873419aed91ac1ee633c6536cb2&o=&hp=1", "https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/347753635.jpg?k=4975fe13722fadf2e078d6c5034e70fd7110affb04792718325a409cd5ab84a5&o=&hp=1"],
                                 tienich: ["25 m²", "Ban công", "Nhìn ra núi", "Hồ bơi trên sân thượng", "Điều hòa không khí", "Phòng tắm riêng trong phòng", "TV màn hình phẳng", "Minibar", "WiFi miễn phí"],
@@ -21,7 +56,7 @@ export const ListItemHotel = [
                         },
                         {
                                 id: 2,
-                                room: "Phòng Superior Giường Đôi",
+                                name: "Phòng Superior Giường Đôi",
                                 price: 375100,
                                 image: ["https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/384183448.jpg?k=e4cdb3f61d5e252dbb603e8a94430e30bc1050ad6000fed4943eacfc602d8567&o=", "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/384183451.jpg?k=80f2982334842517fde3ac8290cd0fc9aebaf4c9304f656871d6788775db97bd&o=", "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/384183447.jpg?k=f31aa622655a637351d51aa930cbc7232b29602fdb2f0ea7b914484b41fa33f5&o=", "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/384183449.jpg?k=1d4a63c5905dbd1eb080a27bf9d16eb5706dd207cefe3ee89798bea4dce68d95&o=", "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/347750443.jpg?k=2c99442d54b22bb2bb0cf679c1d53b0b05900e9859f0dcaa385a123d372df075&o=", "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/347750447.jpg?k=3f02939187fa4fe82d2f7662b4b60cd17da0db57bee1cecd466f67b74e48c5d1&o=", "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/384184149.jpg?k=3cd875b550bdb7b814cce34e0cc042e45b92e6c6aad020caf0df269a507b50c5&o=", "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/347750451.jpg?k=553a472dc26a721e49e8ca88382a41094da68e28272606cdcc0c91c8cfee9578&o="],
                                 tienich: ["27 m²", "Ban công", "Hồ bơi trên sân thượng", "Điều hòa không khí", "Phòng tắm riêng trong phòng", "TV màn hình phẳng", "Minibar", "WiFi miễn phí"],
@@ -31,7 +66,7 @@ export const ListItemHotel = [
                         },
                         {
                                 id: 3,
-                                room: "Phòng Deluxe Giường Đôi",
+                                name: "Phòng Deluxe Giường Đôi",
                                 price: 499100,
                                 image: ["https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/384185030.jpg?k=e6034d93cb6865aff9c5c8cf3cf03eb4078b752e9e3bddfd21fc1e9dd321a004&o=", "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/384185025.jpg?k=738a9a7c984663b98700476dbb2c9dc342f15c5e8c614d80e0f921c76691c84c&o=", "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/384185026.jpg?k=2a1d6c02682c405d568dee47df3970cb5aa4f576ab58b0eb4b66fdf7e3489d8e&o=", "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/384185027.jpg?k=856a255d45712460beb0a36f2ddfc00a216f66b9b235088a75a2cfb2356e74b4&o=", "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/384185032.jpg?k=40e6024cd7892b58bc94858e736eaa9df16fa6166564e7025cdc29478265978f&o=", "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/384185033.jpg?k=5d11e7397319bca941398cef522d8b66d7cf232efcab9e41d6078af926f574b1&o=", "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/384185034.jpg?k=06b4adcfffc9d5edfc89ea4b3366d25cd0f3afb46a3c63801bad66eb6ae41fff&o=", "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/384184149.jpg?k=3cd875b550bdb7b814cce34e0cc042e45b92e6c6aad020caf0df269a507b50c5&o="],
                                 tienich: ["21 m²", "Ban công", "Nhìn ra núi", "Hồ bơi trên sân thượng", "Điều hòa không khí", "Phòng tắm riêng trong phòng", "TV màn hình phẳng", "Minibar", "WiFi miễn phí"],
@@ -41,7 +76,7 @@ export const ListItemHotel = [
                         },
                         {
                                 id: 4,
-                                room: "Phòng 3 Người",
+                                name: "Phòng 3 Người",
                                 price: 561100,
                                 image: ["https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/384445035.jpg?k=d2be3191f393202689985e64607e7ef3dfa419356c4c63801495777e258b4f6c&o=", "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/384179417.jpg?k=bd15d45b88fe7b1ea72a181129e7ae77ed38a7c41954ebc85b19c5775f4f2a03&o=", "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/384179421.jpg?k=4d28351c074cadabaa012f8c2ba9d864e3cd2291a2fc86960b277033ec265f2b&o=", "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/347750636.jpg?k=7c3d8bf1c26ab5bdd179c638d97ff9810052322ae6026ea0bdb137f8373b225f&o=", "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/347750645.jpg?k=1c9d37eca0e73e2850ff9d73bdea20c7de767e5849b8b92edce424bbebb7f1d0&o=", "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/347750642.jpg?k=9cbbb9a20cd8adcf0fc7030430d4e64ccf928c260acaf765777c78a14b0e6099&o=", "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/384180254.jpg?k=ca45b8de23b29bfa56e869f6f888f630b7b1582a853569cd9bdd39e8e8eaf759&o=", "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/347750633.jpg?k=1dba223790537d2633103a254923ac27562fc8e8bdca262c50c139a4fefebd52&o=", "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/384444925.jpg?k=15d72b8c49a7dbb001b24d14cb9714e0f570a53f6900f358ce3f875692af64c7&o="],
                                 tienich: ["31 m²", "Hồ bơi trên sân thượng", "Điều hòa không khí", "Phòng tắm riêng trong phòng", "TV màn hình phẳng", "Minibar", "WiFi miễn phí"],
@@ -51,7 +86,7 @@ export const ListItemHotel = [
                         },
                         {
                                 id: 5,
-                                room: "Phòng Superior Gia Đình",
+                                name: "Phòng Superior Gia Đình",
                                 price: 747100,
                                 image: ["https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/384444925.jpg?k=15d72b8c49a7dbb001b24d14cb9714e0f570a53f6900f358ce3f875692af64c7&o=", "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/384178494.jpg?k=1e840c2e6c51f151e32a78cb0b45b8b66ac7920955e11227a21333f4cde4e256&o=", "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/384178503.jpg?k=7d5b12fdbeabdb0e3a0aa096d36ff50178b0f200d589de1586754c8c238ebbb9&o=", "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/384178498.jpg?k=08a5812d9348ac6de6fcc88e0799b20f871a1ac22c12d32579bc87cebfefeca7&o=", "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/384178496.jpg?k=fcd7f26277dfdbdb2e327b2afad3fee02eee5ef62d15d8a81c4e6480972243c4&o=", "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/384178497.jpg?k=2c6acb9538456ce0485612bc3c20609532080a856f09b00acc75e94dcfd92760&o=", "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/384180253.jpg?k=4d92af39733bdf7c88638dba4953458627ea4d5fda740095a2d3e06788256c53&o=", "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/384178506.jpg?k=baf12a7d167d65c896e92e09d1c27b83b57499bd9af307edb44986507a9871b9&o=", "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/384445035.jpg?k=d2be3191f393202689985e64607e7ef3dfa419356c4c63801495777e258b4f6c&o="],
                                 tienich: ["35 m²", "Ban công", "Nhìn ra biển", "Hồ bơi trên sân thượng", "Điều hòa không khí", "Phòng tắm riêng trong phòng", "TV màn hình phẳng", "Minibar", "WiFi miễn phí"],
@@ -62,18 +97,10 @@ export const ListItemHotel = [
                 ]
         },
         {
-                id: 2,
-                name: "Azura Resort",
-                location: "Duong Dong, Phú Quốc",
-                description: "Nằm trên đảo Phú Quốc, Azura Resort có nhà hàng, quầy bar, sảnh khách chung và khu vườn. Resort này có các phòng gia đình và tiện nghi BBQ. Chỗ nghỉ cung cấp dịch vụ lễ tân 24 giờ, dịch vụ phòng và dịch vụ thu đổi ngoại tệ cho khách.\nMỗi phòng nghỉ của resort đều được bố trí máy điều hòa, khu vực ghế ngồi, TV truyền hình cáp màn hình phẳng, két an toàn, ấm đun nước và phòng tắm riêng với vòi xịt/chậu rửa vệ sinh, áo choàng tắm cùng dép. Một số phòng có sân trong trong khi những phòng còn lại nhìn ra hồ bơi. Tại Azura Resort, các phòng được trang bị ga trải giường và khăn tắm.",
-                advantage: "Cách trung tâm 1.4km",
-                image: "https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/156818404.jpg?k=93a36fefc4a22f9e979b6a345a45fa3fe3fa430c13994da6eb3102c34f924a6d&o=&hp=1",
-                review: 4.5,
-                amount: 10,
                 Room:[
                         {
                                 id:1,
-                                room:"Phòng Superior Giường Đôi",
+                                name:"Phòng Superior Giường Đôi",
                                 price:623700,
                                 image:["https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/156830826.jpg?k=de533560c95eaaaf14f3e28551afef5397f00b3101db0fd0a058a1c2d5fb68aa&o=","https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/156830830.jpg?k=9d333ef53af48aec3fc9055bd579ecf0d00482bfa031944090c2b5d398d2554c&o=","https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/156818901.jpg?k=41a6010f0580816acc6fc05db9b8e2dc1603d3f1f746310418fb617c5a517f1a&o=","https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/162839978.jpg?k=50ccab158269df459583ae6e6d9027dd3706d40e1ea9d9b33829ff897f73ea34&o=","https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/164878933.jpg?k=f054bca0e2dea314e2c93c692db9779a13c27e966e667e2dd55f702cf298187c&o="],
                                 tienich:["32 m²","Ban công","Nhìn ra vườn","Nhìn ra núi","Điều hòa không khí","Phòng tắm riêng","TV màn hình phẳng","Hệ thống cách âm","WiFi miễn phí"],
@@ -83,7 +110,7 @@ export const ListItemHotel = [
                         },
                         {
                                 id:2,
-                                room:"Bungalow với Sân hiên",
+                                name:"Bungalow với Sân hiên",
                                 price:718200,
                                 image:["https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/156819028.jpg?k=31da60b379c372c941cf5c3b4609f1e2ab1920cb4ea7d623ce759065a5994db3&o=","https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/156819034.jpg?k=73052dd24bbd13e1f7d70101e6298aff2fd9654db82c3fa63ef8af51b8c69449&o=","https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/156819044.jpg?k=6515ba1e6204c3e89298fc98c7975c10dc9c8b87787714bf9f92b9708483377d&o=","https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/156819006.jpg?k=5f9f3b8cdae6ca978331aad3e89638dcbd303d8f8beb8f402fe907d7c8a5f0e2&o=","https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/156819129.jpg?k=4fca2aef51ce877c43629de9fe6b16183687d32161b78d90f3fc986c8ee24609&o="],
                                 tienich:["Bungalow nguyên căn","38 m²","Nhìn ra hồ bơi","Hướng nhìn sân trong","Điều hòa không khí","Sân trong","Phòng tắm riêng","TV màn hình phẳng","Hệ thống cách âm","Sân hiên","WiFi miễn phí"],
@@ -93,7 +120,7 @@ export const ListItemHotel = [
                         },
                         {
                                 id:3,
-                                room:"Phòng Superior 3 Người",
+                                name:"Phòng Superior 3 Người",
                                 price:844200,
                                 image:["https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/156818904.jpg?k=c5b0e0dcc060583b2d0c37bb5c05a371b9cf2d4dda89529e5fc4124bf900e875&o=","https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/156818915.jpg?k=3fa771d034650633e8ca7d98c35f3ec10baf185cd483b687f5521be453290200&o=","https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/156818915.jpg?k=3fa771d034650633e8ca7d98c35f3ec10baf185cd483b687f5521be453290200&o=","https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/156818846.jpg?k=71366fc126fd7d591e9906bbe1e10d6c697de1d6955944000641764dba6847df&o=","https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/156818901.jpg?k=41a6010f0580816acc6fc05db9b8e2dc1603d3f1f746310418fb617c5a517f1a&o="],
                                 tienich:["Phòng","32 m²","Ban công","Nhìn ra vườn","Nhìn ra hồ bơi","Nhìn ra núi","Hướng nhìn sân trong","Điều hòa không khí","Sân trong","Phòng tắm riêng","TV màn hình phẳng","Hệ thống cách âm","WiFi miễn phí"],
@@ -104,14 +131,6 @@ export const ListItemHotel = [
                 ]
         },
         {
-                id: 3,
-                name: "Aaron Hotel",
-                location: "Nha Trang Beach, Nha Trang",
-                description: "https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/387110268.jpg?k=6ef80d83ca786d4ce711c765e177fdae5fdf649ae0e4ecc2809557fa47f28de4&o=&hp=1",
-                advantage: "Cách trung tâm 0.6km",
-                image: "https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/387110268.jpg?k=6ef80d83ca786d4ce711c765e177fdae5fdf649ae0e4ecc2809557fa47f28de4&o=&hp=1",
-                review: 4.5,
-                amount: 10,
                 Room: [
                         {
                                 id: 1,
@@ -195,14 +214,6 @@ export const ListItemHotel = [
                 ]
         },
         {
-                id: 4,
-                name: "May Bungalow",
-                location: "East Ham Tien Beach, Mũi Né",
-                description: "Tọa lạc tại một vị trí thuận tiện ở khu Bãi biển Đông Hàm Tiến thuộc Mũi Né, MAY Bungalow nằm cách Bãi biển Hàm Tiến 150 m, Trung tâm Lướt ván diều Surfpoint 1,7 km và Trường dạy Lướt ván diều Windchimes 5 km. Khách sạn 2 sao này có hồ bơi ngoài trời và phòng nghỉ lắp máy điều hòa với WiFi miễn phí cùng phòng tắm riêng. Khách sạn cung cấp các phòng gia đình.\nPhòng nghỉ tại MAY Bungalow có tủ để quần áo, ban công, TV màn hình phẳng và dép. Một số phòng nhìn ra hồ bơi.",
-                advantage: "Cách bãi biển 150m",
-                image: "https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/379475218.jpg?k=f29b7cbde31a60c3137d02cff900bc0897272ab37e4ae80ee18774c1bdf5b525&o=&hp=1",
-                review: 4.5,
-                amount: 10,
                 Room: [
                         {
                                 id: 1,
@@ -280,14 +291,6 @@ export const ListItemHotel = [
                 ]
         },
         {
-                id: 5,
-                name: "Raon Dalat",
-                location: "Đà lạt",
-                description: "Tọa lạc ở thành phố Đà Lạt, cách Quảng trường Lâm Viên 1,2 km, Raon Hotel cung cấp chỗ nghỉ với sảnh khách chung, chỗ đỗ xe riêng miễn phí, khu vườn và sân hiên. Khách sạn 3 sao này có WiFi miễn phí, dịch vụ phòng và dịch vụ tiền sảnh. Chỗ nghỉ có lễ tân 24 giờ, bếp chung và dịch vụ thu đổi ngoại tệ cho khách.\nPhòng nghỉ tại Raon Hotel được bố trí khu vực ghế ngồi, TV truyền hình cáp màn hình phẳng, ấm đun nước và phòng tắm riêng đi kèm dép cùng vòi xịt/chậu rửa vệ sinh. Một số phòng nhìn ra khu vườn. Mỗi phòng đều được trang bị ga trải giường và khăn tắm.\nĐi bộ đường dài và đi xe đạp là các hoạt động được ưa chuộng trong khu vực trong khi du khách cũng có thể thuê xe hơi tại Raon Hotel",
-                advantage: "Cách trung tâm 1.8km",
-                image: "https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/365127907.jpg?k=161dcaf1d0f01ade517e5a028d675158a3061dddee7bc17a11a9acb7faa144d9&o=&hp=1",
-                review: 4.5,
-                amount: 10,
                 Room: [
                         {
                                 id: 1,
@@ -376,18 +379,10 @@ export const ListItemHotel = [
                 ]
         },
         {
-                id: 6,
-                name: "The Arrivals Hotel",
-                location: "Quận 1, Hồ Chí Minh",
-                description: "Tọa lạc tại Thành phố Hồ Chí Minh, The Arrivals Hotel có nhà hàng, hồ bơi ngoài trời, trung tâm thể dục, quán bar và khu vườn. Khách sạn này nằm gần một số điểm tham quan nổi tiếng, cách Bảo tàng Mỹ thuật khoảng 500 m, Bến Nhà Rồng 700 m và Chợ Bến Thành 800 m. Chỗ nghỉ cung cấp dịch vụ lễ tân 24 giờ, dịch vụ phòng và tổ chức các tour du lịch cho khách.\nMột số phòng nghỉ tại đây có khu vực bếp ăn với lò vi sóng, tủ lạnh và lò nướng. Các phòng được trang bị máy điều hòa, két an toàn và TV màn hình phẳng.\nKhách nghỉ tại khách sạn có thể thưởng thức bữa sáng buffet hoặc bữa sáng à la carte.",
-                advantage: "Cách trung tâm 0.7km",
-                image: "https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/356724924.jpg?k=d755c5261e900df05c53ef693fbcbe343a8a9843879dff480c3ffcde610c418e&o=&hp=1",
-                review: 4.5,
-                amount: 10,
-                ROOM:[
+                Room:[
                         {
                                 id:1,
-                                room:"Phòng Đơn Hạng Bình Dân",
+                                name:"Phòng Đơn Hạng Bình Dân",
                                 price:324000,
                                 image:["https://cf.bstatic.com/xdata/images/hotel/max1024x768/359448233.jpg?k=c37dab27793bfcae5f04698e640ed4799bf617d2008c28b292df6e68ff953349&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/359448223.jpg?k=53f793c9929ab78b1480ecb9f583c18b74a8cdf779823dbd017af545ec266792&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/356724945.jpg?k=2a730d00dc011a554064f3e5f94619b538eadaca71b97ca05058e025b9b1743a&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/359448180.jpg?k=88fa56fda453b61a9b5a7b7eb9daea1b9fcb0ccbd0d848dca5feed85e330af43&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/359448228.jpg?k=1b149684ef4ad28714f192546f054c8241e79f58f4a1546f4343bec1c582c6ba&o="],
                                 tienich:["Bồn tắm","Điều hòa không khí","TV màn hình phẳng","Hệ thống cách âm","Wifi miễn phí"],
@@ -397,7 +392,7 @@ export const ListItemHotel = [
                         },
                         {
                                 id:2,
-                                room:"Studio",
+                                name:"Studio",
                                 price:838000,
                                 image:["https://cf.bstatic.com/xdata/images/hotel/max1024x768/356724912.jpg?k=d3797b137d2efb7a5acd06758780b333fa9535643206b98f44d5a2da4113db35&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/364709485.jpg?k=95d36af084bf7fc49db7941d33fafc18a3f271b6a50ee92b514328c684ae79cd&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/356724908.jpg?k=4602e433f46d626a2cc306ac4fe8bbdbbcf3f728d51af7f7e3bf286b060839a7&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/337904405.jpg?k=70c76dd4b8cdc7c76563c2e5fee88e1579fdf9440eefb7e0d94343ff6ef37844&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/356724918.jpg?k=e5c3fba73ced4f15e559c0e3e2e295c4ccfc5cee4b5af9900424cb69bda9061c&o="],
                                 tienich:["25 m²","Bếp riêng","Phòng tắm riêng","Nhìn ra thành phố","Điều hòa không khí","TV màn hình phẳng","Hệ thống cách âm"],
@@ -407,7 +402,7 @@ export const ListItemHotel = [
                         },
                         {
                                 id:3,
-                                room:"Studio Deluxe Có Giường Cỡ Queen",
+                                name:"Studio Deluxe Có Giường Cỡ Queen",
                                 price:1053000,
                                 image:["https://cf.bstatic.com/xdata/images/hotel/max1024x768/356724913.jpg?k=f29078a179ebab8b437f03ee1c4588e2dd05d12a00ebe7833f4e5b0e8536212d&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/356724924.jpg?k=8d05049bb15303223653f973ea5e78a3389a7029e7792cb060ebfec59a534164&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/356728647.jpg?k=9b7e0540b9aaccd5ec019377dad6615233c7ad61d71f3c81259ae320f169d983&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/356724921.jpg?k=cfdd89393fbf20f8761c6e7d822448fe72093431f96d55de994e010efa03cdae&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/356724930.jpg?k=d5d8efdb6d36932a25fb7dea4126dd2dcb9cf9ed1a80fac62dbe0e1e38c61062&o="],
                                 tienich:["35 m²","Bếp riêng","Phòng tắm riêng","Nhìn ra hồ","Nhìn ra thành phố","Nhìn ra sông","Điều hòa không khí","TV màn hình phẳng","Hệ thống cách âm"],
@@ -417,7 +412,7 @@ export const ListItemHotel = [
                         },
                         {
                                 id:4,
-                                room:"Studio Gia Đình",
+                                name:"Studio Gia Đình",
                                 price:1300000,
                                 image:["https://cf.bstatic.com/xdata/images/hotel/max1024x768/356724932.jpg?k=6f01b2391d4bb9c8255f665b38fdf41cc97a97f5aaac45219e0ca90e88781296&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/356724889.jpg?k=8d933f58b1a5b5c00152988c0970c2507d5bc8f3280471ceb87b3e24bcf519ba&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/356724931.jpg?k=0484ff7327630d471002ad7481dd510fe482f25be67e41a2cc378527ad53b704&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/356724885.jpg?k=fd24b3090d0d7b2e1276cc8fe4678eea1a6d573c2cd2959a3280280fa5da1069&o=","https://cf.bstatic.com/xdata/images/hotel/max1024x768/356724884.jpg?k=ae1d29bff3356641000e5d4175a2c05af9a6d3a67185e15dbf2353531eaa57e9&o="],
                                 tienich:["45 m²","Bếp riêng","Phòng tắm riêng","Nhìn ra hồ","Nhìn ra thành phố","Nhìn ra sông","Điều hòa không khí","TV màn hình phẳng","Hệ thống cách âm"],
@@ -484,7 +479,7 @@ const ListRoom=[
 
 export const ListHotel=[
         {
-                id: 1,
+                id: "AmisHotel",
                 name: "Amis Hotel",
                 location: "147-149 Hoang Hoa Tham,Vũng Tàu",
                 description: "Chỉ cách Bãi biển Bãi Sau 200 m và có tầm nhìn tuyệt đẹp hướng ra biển, Amis Hotel cung cấp truy cập Wi-Fi miễn phí trong toàn bộ khuôn viên và có 1 nhà hàng trong nhà.\nVới đồ nội thất trang nhã, các phòng máy lạnh tại đây được trang bị truyền hình cáp màn hình phẳng cũng như minibar và bàn làm việc. Phòng tắm riêng đi kèm với máy sấy tóc và đồ vệ sinh cá nhân miễn phí.\nBộ phận lễ tân làm việc 24 giờ sẽ vui lòng hỗ trợ khách các dịch vụ để hành lý và giặt thường/giặt hấp. Để tạo sự thuận tiện cho khách, nơi đây cung cấp dịch vụ đưa đón sân bay kèm phụ phí.",
@@ -494,7 +489,7 @@ export const ListHotel=[
                 amount: 10,     
         },
         {
-                id: 2,
+                id: "AzuraResort",
                 name: "Azura Resort",
                 location: "Duong Dong, Phú Quốc",
                 description: "Nằm trên đảo Phú Quốc, Azura Resort có nhà hàng, quầy bar, sảnh khách chung và khu vườn. Resort này có các phòng gia đình và tiện nghi BBQ. Chỗ nghỉ cung cấp dịch vụ lễ tân 24 giờ, dịch vụ phòng và dịch vụ thu đổi ngoại tệ cho khách.\nMỗi phòng nghỉ của resort đều được bố trí máy điều hòa, khu vực ghế ngồi, TV truyền hình cáp màn hình phẳng, két an toàn, ấm đun nước và phòng tắm riêng với vòi xịt/chậu rửa vệ sinh, áo choàng tắm cùng dép. Một số phòng có sân trong trong khi những phòng còn lại nhìn ra hồ bơi. Tại Azura Resort, các phòng được trang bị ga trải giường và khăn tắm.",
@@ -504,7 +499,7 @@ export const ListHotel=[
                 amount: 10,  
         },
         {
-                id: 3,
+                id: "AaronHotel",
                 name: "Aaron Hotel",
                 location: "Nha Trang Beach, Nha Trang",
                 description: "https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/387110268.jpg?k=6ef80d83ca786d4ce711c765e177fdae5fdf649ae0e4ecc2809557fa47f28de4&o=&hp=1",
@@ -514,7 +509,7 @@ export const ListHotel=[
                 amount: 10,
         },
         {
-                id: 4,
+                id: "MayBungalow",
                 name: "May Bungalow",
                 location: "East Ham Tien Beach, Mũi Né",
                 description: "Tọa lạc tại một vị trí thuận tiện ở khu Bãi biển Đông Hàm Tiến thuộc Mũi Né, MAY Bungalow nằm cách Bãi biển Hàm Tiến 150 m, Trung tâm Lướt ván diều Surfpoint 1,7 km và Trường dạy Lướt ván diều Windchimes 5 km. Khách sạn 2 sao này có hồ bơi ngoài trời và phòng nghỉ lắp máy điều hòa với WiFi miễn phí cùng phòng tắm riêng. Khách sạn cung cấp các phòng gia đình.\nPhòng nghỉ tại MAY Bungalow có tủ để quần áo, ban công, TV màn hình phẳng và dép. Một số phòng nhìn ra hồ bơi.",
@@ -524,7 +519,7 @@ export const ListHotel=[
                 amount: 10,
         },
         {
-                id: 5,
+                id: "RaonDalat",
                 name: "Raon Dalat",
                 location: "Đà lạt",
                 description: "Tọa lạc ở thành phố Đà Lạt, cách Quảng trường Lâm Viên 1,2 km, Raon Hotel cung cấp chỗ nghỉ với sảnh khách chung, chỗ đỗ xe riêng miễn phí, khu vườn và sân hiên. Khách sạn 3 sao này có WiFi miễn phí, dịch vụ phòng và dịch vụ tiền sảnh. Chỗ nghỉ có lễ tân 24 giờ, bếp chung và dịch vụ thu đổi ngoại tệ cho khách.\nPhòng nghỉ tại Raon Hotel được bố trí khu vực ghế ngồi, TV truyền hình cáp màn hình phẳng, ấm đun nước và phòng tắm riêng đi kèm dép cùng vòi xịt/chậu rửa vệ sinh. Một số phòng nhìn ra khu vườn. Mỗi phòng đều được trang bị ga trải giường và khăn tắm.\nĐi bộ đường dài và đi xe đạp là các hoạt động được ưa chuộng trong khu vực trong khi du khách cũng có thể thuê xe hơi tại Raon Hotel",
@@ -534,7 +529,7 @@ export const ListHotel=[
                 amount: 10,
         },
         {
-                id: 6,
+                id: "TheArrivalsHotel",
                 name: "The Arrivals Hotel",
                 location: "Quận 1, Hồ Chí Minh",
                 description: "Tọa lạc tại Thành phố Hồ Chí Minh, The Arrivals Hotel có nhà hàng, hồ bơi ngoài trời, trung tâm thể dục, quán bar và khu vườn. Khách sạn này nằm gần một số điểm tham quan nổi tiếng, cách Bảo tàng Mỹ thuật khoảng 500 m, Bến Nhà Rồng 700 m và Chợ Bến Thành 800 m. Chỗ nghỉ cung cấp dịch vụ lễ tân 24 giờ, dịch vụ phòng và tổ chức các tour du lịch cho khách.\nMột số phòng nghỉ tại đây có khu vực bếp ăn với lò vi sóng, tủ lạnh và lò nướng. Các phòng được trang bị máy điều hòa, két an toàn và TV màn hình phẳng.\nKhách nghỉ tại khách sạn có thể thưởng thức bữa sáng buffet hoặc bữa sáng à la carte.",

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { View, Text, TouchableOpacity, FlatList } from 'react-native'
 import firestore, { firebase } from '@react-native-firebase/firestore';
-import { ListHotel } from '../../consts/hotellist';
+import { ListHotel,ListItemHotel,Room } from '../../consts/hotellist';
 import { createIconSetFromFontello } from 'react-native-vector-icons';
 export default function Test() {
     const [data, setData] = useState([])

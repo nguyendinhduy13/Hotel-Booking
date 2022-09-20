@@ -82,7 +82,7 @@ export default function HomeScreen({ navigation }) {
                 const scale = scrollX.interpolate({ inputRange, outputRange: [0.8, 1, 0.8] });
                 return (
                         <View>
-                                <TouchableOpacity disabled={activeCardIndex != index} activeOpacity={1} onPress={() => navigation.navigate("DetailsScreen", hotel.id)}>
+                                <TouchableOpacity disabled={activeCardIndex != index} activeOpacity={1} onPress={() => navigation.navigate("ListRoom", hotel)}>
                                         <Animated.View style={{ ...styles.card, transform: [{ scale }] }}>
                                                 <Animated.View style={{ ...styles.cardOverplay, opacity }} />
                                                 <View style={styles.priceTag}>
@@ -111,7 +111,7 @@ export default function HomeScreen({ navigation }) {
         const TopHotelCard = ({ hotel, index }) => {
                 if (index < 3) {
                         return (
-                                <TouchableOpacity style={styles.topHotelCard} onPress={() => navigation.navigate("DetailsScreen", hotel.id)}>
+                                <TouchableOpacity style={styles.topHotelCard} onPress={() => navigation.navigate("ListRoom", hotel)}>
                                         <View style={{ position: "absolute", top: 5, right: 10, zIndex: 1, flexDirection: "row", alignItems: 'center', }}>
                                                 <Icon name="star" size={15} color={COLORS.orange} />
                                                 <Text style={{ color: COLORS.white, fontWeight: "bold", fontSize: 15, marginLeft: 3 }}>5.0</Text>
@@ -133,7 +133,7 @@ export default function HomeScreen({ navigation }) {
         const RecentlyBookedCard = ({ hotel }) => {
                 return (
                         <View>
-                                <TouchableOpacity style={styles.RecentlyBox} onPress={() => navigation.navigate("DetailsScreen", hotel.id)}>
+                                <TouchableOpacity style={styles.RecentlyBox} onPress={() => navigation.navigate("ListRoom", hotel)}>
                                         <View style={{ width: 120, height: 120 }}>
                                                 <Image style={styles.IMGRecent} source={{ uri: hotel.image }} />
                                         </View>

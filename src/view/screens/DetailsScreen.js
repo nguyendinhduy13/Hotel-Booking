@@ -23,7 +23,7 @@ export default function DetailsScreen({ navigation, route }) {
                                         console.log(documentSnapshot.data())
                                 }
                                 const data = documentSnapshot.data();
-                                setA(data.Room[].image)
+                                setA(data.Room.image)
                         });
         }, [])
         console.log(a[0])

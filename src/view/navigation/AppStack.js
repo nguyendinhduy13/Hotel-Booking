@@ -5,6 +5,7 @@ import DetailsScreen from "../screens/DetailsScreen"
 import TabNavigator from "./TabNavigator";
 import HotelPhotos from "../screens/HotelPhotos";
 import Test from "../screens/Test";
+import ListRoom from "../screens/ListRoom";
 const Stack = createNativeStackNavigator()
 
 export default function AppStack() {
@@ -44,6 +45,13 @@ export default function AppStack() {
                                 options={{
                                         headerShown: false
                                 }}
+                        />
+                        <Stack.Screen
+                        name="ListRoom"
+                        component={ListRoom}
+                        options={{
+                                headerShown: false
+                        }}
                         />
                 </Stack.Navigator>
         )
