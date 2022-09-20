@@ -1,4 +1,4 @@
-import React, { useRef, useState,useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { SafeAreaView, Text, StyleSheet, View, ScrollView, TextInput, TouchableOpacity, FlatList, Dimensions, Image, Animated, LogBox } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Icon1 from "react-native-vector-icons/MaterialCommunityIcons";
@@ -13,24 +13,22 @@ const { width } = Dimensions.get('screen');
 const cardWidth = width / 1.8
 export default function HomeScreen({ navigation }) {
         const [ListHotelData, setListHotelData] = useState([])
-        useEffect(()=>{
+        useEffect(() => {
                 firestore()
-                .collection("ListHotel")
-                .doc("ListHotel")
-                .get()
-                .then(documentSnapshot=>{
-                       setListHotelData(documentSnapshot.data().ListHotel)
-                })
-        },[])
+                        .collection("ListHotel")
+                        .doc("ListHotel")
+                        .get()
+                        .then(documentSnapshot => {
+                                setListHotelData(documentSnapshot.data().ListHotel)
+                        })
+        }, [])
 
-        const categories = ['All', 'Popular', 'Top Rated', 'Featured', 'Luxury'];
         const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
         const [activeCardIndex, setActiveCardIndex] = useState(0);
         const scrollX = useRef(new Animated.Value(0)).current;
         const [countShow, setCountShow] = useState(0);
         const user = auth().currentUser;
         const CategoryList = ({ navigation }) => {
-
                 return (
                         <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', backgroundColor: "#fff2cc", width: 360, height: 140, alignSelf: 'center', borderRadius: 20, paddingBottom: 5, marginTop: 20 }}>
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -110,20 +108,27 @@ export default function HomeScreen({ navigation }) {
                         </View>
                 )
         }
-        const TopHotelCard = ({ hotel }) => {
-                return (
-                        <TouchableOpacity style={styles.topHotelCard} onPress={() => navigation.navigate("DetailsScreen", hotel.id)}>
-                                <View style={{ position: "absolute", top: 5, right: 10, zIndex: 1, flexDirection: "row", alignItems: 'center', }}>
-                                        <Icon name="star" size={15} color={COLORS.orange} />
-                                        <Text style={{ color: COLORS.white, fontWeight: "bold", fontSize: 15, marginLeft: 3 }}>5.0</Text>
-                                </View>
-                                <Image style={styles.topHotelCardImage} source={{ uri: hotel.image }} />
-                                <View style={{ paddingHorizontal: 10 }}>
-                                        <Text style={{ fontsize: 10, fontWeight: "bold", color: COLORS.dark, height: 35 }}>{hotel.name}</Text>
-                                        <Text style={{ fontSize: 12, marginTop: 3, fontWeight: "bold", color: COLORS.grey }}>{hotel.location}</Text>
-                                </View>
-                        </TouchableOpacity>
-                )
+        const TopHotelCard = ({ hotel, index }) => {
+                if (index < 3) {
+                        return (
+                                <TouchableOpacity style={styles.topHotelCard} onPress={() => navigation.navigate("DetailsScreen", hotel.id)}>
+                                        <View style={{ position: "absolute", top: 5, right: 10, zIndex: 1, flexDirection: "row", alignItems: 'center', }}>
+                                                <Icon name="star" size={15} color={COLORS.orange} />
+                                                <Text style={{ color: COLORS.white, fontWeight: "bold", fontSize: 15, marginLeft: 3 }}>5.0</Text>
+                                        </View>
+                                        <Image style={styles.topHotelCardImage} source={{ uri: hotel.image }} />
+                                        <View style={{ paddingHorizontal: 10, paddingVertical: 5 }}>
+                                                <Text style={{ fontsize: 17, fontWeight: "bold", color: COLORS.dark, height: 30 }}>{hotel.name}</Text>
+                                                <View style={{ flexDirection: 'row', height: 35, }}>
+                                                        <Image
+                                                                style={{ width: 20, height: 20, resizeMode: "cover", alignSelf: 'center' }}
+                                                                source={{ uri: 'https://cdn2.iconfinder.com/data/icons/picons-basic-2/57/basic2-059_pin_location-256.png' }} />
+                                                        <Text style={{ fontSize: 14, paddingHorizontal: 3, fontWeight: "bold", color: COLORS.grey, alignSelf: 'center' }}>{hotel.location}</Text>
+                                                </View>
+                                        </View>
+                                </TouchableOpacity>
+                        )
+                }
         }
         const RecentlyBookedCard = ({ hotel }) => {
                 return (
@@ -134,17 +139,16 @@ export default function HomeScreen({ navigation }) {
                                         </View>
                                         <View>
                                                 <View style={{ marginTop: 10, flexDirection: 'row' }}>
-                                                        <View style={{ width: 130 }}>
-                                                                <View style={{ width: 120, height: 45 }}>
+                                                        <View style={{ width: 200 }}>
+                                                                <View style={{ width: 120, height: 29 }}>
                                                                         <Text style={{ fontSize: 17, fontWeight: 'bold', color: "black" }}>{hotel.name}</Text>
                                                                 </View>
-                                                                <Text style={{ fontSize: 15 }}>{hotel.location}</Text>
-                                                        </View>
-                                                        <View style={{ width: 100, alignItems: 'center', marginTop: 10 }}>
-
+                                                                <View style={{ height: 40, justifyContent: 'center' }}>
+                                                                        <Text style={{ fontSize: 15, }}>{hotel.location}</Text>
+                                                                </View>
                                                         </View>
                                                 </View>
-                                                <View style={{ flexDirection: 'row', width: 180, marginTop: 10 }}>
+                                                <View style={{ flexDirection: 'row', width: 180, paddingVertical: 10 }}>
                                                         <View style={{ flexDirection: 'row', alignItems: 'center', width: 160 }}>
                                                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                         <Icon name="star" size={15} color={COLORS.orange} />
@@ -156,7 +160,7 @@ export default function HomeScreen({ navigation }) {
                                         </View>
                                 </TouchableOpacity>
                                 <TouchableOpacity>
-                                        <Icon name="bookmark-border" size={26} style={{ marginLeft: 30, top: -50, left: 300, position: 'absolute' }} color="black" />
+                                        <Icon name="bookmark-border" size={26} style={{ marginLeft: 35, top: -50, left: 300, position: 'absolute' }} color="black" />
                                 </TouchableOpacity>
                         </View>
                 )
@@ -229,7 +233,7 @@ export default function HomeScreen({ navigation }) {
                                         data={ListHotelData}
                                         showsHorizontalScrollIndicator={false}
                                         contentContainerStyle={{ paddingLeft: 10, marginTop: 20, paddingBottom: 30 }}
-                                        renderItem={({ item }) => <TopHotelCard hotel={item} />}
+                                        renderItem={({ item, index }) => <TopHotelCard hotel={item} index={index} />}
                                 />
                                 <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: 20 }}>
                                         <Text style={{ fontWeight: "bold", color: "black", fontSize: 16 }}>Recently Booked</Text>
@@ -311,15 +315,15 @@ const styles = StyleSheet.create({
                 borderRadius: 35,
         },
         topHotelCard: {
-                height: 150,
-                width: 140,
+                height: 180,
+                width: 200,
                 backgroundColor: COLORS.white,
                 elevation: 15,
                 marginHorizontal: 10,
                 borderRadius: 15,
         },
         topHotelCardImage: {
-                height: 90,
+                height: 100,
                 width: "100%",
                 borderTopRightRadius: 15,
                 borderTopLeftRadius: 15
