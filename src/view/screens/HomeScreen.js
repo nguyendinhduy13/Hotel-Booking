@@ -177,7 +177,7 @@ export default function HomeScreen({ navigation }) {
                                                 <Icon1 name="bell-ring-outline" size={26} color={COLORS.grey} />
                                         </View>
                                 </View>
-                                <TouchableOpacity onPress={() => { navigation.navigate("Test") }}>
+                                <TouchableOpacity onPress={() => { navigation.navigate("Booked") }}>
                                         <View style={{ marginTop: 15 }}>
                                                 <Text style={{ fontWeight: 'bold', fontSize: 28, color: 'black' }}>Hello, {auth().currentUser.displayName}
                                                         <Icon1
