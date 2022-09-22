@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, TouchableOpacity, Modal, ScrollView } from "react-native"
+import { View, Text, Image, TouchableOpacity, Modal, ScrollView, TouchableNativeFeedback, TouchableHighlight } from "react-native"
 import { FlatList } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/AntDesign"
 import COLORS from "../../consts/colors";
@@ -9,25 +9,8 @@ export default function HotelPhotos({ route, navigation }) {
         const [index, setIndex] = useState(0)
         const [itemzoom, setitemzoom] = useState([])
         const [modalVisible, setModalVisible] = useState(false)
-        const ListImage = ({ hotel }) => {
-                if (hotel.id == item.id) {
-                        return (
-                                <View>
-                                        {hotel.image.map((image, index) => (
-                                                <TouchableOpacity onPress={() => { setModalVisible(!modalVisible), setitemzoom(item), setIndex(index) }}>
-                                                        <Image
-                                                                source={{ uri: image }}
-                                                                style={{ width: 160, height: 150, marginTop: 20, marginHorizontal: 15, borderRadius: 20 }}
-                                                        />
-                                                </TouchableOpacity>
-                                        ))}
-                                </View>
-                        )
-                }
-        }
-
-
         return (
+                <TouchableNativeFeedback onPress={()=>{modalVisible?setModalVisible(!modalVisible):{}}}>
                 <ScrollView contentContainerStyle={!modalVisible ? {
                         backgroundColor: COLORS.white,
                         flex: 1,
@@ -48,15 +31,17 @@ export default function HotelPhotos({ route, navigation }) {
                                 </Text>
                         </View>
 
-                        {/* <View>
-                                <FlatList
-                                        data={!modalVisible ? hotellist : ""}
-                                        horizontal={false}
-                                        showsHorizontalScrollIndicator={false}
-                                        numColumns={2}
-                                        renderItem={({ item }) => <ListImage hotel={item} />}
-                                />
-                        </View>
+                        <View  style={{flexDirection:"row", flexWrap:"wrap"}}>
+                                {!modalVisible&&
+                                        item.image.map((image, index) => (
+                                                <TouchableOpacity onPress={() => { setModalVisible(!modalVisible), setitemzoom(item), setIndex(index) }}>
+                                                        <Image
+                                                                source={{ uri: image }}
+                                                                style={{ width: 160, height: 150, marginTop: 20, marginHorizontal: 15, borderRadius: 20 }}
+                                                        />
+                                                </TouchableOpacity>
+                                        ))}
+                                </View>
                         <Modal
                                 transparent={true}
                                 visible={modalVisible}
@@ -64,13 +49,14 @@ export default function HotelPhotos({ route, navigation }) {
                                         setModalVisible(!modalVisible);
                                 }}
                         >
-                                <View style={{ alignItems: "center", marginTop: "50%" }}>
+                                <TouchableOpacity style={{ alignItems: "center", marginTop: "50%" }} onPress={()=>{setModalVisible(!modalVisible)}}>
                                         <Image
                                                 source={{ uri: modalVisible ? itemzoom.image[index] : item.image[0] }}
                                                 style={{ width: 300, height: 290, borderRadius: 20 }}
                                         />
-                                </View>
-                        </Modal> */}
+                                </TouchableOpacity>
+                        </Modal>
                 </ScrollView>
+                </TouchableNativeFeedback>
         )
 }

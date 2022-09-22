@@ -59,7 +59,7 @@ const ListRoom = ({ navigation, route }) => {
                                 <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'black',marginTop:10 }}>Danh sách phòng</Text>
                                 {DataRoom.map((items, index) => (
                                         <View>
-                                                <TouchableOpacity style={styles.RecentlyBox} key={index} onPress={() => { }}>
+                                                <TouchableOpacity style={styles.RecentlyBox} key={index} onPress={() => {navigation.navigate("DetailsScreen",items)}}>
                                                         <View style={{ width: "98%", height: 200, alignSelf: 'center' }}>
                                                                 <Image style={styles.IMGRecent} source={{ uri: items.image[0] }} />
                                                         </View>
