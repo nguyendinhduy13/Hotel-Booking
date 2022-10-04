@@ -28,54 +28,6 @@ export default function HomeScreen({ navigation }) {
         const scrollX = useRef(new Animated.Value(0)).current;
         const [countShow, setCountShow] = useState(0);
         const user = auth().currentUser;
-        const CategoryList = ({ navigation }) => {
-                return (
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', backgroundColor: "#fff2cc", width: 360, height: 140, alignSelf: 'center', borderRadius: 20, paddingBottom: 5, marginTop: 20 }}>
-                                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                        <TouchableOpacity>
-                                                <View style={{ alignItems: 'center', paddingTop: 10 }}>
-                                                        <Icon2 name="hour-glass" size={25} color={COLORS.orange} />
-                                                        <Text style={{ paddingTop: 5, fontSize: 15, fontWeight: 'bold' }}>Theo giờ</Text>
-                                                </View>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity>
-                                                <View style={{ alignItems: 'center', paddingTop: 10 }}>
-                                                        <Icon1 name="heart-multiple-outline" size={25} color={COLORS.orange} />
-                                                        <Text style={{ paddingTop: 5, fontSize: 15, fontWeight: 'bold' }}>Tình yêu</Text>
-                                                </View>
-                                        </TouchableOpacity>
-                                </View>
-                                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                        <TouchableOpacity>
-                                                <View style={{ alignItems: 'center', paddingTop: 10 }}>
-                                                        <Icon3 name="moon" size={25} color={COLORS.orange} />
-                                                        <Text style={{ paddingTop: 5, fontSize: 15, fontWeight: 'bold' }}>Theo đêm</Text>
-                                                </View>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity>
-                                                <View style={{ alignItems: 'center', paddingTop: 10 }}>
-                                                        <Icon1 name="airplane-marker" size={25} color={COLORS.orange} />
-                                                        <Text style={{ paddingTop: 5, fontSize: 15, fontWeight: 'bold' }}>Du lịch</Text>
-                                                </View>
-                                        </TouchableOpacity>
-                                </View>
-                                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                        <TouchableOpacity>
-                                                <View style={{ alignItems: 'center', paddingTop: 10 }}>
-                                                        <Icon4 name="today" size={25} color={COLORS.orange} />
-                                                        <Text style={{ paddingTop: 5, fontSize: 15, fontWeight: 'bold' }}>Theo ngày</Text>
-                                                </View>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity>
-                                                <View style={{ alignItems: 'center', paddingTop: 10 }}>
-                                                        <Icon2 name="dots-three-horizontal" size={25} color={COLORS.orange} />
-                                                        <Text style={{ paddingTop: 5, fontSize: 15, fontWeight: 'bold' }}>Tất cả</Text>
-                                                </View>
-                                        </TouchableOpacity>
-                                </View>
-                        </View>
-                )
-        }
         const Card = ({ hotel, index }) => {
                 const inputRange = [(index - 1) * cardWidth, index * cardWidth, (index + 1) * cardWidth];
                 const opacity = scrollX.interpolate({ inputRange, outputRange: [0.7, 0, 0.7] });
@@ -201,7 +153,6 @@ export default function HomeScreen({ navigation }) {
                                                 style={{ fontSize: 18, paddingLeft: 10 }}
                                         />
                                 </View>
-                                <CategoryList />
                                 <View>
                                         <Animated.FlatList
                                                 onMomentumScrollEnd={(e) => {
@@ -225,7 +176,7 @@ export default function HomeScreen({ navigation }) {
                                 </View>
                                 <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: 20 }}>
                                         <Text style={{ fontWeight: "bold", color: "black", fontSize: 16 }}>Top Hotels</Text>
-                                        <TouchableOpacity>
+                                        <TouchableOpacity onPress={() => { navigation.navigate("Test") }}>
                                                 <Text style={{ fontWeight: "bold", color: COLORS.primary }}>See All</Text>
                                         </TouchableOpacity>
                                 </View>
@@ -318,7 +269,7 @@ const styles = StyleSheet.create({
                 height: 180,
                 width: 200,
                 backgroundColor: COLORS.white,
-                elevation: 15,
+                elevation: 10,
                 marginHorizontal: 10,
                 borderRadius: 15,
         },
