@@ -180,8 +180,8 @@ export default function HomeScreen({ navigation }) {
         const navigateTo = (item) => {
                 navigation.navigate("ListRoom", item)
                 setModalVisible(false)
-                setData([])
-                setSearch("")
+                // setData([])
+                // setSearch("")
                 addItemToSearchHistory(item)
         }
         const ShowModal = async () => {
@@ -202,18 +202,16 @@ export default function HomeScreen({ navigation }) {
                                                 <Icon1 name="bell-ring-outline" size={26} color={COLORS.grey} />
                                         </View>
                                 </View>
-                                <TouchableOpacity onPress={() => { navigation.navigate("Booked") }}>
-                                        <View style={{ marginTop: 15 }}>
-                                                <Text style={{ fontWeight: 'bold', fontSize: 28, color: 'black' }}>Hello, {auth().currentUser.displayName}
-                                                        <Icon1
-                                                                name="hand-wave-outline"
-                                                                size={26}
-                                                                color={"#FF6347"}
-
-                                                        />
-                                                </Text>
-                                        </View>
-                                </TouchableOpacity>
+                                <View style={{ marginTop: 15 }}>
+                                        <Text style={{ fontWeight: 'bold', fontSize: 28, color: 'black' }}>Hello, {auth().currentUser.displayName}
+                                                < Icon1
+                                                        name="hand-wave-outline"
+                                                        size={26}
+                                                        color={"#FF6347"}
+                                                        style={{ marginLeft: 10 }}
+                                                />
+                                        </Text>
+                                </View>
                         </View>
                         <ScrollView
                                 showsHorizontalScrollIndicator={false}
@@ -295,8 +293,15 @@ export default function HomeScreen({ navigation }) {
                                 <View style={styles.centeredView}>
                                         <View style={styles.modalView}>
                                                 <View style={styles.generalView}>
-                                                        <View style={{ flexDirection: 'row', marginTop: 15, alignItems: 'center' }}>
-                                                                <View style={[styles.searchInputContainer, { width: '90%' }]}>
+                                                        <View style={{ flexDirection: 'row', marginTop: 15, alignItems: 'center', }}>
+                                                                <TouchableOpacity onPress={() => { setModalVisible(!modalVisible) }}>
+                                                                        <Icon4 name="chevron-back-outline"
+                                                                                size={30}
+                                                                                style={{ marginLeft: 10 }}
+                                                                                color="#FF6347"
+                                                                        />
+                                                                </TouchableOpacity>
+                                                                <View style={styles.searchInputContainer1}>
                                                                         <TouchableOpacity onPress={() => { }}>
                                                                                 <Icon5 name="search"
                                                                                         size={30}
@@ -314,6 +319,7 @@ export default function HomeScreen({ navigation }) {
                                                                         />
                                                                 </View>
                                                         </View>
+
                                                         {data.length > 0 ?
                                                                 <></> :
                                                                 <View>
@@ -340,6 +346,7 @@ export default function HomeScreen({ navigation }) {
                                                                         }
                                                                 </View>
                                                         }
+
                                                         {data.length > 0 ?
                                                                 <ScrollView>
                                                                         <Text style={{ marginLeft: 20, marginTop: 10, marginBottom: 10, fontSize: 16, fontWeight: 'bold' }}>Khách sạn</Text>
@@ -378,6 +385,17 @@ const styles = StyleSheet.create({
                 marginTop: 5,
                 marginLeft: 20,
                 marginRight: 20,
+                borderRadius: 10,
+                flexDirection: "row",
+                alignItems: "center",
+                borderWidth: 1,
+                borderColor: "#dddddd",
+        },
+        searchInputContainer1: {
+                width: '83%',
+                height: 45,
+                marginLeft: 5,
+                backgroundColor: "white",
                 borderRadius: 10,
                 flexDirection: "row",
                 alignItems: "center",
@@ -491,12 +509,11 @@ const styles = StyleSheet.create({
                 height: "100%",
         },
         generalView: {
-                width: '93%',
-                backgroundColor: 'white',
+                width: '100%',
                 height: '100%',
-                marginTop: 10,
-                borderTopLeftRadius: 20,
-                borderTopRightRadius: 20,
+                borderTopLeftRadius: 15,
+                borderTopRightRadius: 15,
+                backgroundColor: 'white',
         },
         ModalBoxes: {
                 flexDirection: 'row',

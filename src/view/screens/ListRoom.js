@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react'
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Icon1 from 'react-native-vector-icons/FontAwesome';
-import Icon2 from 'react-native-vector-icons/Ionicons'
+import Icon2 from 'react-native-vector-icons/Ionicons';
+import Icon3 from 'react-native-vector-icons/Feather';
 import firestore from '@react-native-firebase/firestore';
 import { TouchableOpacity, View, SafeAreaView, ScrollView, Text, Animated, Image, StyleSheet, Dimensions } from "react-native"
 import COLORS from '../../consts/colors';
@@ -74,21 +75,23 @@ const ListRoom = ({ navigation, route }) => {
                                         </View>
                                         <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'black', paddingVertical: 15 }}>Danh sách phòng</Text>
                                         {DataRoom.map((items, index) => (
-                                                <View>
-                                                        <TouchableOpacity style={styles.RecentlyBox} key={index} onPress={() => { navigation.navigate("DetailsScreen", items) }}>
-                                                                <View style={{ width: "90%", height: 200, alignSelf: 'center' }}>
+                                                <View key={index}>
+                                                        <TouchableOpacity style={styles.RecentlyBox} onPress={() => { navigation.navigate("DetailsScreen", items) }}>
+                                                                <View style={{ width: "100%", height: 150, alignSelf: 'center' }}>
                                                                         <Image style={styles.IMGRecent} source={{ uri: items.image[0] }} />
                                                                 </View>
-                                                                <View style={{ marginTop: 25 }}>
-                                                                        <View style={{ paddingHorizontal: 20 }}>
+                                                                <View style={{ marginTop: 35 }}>
+                                                                        <View style={{ paddingHorizontal: 15 }}>
                                                                                 <Text style={{ fontSize: 20, height: 25, color: "black" }}>{items.name}</Text>
-                                                                                <Text style={{ fontSize: 20, paddingVertical: 10, fontWeight: "700", color: COLORS.primary }}>{
+                                                                                <Text style={{ fontSize: 18, paddingVertical: 10, fontWeight: "700", color: COLORS.primary }}>{
                                                                                         Format(items.price)
                                                                                 } <Text style={{ fontSize: 14, color: 'gray' }}>VND/đêm</Text></Text>
                                                                         </View>
                                                                 </View>
                                                         </TouchableOpacity>
-                                                        <Icon name="bookmark-border" size={26} style={{ position: 'absolute', top: 255, left: 330 }} color={COLORS.black} />
+                                                        <TouchableOpacity style={{ position: 'absolute', backgroundColor: 'white', borderRadius: 20, top: 10, left: 335 }}>
+                                                                <Icon3 name="info" size={26} color="orange" />
+                                                        </TouchableOpacity>
                                                 </View>
                                         ))}
                                 </View>
@@ -100,12 +103,12 @@ const ListRoom = ({ navigation, route }) => {
 const styles = StyleSheet.create({
         RecentlyBox: {
                 width: "100%",
-                height: 300,
+                height: 260,
                 color: "black",
                 backgroundColor: COLORS.white,
                 marginBottom: 15,
                 alignSelf: 'center',
-                borderRadius: 20,
+                borderRadius: 10,
                 elevation: 15,
                 shadowColor: COLORS.black,
 
@@ -113,9 +116,9 @@ const styles = StyleSheet.create({
         IMGRecent: {
                 height: '100%',
                 width: '100%',
-                borderRadius: 10,
+                borderTopLeftRadius: 10,
+                borderTopRightRadius: 10,
                 alignItems: 'center',
-                marginTop: 20
         },
         HeaderBack: {
                 width: width,

@@ -1,9 +1,13 @@
 import React, { useContext } from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity, Alert } from "react-native"
+import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, ScrollView } from "react-native"
 import { Avatar, Switch } from "react-native-elements";
 import COLORS from "../../consts/colors";
-import Icon1 from "react-native-vector-icons/MaterialIcons"
 import Icon from "react-native-vector-icons/Ionicons"
+import Icon1 from "react-native-vector-icons/MaterialIcons"
+import Icon2 from "react-native-vector-icons/Feather"
+import Icon3 from "react-native-vector-icons/Entypo"
+import Icon4 from "react-native-vector-icons/SimpleLineIcons"
+import Icon5 from "react-native-vector-icons/AntDesign"
 import auth from "@react-native-firebase/auth"
 import { SignInContext } from "../../contexts/authContext";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
@@ -25,77 +29,65 @@ export default function Profile() {
         }
 
         return (
-                <View style={{ flex: 1, backgroundColor: COLORS.white }}>
-                        <View style={{ flexDirection: "row", paddingTop: "4%" }}>
-                                <Image source={require("../../assets/logo.png")}
-                                        style={{ width: 40, height: 40, borderRadius: 20, marginLeft: 10 }}
-                                />
-                                <Text style={{ fontSize: 22, fontWeight: "bold", color: COLORS.dark, paddingTop: 4, marginLeft: 10 }}>Profile</Text>
+                <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
+                        <View style={{ backgroundColor: 'white', elevation: 15 }}>
+                                <View style={styles.heaerProfile}>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                <Text style={{ fontSize: 27, fontWeight: 'bold', color: 'black' }}>{auth().currentUser.displayName}</Text>
+                                                <TouchableOpacity>
+                                                        <Icon2 name="edit-3" size={20} color="red" style={{ marginLeft: 5 }} />
+                                                </TouchableOpacity>
+                                        </View>
+                                        <Text style={{ color: 'black', fontSize: 15, paddingTop: 5 }}>0976124912</Text>
+                                        <Text style={{ color: 'black', fontSize: 15, paddingTop: 5 }}>{auth().currentUser.email}</Text>
+                                </View>
                         </View>
-                        <View style={{ alignItems: "center", paddingTop: "5%" }}>
-                                <Avatar
-                                        size={130}
-                                        rounded
-                                        source={require("../../assets/logo.png")}
-                                />
-                                <Text style={{ fontSize: 20, marginTop: 7, fontWeight: "bold", color: COLORS.dark }}>{auth().currentUser.displayName}</Text>
-                                <Text style={{ fontWeight: "600", marginTop: 5 }}>{auth().currentUser.email}</Text>
+                        <View style={{ backgroundColor: 'white', marginVertical: 10 }}>
+                                <View style={styles.bodyProfile}>
+                                        <Text style={styles.tittle}>Trang của tôi</Text>
+                                        <TouchableOpacity style={styles.view}>
+                                                <Icon3 name="back-in-time" size={25} />
+                                                <Text style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}>Đặt phòng của tôi</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={styles.view}>
+                                                <Icon2 name="bookmark" size={25} />
+                                                <Text style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}>Khách sạn yêu thích</Text>
+                                        </TouchableOpacity>
+                                        <Text style={styles.tittle}>Cài đặt</Text>
+                                        <TouchableOpacity style={styles.view}>
+                                                <Icon4 name="bell" size={25} />
+                                                <Text style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}>Thông báo</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={[styles.view, { justifyContent: "space-between" }]}>
+                                                <View style={{ flexDirection: 'row' }}>
+                                                        <Icon1 name="language" size={25} />
+                                                        <Text style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}>Ngôn ngữ</Text>
+                                                </View>
+                                                <Text style={{ fontSize: 16, fontWeight: 'bold', paddingHorizontal: 15, color: 'orange' }}>Tiếng Việt</Text>
+                                        </TouchableOpacity>
+                                        <Text style={styles.tittle}>Thông tin</Text>
+                                        <TouchableOpacity style={styles.view}>
+                                                <Icon name="shield-checkmark-outline" size={25} />
+                                                <Text style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}>Điều khoản & Chính sách bảo mật</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={[styles.view, { justifyContent: "space-between" }]}>
+                                                <View style={{ flexDirection: 'row' }}>
+                                                        <Icon1 name="phonelink-setup" size={25} />
+                                                        <Text style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}>Phiên bản</Text>
+                                                </View>
+                                                <Text style={{ fontSize: 16, fontWeight: 'bold', paddingHorizontal: 15, color: 'orange' }}>14.3.1</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={styles.view}>
+                                                <Icon1 name="info-outline" size={25} />
+                                                <Text style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}>Liên hệ</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={styles.view} onPress={() => { signOut() }}>
+                                                <Icon5 name="logout" size={25} />
+                                                <Text style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}>Đăng suất</Text>
+                                        </TouchableOpacity>
+                                </View>
                         </View>
-                        <View style={{ paddingTop: "10%" }}>
-                                <TouchableOpacity style={{ flexDirection: "row", marginHorizontal: 20 }}>
-                                        <Icon
-                                                name="person-outline"
-                                                size={30}
-                                        />
-                                        <Text style={styles.text}>
-                                                Edit Profile
-                                        </Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={{ flexDirection: "row", paddingTop: "7%", marginHorizontal: 20 }}>
-                                        <Icon
-                                                name="notifications-outline"
-                                                size={30}
-                                        />
-                                        <Text style={styles.text}>
-                                                Notifications
-                                        </Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={{ flexDirection: "row", paddingTop: "7%", marginHorizontal: 20 }}>
-                                        <Icon
-                                                name="help-circle-outline"
-                                                size={30}
-                                        />
-                                        <Text style={styles.text}>
-                                                Help
-                                        </Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={{ flexDirection: "row", paddingTop: "7%", marginHorizontal: 20 }}>
-                                        <Icon
-                                                name="eye-outline"
-                                                size={30}
-                                        />
-                                        <Text style={styles.text}>
-                                                Dark Theme
-                                        </Text>
-                                        <Switch style={{ paddingHorizontal: 40 }}
-
-                                        />
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                        style={{ flexDirection: "row", paddingTop: "7%", marginHorizontal: 20 }}
-                                        onPress={() => signOut()}
-                                >
-                                        <Icon1
-                                                name="logout"
-                                                size={30}
-                                                style={{ color: "red" }}
-                                        />
-                                        <Text style={[styles.text, { color: "red" }]}>
-                                                Logout
-                                        </Text>
-                                </TouchableOpacity>
-                        </View>
-                </View>
+                </ScrollView >
         )
 }
 
@@ -105,5 +97,27 @@ const styles = StyleSheet.create({
                 fontWeight: "600",
                 marginTop: 5,
                 marginHorizontal: 15
+        },
+        heaerProfile: {
+                width: '100%',
+                paddingBottom: 15,
+                marginHorizontal: 10,
+        },
+        bodyProfile: {
+                marginHorizontal: 10,
+        },
+        tittle: {
+                fontSize: 20,
+                fontWeight: 'bold',
+                color: 'black',
+                marginTop: 10,
+        },
+        view: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                borderBottomWidth: 1,
+                borderBottomColor: '#d9cccc',
+                paddingTop: 15,
+                paddingBottom: 15,
         }
 })
