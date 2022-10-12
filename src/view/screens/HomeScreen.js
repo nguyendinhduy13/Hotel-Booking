@@ -144,7 +144,13 @@ export default function HomeScreen({ navigation }) {
         const [historySearch, setHistorySearch] = useState([])
         const readItemFromStorage = async newValue => {
                 const value = await AsyncStorage.getItem('hotel')
-                setHistorySearch(JSON.parse(value))
+                if (value == null) {
+                        await AsyncStorage.setItem('hotel', JSON.stringify([]))
+                        setHistorySearch([])
+                }
+                else {
+                        setHistorySearch(JSON.parse(value))
+                }
         };
         useEffect(() => {
                 readItemFromStorage();
