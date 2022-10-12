@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity, Modal, ScrollView, TouchableNativeFeedback, TouchableHighlight } from "react-native"
-import { FlatList } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/AntDesign"
 import COLORS from "../../consts/colors";
-import hotellist from "../../consts/hotellist"
 export default function HotelPhotos({ route, navigation }) {
         const [item, setItem] = useState(route.params)
         const [index, setIndex] = useState(0)
         const [itemzoom, setitemzoom] = useState([])
         const [modalVisible, setModalVisible] = useState(false)
         return (
-                <TouchableNativeFeedback onPress={()=>{modalVisible?setModalVisible(!modalVisible):{}}}>
                 <ScrollView contentContainerStyle={!modalVisible ? {
                         backgroundColor: COLORS.white,
                         flex: 1,
@@ -57,6 +54,5 @@ export default function HotelPhotos({ route, navigation }) {
                                 </TouchableOpacity>
                         </Modal>
                 </ScrollView>
-                </TouchableNativeFeedback>
         )
 }

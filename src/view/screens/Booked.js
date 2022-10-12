@@ -1,16 +1,66 @@
 import React,{useState,useEffect} from "react";
 import {View,Text,StyleSheet, TouchableOpacity} from "react-native"
 import Icon2 from "react-native-vector-icons/AntDesign"
+import Icon1 from 'react-native-vector-icons/Entypo';
 import COLORS from "../../consts/colors";
-import Calendar from "react-native-calendars/src/calendar";
+import DatetimePicker from "@react-native-community/datetimepicker"
+
 export default function Booked({navigation,route}){
         const item=route.params
-        const [day,setDay]=useState("")
         const [Number,setNumber]=useState(0)
-        const [dateString,setDateString]=useState("")
+        const [startDate, setstartDate] = useState(new Date());
+        const [endDate, setendDate] = useState(new Date());
+        const [showDatetime, setshowDatetime] = useState(false);
+        const [showDatetime1, setshowDatetime1] = useState(false);
+        const [mode, setMode] = useState("date");
+        const showDatepicker = () => {
+                showMode("date");
+        };
+        const showDatepicker1 = () => {
+                showMode1("date");
+        };
+        
+        const onChange = (event, selectedDate) => {
+                const currentDate = selectedDate || date;
+                setshowDatetime(false);
+                const formattedDate = currentDate.getDate() + "/" + (currentDate.getMonth() + 1) + "/" + currentDate.getFullYear()
+                setstartDate(formattedDate);
+        };
+
+        const onChange1 = (event, selectedDate) => {
+                const currentDate = selectedDate || date;
+                setshowDatetime1(false);
+                const formattedDate = currentDate.getDate() + "/" + (currentDate.getMonth() + 1) + "/" + currentDate.getFullYear()
+                setendDate(formattedDate);
+        };
+            
+        const showMode = (currentMode) => {
+                setshowDatetime(true);
+                setMode(currentMode);
+        };
+        const showMode1 = (currentMode) => {
+                setshowDatetime1(true);
+                setMode(currentMode);
+        };
+        
+        const addbooking=()=>{
+                const booking=[]
+                booking.push({
+                        startDate:startDate,
+                        endDate:endDate,
+                        gueust:Number,
+                })
+                const hello=[]
+                hello.push({
+                        booking:booking,
+                        startDate:startDate,
+                })
+                console.log(hello)
+        }
+
         return(
                 <View style={{backgroundColor:COLORS.white,flex:1}}>
-                        <View style={{flexDirection:"row"}}>
+                        <View style={{flexDirection:"row",marginVertical:30}}>
                         <Icon2
                         onPress={()=> {}}
                                 name="arrowleft"
@@ -19,29 +69,52 @@ export default function Booked({navigation,route}){
                         />
                         <Text style={{fontSize:20,fontWeight:"bold",marginTop:16,marginLeft:10,color:COLORS.dark}}>Select Date</Text>
                         </View>  
-                        <Calendar
-                        onDayPress={(day)=>{setDay(day),setDateString(day.dateString)}}
-                        markedDates={
-                                {
-                                     "2022-09-21":{marked:true,dotColor:"red",selectedColor:COLORS.primary,selected:true}   
-                                }
-                        }
-                        />
                         <View style={{flexDirection:"row",justifyContent:"space-between",marginHorizontal:23,marginTop:20}}>
                                 <Text style={styles.Text}>Check in</Text>
                                 <Text style={styles.Text}>Check out</Text>
                         </View>
                         <View style={{flexDirection:"row",marginHorizontal:15,justifyContent:"space-between",marginTop:10}}>
-                               <View style={{borderWidth:0.9,width:150,height:50,borderRadius:10,flexDirection:"row",justifyContent:"space-between",alignItems:"center"}}>
-                                <Text style={{fontWeight:"500",marginLeft:5,color:COLORS.dark}}>Dec 16</Text>
-                                <Icon2 name="calendar" style={{marginRight:5,color:COLORS.dark}} size={20} />
+                                <View style={{flexDirection:"row",borderWidth:2,borderRadius:10,width:160,height:40,alignItems:"center",justifyContent:"space-between",borderColor:COLORS.primary}}>
+                                <Text style={{fontWeight:"600",color:COLORS.dark,fontSize:17}}>{startDate.toString()}</Text>
+                               <Icon1
+                                    name="calendar"
+                                    size={24}
+                                    onPress={showDatepicker}
+                                    style={{color:COLORS.primary,marginRight:7}}
+                                />
+                                {showDatetime && (
+                                    <DatetimePicker
+                                        testID="dateTimePicker"
+                                        value={startDate}
+                                        mode={mode}
+                                        is24Hour={true}
+                                        display="default"
+                                        onChange={onChange}
+                                    />
+                                )}
                                 </View>
-                                <View style={{borderWidth:0.9,width:150,height:50,borderRadius:10,flexDirection:"row",justifyContent:"space-between",alignItems:"center"}}>
-                                <Text style={{fontWeight:"500",marginLeft:5,color:COLORS.dark}}>Dec 16</Text>
-                                <Icon2 name="calendar" style={{marginRight:5,color:COLORS.dark}} size={20} />
-                                </View> 
+                                <View style={{flexDirection:"row",borderWidth:2,borderRadius:10,alignItems:"center",justifyContent:"space-between",width:150,height:40,borderColor:COLORS.primary}}>
+                                <Text style={{fontWeight:"600",color:COLORS.dark,fontSize:17}}>{endDate.toString()}</Text>
+                                <Icon1
+                                    name="calendar"
+                                    size={24}
+                                    onPress={showDatepicker1}
+                                    style={{ color: COLORS.primary,marginRight:7 }}
+                                />
+                                {showDatetime1 && (
+                                    <DatetimePicker
+                                        testID="dateTimePicker"
+                                        value={endDate}
+                                        mode={mode}
+                                        is24Hour={true}
+                                        display="default"
+                                        onChange={onChange1}
+                                    />
+                                )}
+                                </View>
                         </View>
-                        <Text style={{fontSize:18,color:COLORS.dark, fontWeight:"bold",marginTop:10,marginLeft:23}}>Guest</Text>
+                        <View style={{marginVertical:25}}>
+                        <Text style={{fontSize:18,color:COLORS.dark, fontWeight:"bold",marginTop:15,marginLeft:23}}>Guest</Text>
                         <View style={{flexDirection:"row",justifyContent:"center",width:350,alignSelf:"center",height:55,alignItems:"center",borderRadius:10,marginTop:10}}>
                                 <TouchableOpacity style={{width:50,backgroundColor:COLORS.blurprimary,height:40,alignItems:"center",borderRadius:15}} onPress={()=>{setNumber(Number>0?Number-1:Number)}}>
                                         <Text style={{fontSize:30,color:COLORS.primary}}>-</Text>
@@ -52,9 +125,10 @@ export default function Booked({navigation,route}){
                                 </TouchableOpacity>
                         </View>
                         <Text style={{alignSelf:"center",paddingTop:30,fontSize:20,fontWeight:"bold",color:COLORS.dark}}>Total: $435</Text>
-                        <TouchableOpacity style={{backgroundColor:COLORS.primary,height:45,width:350,alignSelf:"center",alignItems:"center",justifyContent:"center",borderRadius:20,marginTop:15}} onPress={()=>navigation.navigate("BookedCT",item)}>
+                        <TouchableOpacity style={{backgroundColor:COLORS.primary,height:45,width:350,alignSelf:"center",alignItems:"center",justifyContent:"center",borderRadius:20,marginTop:15}} onPress={()=>{navigation.navigate("BookedCT",item);addbooking()}}>
                                 <Text style={{fontSize:15,fontWeight:"bold",color:COLORS.white}}>Continue</Text>
                         </TouchableOpacity>
+                        </View>
                 </View>
         )
 }

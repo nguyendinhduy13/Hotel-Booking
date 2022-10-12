@@ -82,7 +82,7 @@ export default function HomeScreen({ navigation }) {
                 const scale = scrollX.interpolate({ inputRange, outputRange: [0.8, 1, 0.8] });
                 return (
                         <View>
-                                <TouchableOpacity disabled={activeCardIndex != index} activeOpacity={1} onPress={() => navigation.navigate("ListRoom", hotel)}>
+                                <TouchableOpacity disabled={activeCardIndex != index} activeOpacity={1} onPress={() => navigation.navigate("ListRoom",hotel)}>
                                         <Animated.View style={{ ...styles.card, transform: [{ scale }] }}>
                                                 <Animated.View style={{ ...styles.cardOverplay, opacity }} />
                                                 <View style={styles.priceTag}>

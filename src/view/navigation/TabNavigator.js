@@ -4,8 +4,10 @@ import {View} from "react-native"
 import HomeScreen from "../screens/HomeScreen";
 import Icon  from "react-native-vector-icons/FontAwesome";
 import Icon1 from "react-native-vector-icons/Ionicons"
+import Icon2 from "react-native-vector-icons/AntDesign"
 import Profile from "../screens/Profile";
 import COLORS from "../../consts/colors";
+import Booking from "../screens/Booking";
 const Tab=createBottomTabNavigator();
 export default function TabNavigator(){
         return (
@@ -26,6 +28,21 @@ export default function TabNavigator(){
                               )
                          }}
                          />
+                         
+                         <Tab.Screen
+                         name="Booking"
+                         component={Booking}
+                         options={{
+                                tabBarLabel:"Booking",
+                                tabBarIcon:({size,color})=>(
+                                        <Icon2 name="book"
+                                        size={size}
+                                        color={color}
+                                        />
+                                )
+                         }}
+                         />
+
                          <Tab.Screen
                          name="Profile"
                          component={Profile}
@@ -36,7 +53,7 @@ export default function TabNavigator(){
                                         size={size}
                                         color={color}
                                         />
-                                      )
+                                )
                          }}
                          />
                         
