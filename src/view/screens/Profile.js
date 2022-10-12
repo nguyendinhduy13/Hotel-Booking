@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, ScrollView } from "react-native"
 import { Avatar, Switch } from "react-native-elements";
 import COLORS from "../../consts/colors";
@@ -27,16 +27,32 @@ export default function Profile() {
                         Alert.alert("Error", error.message)
                 }
         }
-
+        const [isEnabled, setIsEnabled] = useState(false);
+        const toggleSwitch = () => {
+                setIsEnabled(previousState => !previousState)
+                !isEnabled ? console.log("Dark Mode") : console.log("Light Mode")
+        };
         return (
                 <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
                         <View style={{ backgroundColor: 'white', elevation: 15 }}>
                                 <View style={styles.heaerProfile}>
-                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                <Text style={{ fontSize: 27, fontWeight: 'bold', color: 'black' }}>{auth().currentUser.displayName}</Text>
-                                                <TouchableOpacity>
-                                                        <Icon2 name="edit-3" size={20} color="red" style={{ marginLeft: 5 }} />
-                                                </TouchableOpacity>
+                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginRight: 20 }}>
+                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                        <Text style={{ fontSize: 27, fontWeight: 'bold', color: 'black' }}>{auth().currentUser.displayName}</Text>
+                                                        <TouchableOpacity>
+                                                                <Icon2 name="edit-3" size={20} color="red" style={{ marginLeft: 5 }} />
+                                                        </TouchableOpacity>
+                                                </View>
+                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                        {isEnabled ? <Icon3 name="moon" size={25} color="#767577" style={{ marginRight: 5 }} /> : <Icon3 name="light-up" size={25} color="#f5dd4b" style={{ marginRight: 5 }} />}
+                                                        <Switch
+                                                                trackColor={{ false: "#81b0ff", true: "#767577" }}
+                                                                thumbColor={isEnabled ? "#f4f3f4" : "#f5dd4b"}
+                                                                ios_backgroundColor="#3e3e3e"
+                                                                onValueChange={toggleSwitch}
+                                                                value={isEnabled}
+                                                        />
+                                                </View>
                                         </View>
                                         <Text style={{ color: 'black', fontSize: 15, paddingTop: 5 }}>0976124912</Text>
                                         <Text style={{ color: 'black', fontSize: 15, paddingTop: 5 }}>{auth().currentUser.email}</Text>
