@@ -50,32 +50,32 @@ export default function AppStack() {
                                 }}
                         />
                         <Stack.Screen
-                        name="ListRoom"
-                        component={ListRoom}
-                        options={{
-                                headerShown: false
-                        }}
+                                name="ListRoom"
+                                component={ListRoom}
+                                options={{
+                                        headerShown: false
+                                }}
                         />
                         <Stack.Screen
-                        name="Booked"
-                        component={Booked}
-                        options={{
-                                headerShown: false
-                        }}
+                                name="Booked"
+                                component={Booked}
+                                options={{
+                                        headerShown: false
+                                }}
                         />
                         <Stack.Screen
-                        name="BookedCT"
-                        component={BookedCT}
-                        options={{
-                                headerShown: false
-                        }} 
+                                name="BookedCT"
+                                component={BookedCT}
+                                options={{
+                                        headerShown: false
+                                }}
                         />
                         <Stack.Screen
-                        name="BookedFinal"
-                        component={BookedFinal}
-                        options={{
-                                headerShown: false
-                        }} 
+                                name="BookedFinal"
+                                component={BookedFinal}
+                                options={{
+                                        headerShown: false
+                                }}
                         />
                 </Stack.Navigator>
         )

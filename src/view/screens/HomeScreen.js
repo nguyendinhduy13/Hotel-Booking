@@ -1,18 +1,20 @@
 import React, { useRef, useState, useEffect } from "react";
-import { SafeAreaView, Text, StyleSheet, View, ScrollView, TextInput, TouchableOpacity, FlatList, Dimensions, Image, Animated, LogBox } from "react-native";
+import { SafeAreaView, Text, StyleSheet, View, ScrollView, Alert, TextInput, TouchableOpacity, FlatList, Dimensions, Image, Animated, LogBox, Modal } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Icon1 from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon2 from "react-native-vector-icons/Entypo";
 import Icon3 from "react-native-vector-icons/Feather";
 import Icon4 from "react-native-vector-icons/Ionicons";
+import Icon5 from "react-native-vector-icons/EvilIcons";
 import COLORS from "../../consts/colors";
 import firestore, { firebase } from '@react-native-firebase/firestore';
 import auth from "@react-native-firebase/auth"
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width } = Dimensions.get('screen');
 const cardWidth = width / 1.8
 export default function HomeScreen({ navigation }) {
-        const [ListHotelData, setListHotelData] = useState([])
+        const [ListHotelData, setListHotelData] = useState([]);
         useEffect(() => {
                 firestore()
                         .collection("ListHotel")
@@ -22,60 +24,14 @@ export default function HomeScreen({ navigation }) {
                                 setListHotelData(documentSnapshot.data().ListHotel)
                         })
         }, [])
-
+        const [isShow, setIsShow] = useState(false);
         const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
         const [activeCardIndex, setActiveCardIndex] = useState(0);
         const scrollX = useRef(new Animated.Value(0)).current;
         const [countShow, setCountShow] = useState(0);
         const user = auth().currentUser;
-        const CategoryList = ({ navigation }) => {
-                return (
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', backgroundColor: "#fff2cc", width: 360, height: 140, alignSelf: 'center', borderRadius: 20, paddingBottom: 5, marginTop: 20 }}>
-                                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                        <TouchableOpacity>
-                                                <View style={{ alignItems: 'center', paddingTop: 10 }}>
-                                                        <Icon2 name="hour-glass" size={25} color={COLORS.orange} />
-                                                        <Text style={{ paddingTop: 5, fontSize: 15, fontWeight: 'bold' }}>Theo giờ</Text>
-                                                </View>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity>
-                                                <View style={{ alignItems: 'center', paddingTop: 10 }}>
-                                                        <Icon1 name="heart-multiple-outline" size={25} color={COLORS.orange} />
-                                                        <Text style={{ paddingTop: 5, fontSize: 15, fontWeight: 'bold' }}>Tình yêu</Text>
-                                                </View>
-                                        </TouchableOpacity>
-                                </View>
-                                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                        <TouchableOpacity>
-                                                <View style={{ alignItems: 'center', paddingTop: 10 }}>
-                                                        <Icon3 name="moon" size={25} color={COLORS.orange} />
-                                                        <Text style={{ paddingTop: 5, fontSize: 15, fontWeight: 'bold' }}>Theo đêm</Text>
-                                                </View>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity>
-                                                <View style={{ alignItems: 'center', paddingTop: 10 }}>
-                                                        <Icon1 name="airplane-marker" size={25} color={COLORS.orange} />
-                                                        <Text style={{ paddingTop: 5, fontSize: 15, fontWeight: 'bold' }}>Du lịch</Text>
-                                                </View>
-                                        </TouchableOpacity>
-                                </View>
-                                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                        <TouchableOpacity>
-                                                <View style={{ alignItems: 'center', paddingTop: 10 }}>
-                                                        <Icon4 name="today" size={25} color={COLORS.orange} />
-                                                        <Text style={{ paddingTop: 5, fontSize: 15, fontWeight: 'bold' }}>Theo ngày</Text>
-                                                </View>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity>
-                                                <View style={{ alignItems: 'center', paddingTop: 10 }}>
-                                                        <Icon2 name="dots-three-horizontal" size={25} color={COLORS.orange} />
-                                                        <Text style={{ paddingTop: 5, fontSize: 15, fontWeight: 'bold' }}>Tất cả</Text>
-                                                </View>
-                                        </TouchableOpacity>
-                                </View>
-                        </View>
-                )
-        }
+        const [modalVisible, setModalVisible] = useState(false);
+
         const Card = ({ hotel, index }) => {
                 const inputRange = [(index - 1) * cardWidth, index * cardWidth, (index + 1) * cardWidth];
                 const opacity = scrollX.interpolate({ inputRange, outputRange: [0.7, 0, 0.7] });
@@ -165,6 +121,72 @@ export default function HomeScreen({ navigation }) {
                         </View>
                 )
         }
+        const textInput = useRef(0)
+        const [data, setData] = useState([])
+        const [search, setSearch] = useState("")
+        const handleSearch = (text) => {
+                if (text) {
+                        const newData = ListHotelData.filter(item => {
+                                const itemData = item.name ?
+                                        item.name.toUpperCase()
+                                        : ''.toUpperCase();
+                                const textData = text.toUpperCase();
+                                return itemData.indexOf(textData) > -1;
+                        });
+                        setData(newData);
+                        setSearch(text);
+                } else {
+                        setData([]);
+                        setSearch("");
+                }
+        }
+
+        const [historySearch, setHistorySearch] = useState([])
+        const readItemFromStorage = async newValue => {
+                const value = await AsyncStorage.getItem('hotel')
+                setHistorySearch(JSON.parse(value))
+        };
+        useEffect(() => {
+                readItemFromStorage();
+        }, []);
+        const addItemToSearchHistory = async (item) => {
+                const value = await AsyncStorage.getItem('hotel')
+                const arr = JSON.parse(value)
+                if (arr) {
+                        const index = arr.findIndex((e) => e.id === item.id)
+                        if (index === -1) {
+                                arr.push(item)
+                        }
+                        else {
+                                arr.splice(index, 1)
+                                arr.push(item)
+                        }
+                }
+                await AsyncStorage.setItem('hotel', JSON.stringify(arr))
+                readItemFromStorage()
+        }
+        const removeItemFromSearchHistory = async (item) => {
+                const value = await AsyncStorage.getItem('hotel')
+                const arr = JSON.parse(value)
+                if (arr) {
+                        const index = arr.findIndex((e) => e.id === item.id)
+                        if (index !== -1) {
+                                arr.splice(index, 1)
+                        }
+                }
+                await AsyncStorage.setItem('hotel', JSON.stringify(arr))
+                readItemFromStorage()
+        }
+        const navigateTo = (item) => {
+                navigation.navigate("ListRoom", item)
+                setModalVisible(false)
+                // setData([])
+                // setSearch("")
+                addItemToSearchHistory(item)
+        }
+        const ShowModal = async () => {
+                setModalVisible(true)
+        }
         return (
                 <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
                         <View style={{ paddingHorizontal: 20, height: 100, }}>
@@ -174,34 +196,44 @@ export default function HomeScreen({ navigation }) {
                                                 <Text style={{ marginLeft: 10, fontSize: 18, fontWeight: '700', color: 'black' }}>App Name</Text>
                                         </View>
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                <TouchableOpacity onPress={(() => { ShowModal() })}>
+                                                        <Icon5 name="search" size={32} color="#FF6347" style={{ paddingRight: 10, height: isShow ? 'auto' : 0 }} />
+                                                </TouchableOpacity>
                                                 <Icon1 name="bell-ring-outline" size={26} color={COLORS.grey} />
                                         </View>
                                 </View>
-                                <TouchableOpacity onPress={() => { navigation.navigate("Booked") }}>
-                                        <View style={{ marginTop: 15 }}>
-                                                <Text style={{ fontWeight: 'bold', fontSize: 28, color: 'black' }}>Hello, {auth().currentUser.displayName}
-                                                        <Icon1
-                                                                name="hand-wave-outline"
-                                                                size={26}
-                                                                color={"#FF6347"}
-
-                                                        />
-                                                </Text>
+                                <View style={{ marginTop: 15 }}>
+                                        <Text style={{ fontWeight: 'bold', fontSize: 28, color: 'black' }}>Hello, {auth().currentUser.displayName}
+                                                < Icon1
+                                                        name="hand-wave-outline"
+                                                        size={26}
+                                                        color={"#FF6347"}
+                                                        style={{ marginLeft: 10 }}
+                                                />
+                                        </Text>
+                                </View>
+                        </View>
+                        <ScrollView
+                                showsHorizontalScrollIndicator={false}
+                                style={{ height: "100%" }}
+                                onScroll={(e) => {
+                                        if (e.nativeEvent.contentOffset.y > 30) {
+                                                setIsShow(true)
+                                        } else {
+                                                setIsShow(false)
+                                        }
+                                }}
+                        >
+                                <TouchableOpacity onPress={(() => { ShowModal() })}>
+                                        <View style={styles.searchInputContainer}>
+                                                <Icon5 name="search"
+                                                        size={30}
+                                                        style={{ marginLeft: 10 }}
+                                                        color="#FF6347"
+                                                />
+                                                <Text style={{ fontSize: 17, paddingLeft: 10 }}>Tìm địa điểm, khách sạn</Text>
                                         </View>
                                 </TouchableOpacity>
-                        </View>
-                        <ScrollView showsHorizontalScrollIndicator={false} style={{ height: "100%" }}>
-                                <View style={styles.searchInputContainer}>
-                                        <Icon name="search"
-                                                size={30}
-                                                style={{ marginLeft: 20 }}
-                                        />
-                                        <TextInput
-                                                placeholder="Search"
-                                                style={{ fontSize: 18, paddingLeft: 10 }}
-                                        />
-                                </View>
-                                <CategoryList />
                                 <View>
                                         <Animated.FlatList
                                                 onMomentumScrollEnd={(e) => {
@@ -225,7 +257,7 @@ export default function HomeScreen({ navigation }) {
                                 </View>
                                 <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: 20 }}>
                                         <Text style={{ fontWeight: "bold", color: "black", fontSize: 16 }}>Top Hotels</Text>
-                                        <TouchableOpacity>
+                                        <TouchableOpacity onPress={() => { navigation.navigate("Test") }}>
                                                 <Text style={{ fontWeight: "bold", color: COLORS.primary }}>See All</Text>
                                         </TouchableOpacity>
                                 </View>
@@ -251,7 +283,92 @@ export default function HomeScreen({ navigation }) {
                                         )}
                                 </View>
                         </ScrollView>
-                </SafeAreaView>
+                        <Modal
+                                animationType="slide"
+                                transparent={true}
+                                visible={modalVisible}
+                                onRequestClose={() => {
+                                        setModalVisible(!modalVisible);
+                                }}>
+                                <View style={styles.centeredView}>
+                                        <View style={styles.modalView}>
+                                                <View style={styles.generalView}>
+                                                        <View style={{ flexDirection: 'row', marginTop: 15, alignItems: 'center', }}>
+                                                                <TouchableOpacity onPress={() => { setModalVisible(!modalVisible) }}>
+                                                                        <Icon4 name="chevron-back-outline"
+                                                                                size={30}
+                                                                                style={{ marginLeft: 10 }}
+                                                                                color="#FF6347"
+                                                                        />
+                                                                </TouchableOpacity>
+                                                                <View style={styles.searchInputContainer1}>
+                                                                        <TouchableOpacity onPress={() => { }}>
+                                                                                <Icon5 name="search"
+                                                                                        size={30}
+                                                                                        style={{ marginLeft: 10 }}
+                                                                                        color="#FF6347"
+                                                                                />
+                                                                        </TouchableOpacity>
+                                                                        <TextInput
+                                                                                style={{ fontSize: 17, paddingLeft: 10 }}
+                                                                                placeholder="Tìm địa điểm, khách sạn"
+                                                                                autoFocus={true}
+                                                                                ref={textInput}
+                                                                                value={search}
+                                                                                onChangeText={(text) => { handleSearch(text) }}
+                                                                        />
+                                                                </View>
+                                                        </View>
+
+                                                        {data.length > 0 ?
+                                                                <></> :
+                                                                <View>
+                                                                        {historySearch.length > 0 ?
+                                                                                <Text style={{ marginLeft: 20, marginTop: 10, marginBottom: 10, fontSize: 16, fontWeight: 'bold' }}>Ghé thăm gần đây</Text>
+                                                                                : <></>}
+                                                                        {
+                                                                                historySearch.map((item, index) => (
+                                                                                        <TouchableOpacity
+                                                                                                key={index}
+                                                                                                style={{ flexDirection: 'row', height: 50, borderBottomWidth: 1, borderBottomColor: '#C8D8C3', alignItems: 'center', width: '90%', alignSelf: 'center', marginBottom: 12 }}
+                                                                                                onPress={() => { navigateTo(item) }}
+                                                                                        >
+                                                                                                <Image source={{ uri: item.image }} style={{ width: 30, height: 30, resizeMode: 'cover' }} />
+                                                                                                <View>
+                                                                                                        <Text style={{ marginLeft: 10, fontSize: 17, height: 22, color: 'black', fontWeight: 'bold' }}>{item.name}</Text>
+                                                                                                        <Text style={{ marginLeft: 10, fontSize: 15, height: 20 }}>{item.location}</Text>
+                                                                                                </View>
+                                                                                                <TouchableOpacity style={{ position: 'absolute', right: 0, }} onPress={() => { removeItemFromSearchHistory(item) }}>
+                                                                                                        <Icon5 name='close' size={22} style={{ color: 'black' }} />
+                                                                                                </TouchableOpacity>
+                                                                                        </TouchableOpacity>
+                                                                                )).reverse()
+                                                                        }
+                                                                </View>
+                                                        }
+
+                                                        {data.length > 0 ?
+                                                                <ScrollView>
+                                                                        <Text style={{ marginLeft: 20, marginTop: 10, marginBottom: 10, fontSize: 16, fontWeight: 'bold' }}>Khách sạn</Text>
+                                                                        {data.map((item, index) =>
+                                                                                <TouchableOpacity key={index} style={{ paddingBottom: 20 }} onPress={() => navigateTo(item)}>
+                                                                                        <View style={styles.ModalBoxes}>
+                                                                                                <Image source={{ uri: item.image }} style={{ width: 75, height: 75, marginLeft: 7.5, borderRadius: 10, }} />
+                                                                                                <View style={{ height: 70, paddingHorizontal: 7, width: '79%' }}>
+                                                                                                        <Text style={{ fontSize: 17, fontWeight: 'bold', color: 'black' }}>{item.name}</Text>
+                                                                                                        <Text style={{ height: 40, lineHeight: 20, marginTop: 10, }}>{item.location}</Text>
+                                                                                                </View>
+                                                                                        </View>
+                                                                                </TouchableOpacity>
+                                                                        )}
+                                                                </ScrollView>
+                                                                :
+                                                                <></>}
+                                                </View>
+                                        </View>
+                                </View>
+                        </Modal>
+                </SafeAreaView >
         )
 }
 
@@ -263,14 +380,27 @@ const styles = StyleSheet.create({
                 paddingHorizontal: 20,
         },
         searchInputContainer: {
-                height: 50,
-                backgroundColor: COLORS.light,
+                height: 45,
+                backgroundColor: "white",
                 marginTop: 5,
                 marginLeft: 20,
                 marginRight: 20,
-                borderRadius: 20,
+                borderRadius: 10,
                 flexDirection: "row",
                 alignItems: "center",
+                borderWidth: 1,
+                borderColor: "#dddddd",
+        },
+        searchInputContainer1: {
+                width: '83%',
+                height: 45,
+                marginLeft: 5,
+                backgroundColor: "white",
+                borderRadius: 10,
+                flexDirection: "row",
+                alignItems: "center",
+                borderWidth: 1,
+                borderColor: "#dddddd",
         },
         card: {
                 height: 280,
@@ -318,7 +448,7 @@ const styles = StyleSheet.create({
                 height: 180,
                 width: 200,
                 backgroundColor: COLORS.white,
-                elevation: 15,
+                elevation: 10,
                 marginHorizontal: 10,
                 borderRadius: 15,
         },
@@ -357,4 +487,43 @@ const styles = StyleSheet.create({
                 marginTop: 5,
                 alignItems: 'center'
         },
+        centeredView: {
+                flex: 1,
+                alignItems: "center",
+                justifyContent: 'flex-end'
+        },
+        modalView: {
+                backgroundColor: '#f4eded',
+                borderTopLeftRadius: 20,
+                borderTopRightRadius: 20,
+                alignItems: "center",
+                shadowColor: "#000",
+                shadowOffset: {
+                        width: 0,
+                        height: 2
+                },
+                shadowOpacity: 0.75,
+                shadowRadius: 10,
+                elevation: 5,
+                width: "100%",
+                height: "100%",
+        },
+        generalView: {
+                width: '100%',
+                height: '100%',
+                borderTopLeftRadius: 15,
+                borderTopRightRadius: 15,
+                backgroundColor: 'white',
+        },
+        ModalBoxes: {
+                flexDirection: 'row',
+                width: '90%',
+                backgroundColor: 'white',
+                height: 90,
+                alignSelf: 'center',
+                borderRadius: 10,
+                alignItems: 'center',
+                borderWidth: 1.25,
+                borderColor: '#dddddd'
+        }
 })

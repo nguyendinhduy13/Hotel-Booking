@@ -1,3 +1,4 @@
+
 import React,{useState,useEffect} from "react";
 import {View,Text,StyleSheet, TouchableOpacity} from "react-native"
 import Icon2 from "react-native-vector-icons/AntDesign"
@@ -58,7 +59,7 @@ export default function Booked({navigation,route}){
                 console.log(hello)
         }
 
-        return(
+        return (
                 <View style={{backgroundColor:COLORS.white,flex:1}}>
                         <View style={{flexDirection:"row",marginVertical:30}}>
                         <Icon2
@@ -132,13 +133,10 @@ export default function Booked({navigation,route}){
                 </View>
         )
 }
-
-const styles=StyleSheet.create(
-        {
-                Text:{
-                        fontSize:18,
-                        fontWeight:"bold",
-                        color:COLORS.dark  
-                }
-        }
-)
+const styles = StyleSheet.create({
+  Text: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: COLORS.dark,
+  },
+});
