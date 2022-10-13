@@ -4,7 +4,7 @@ import Icon1 from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/Ionicons';
 import Icon3 from 'react-native-vector-icons/Feather';
 import firestore from '@react-native-firebase/firestore';
-import { TouchableOpacity, View, SafeAreaView, ScrollView, Text, Animated, Image, StyleSheet, Dimensions } from "react-native"
+import { TouchableOpacity, View, SafeAreaView, ScrollView, StatusBar, Text, Animated, Image, StyleSheet, Dimensions } from "react-native"
 import COLORS from '../../consts/colors';
 const width = Dimensions.get('screen').width;
 const ListRoom = ({ navigation, route }) => {
@@ -29,23 +29,50 @@ const ListRoom = ({ navigation, route }) => {
         const handleShow = () => {
                 setShow(!show)
         }
-
+        const AnimatedView = Animated.createAnimatedComponent(View)
+        const animatedValue = useRef(new Animated.Value(0)).current;
+        const HeaderAnimated = {
+                opacity: animatedValue.interpolate({
+                        inputRange: [150, 300],
+                        outputRange: [0, 1],
+                }),
+        }
+        const HeaderAnimatedScroll = {
+                opacity: animatedValue.interpolate({
+                        inputRange: [0, 300],
+                        outputRange: [1, 0],
+                }),
+        }
         return (
                 <SafeAreaView style={{ backgroundColor: 'white' }}>
-
-                        <View style={styles.HeaderBack}>
-                                <Icon1 name="chevron-left" size={25} color='black' style={{}} onPress={() => navigation.goBack()} />
-                                <View style={{ alignItems: 'center' }}>
+                        <AnimatedView style={[styles.HeaderBack, HeaderAnimated]}>
+                                <Icon
+                                        name="arrow-back-ios"
+                                        size={28}
+                                        color="black"
+                                        onPress={navigation.goBack}
+                                />
+                                <View style={{ alignItems: 'center', }}>
                                         <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'orange' }}>{item.name}</Text>
                                         <Text>{item.location}</Text>
                                 </View>
-                                <Icon1 name={"bookmark-o"} size={25} color='black' style={{}} />
-                        </View>
+                                <Icon2 name="heart-outline" size={0} color='black' style={{}} />
+                        </AnimatedView>
+
+                        <AnimatedView style={[styles.HeaderTitle, HeaderAnimatedScroll]}>
+                                <Icon
+                                        name="arrow-back-ios"
+                                        size={28}
+                                        color={COLORS.white}
+                                        onPress={navigation.goBack}
+                                />
+                                <Icon1 name={"bookmark-o"} size={25} color='white' style={{}} />
+                        </AnimatedView>
                         <ScrollView
-                                // onScroll={e => {
-                                //         PosY = e.nativeEvent.contentOffset.y,
-                                //                 PosY < 260 ? setPos(true) : setPos(false)
-                                // }}
+                                onScroll={e => {
+                                        const currentOffset = e.nativeEvent.contentOffset.y;
+                                        animatedValue.setValue(currentOffset)
+                                }}
                                 scrollEventThrottle={16}
                                 showsVerticalScrollIndicator={false}
                         >
@@ -124,7 +151,9 @@ const styles = StyleSheet.create({
                 width: width,
                 height: 50,
                 flexDirection: 'row',
-                justifyContent: 'space-between',
+                position: 'absolute',
+                zIndex: 1,
+                top: 0,
                 alignItems: 'center',
                 paddingHorizontal: 10,
                 borderStyle: 'solid',
@@ -132,17 +161,19 @@ const styles = StyleSheet.create({
                 borderColor: '#e0e0e0',
                 elevation: 10,
                 shadowColor: COLORS.black,
-                backgroundColor: 'white'
+                backgroundColor: '#fffafa',
+                justifyContent: 'space-between'
 
         },
         HeaderTitle: {
                 width: width,
                 height: 50,
-                paddingHorizontal: 15,
+                paddingHorizontal: 10,
                 position: 'absolute',
                 zIndex: 1,
-                backgroundColor: 'white',
-                elevation: 20,
+                top: 10,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
         },
 })
 

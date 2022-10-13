@@ -32,6 +32,15 @@ export default function HomeScreen({ navigation }) {
         const user = auth().currentUser;
         const [modalVisible, setModalVisible] = useState(false);
 
+        const AnimatedView = Animated.createAnimatedComponent(View)
+        const animatedValue = useRef(new Animated.Value(0)).current;
+        const SearchShow = {
+                opacity: animatedValue.interpolate({
+                        inputRange: [0, 50],
+                        outputRange: [0, 1]
+                }),
+        }
+
         const Card = ({ hotel, index }) => {
                 const inputRange = [(index - 1) * cardWidth, index * cardWidth, (index + 1) * cardWidth];
                 const opacity = scrollX.interpolate({ inputRange, outputRange: [0.7, 0, 0.7] });
@@ -202,9 +211,11 @@ export default function HomeScreen({ navigation }) {
                                                 <Text style={{ marginLeft: 10, fontSize: 18, fontWeight: '700', color: 'black' }}>App Name</Text>
                                         </View>
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                <TouchableOpacity onPress={(() => { ShowModal() })}>
-                                                        <Icon5 name="search" size={32} color="#FF6347" style={{ paddingRight: 10, height: isShow ? 'auto' : 0 }} />
-                                                </TouchableOpacity>
+                                                <Animated.View style={[{ paddingRight: 10 }, SearchShow]}>
+                                                        <TouchableOpacity onPress={(() => { ShowModal() })}>
+                                                                <Icon5 name="search" size={32} color="#FF6347" />
+                                                        </TouchableOpacity>
+                                                </Animated.View>
                                                 <Icon1 name="bell-ring-outline" size={26} color={COLORS.grey} />
                                         </View>
                                 </View>
@@ -222,13 +233,12 @@ export default function HomeScreen({ navigation }) {
                         <ScrollView
                                 showsHorizontalScrollIndicator={false}
                                 style={{ height: "100%" }}
-                                onScroll={(e) => {
-                                        if (e.nativeEvent.contentOffset.y > 30) {
-                                                setIsShow(true)
-                                        } else {
-                                                setIsShow(false)
-                                        }
+                                onScroll={e => {
+                                        const currentOffset = e.nativeEvent.contentOffset.y;
+                                        animatedValue.setValue(currentOffset)
+                                        console.log(currentOffset)
                                 }}
+                                scrollEventThrottle={16}
                         >
                                 <TouchableOpacity onPress={(() => { ShowModal() })}>
                                         <View style={styles.searchInputContainer}>
