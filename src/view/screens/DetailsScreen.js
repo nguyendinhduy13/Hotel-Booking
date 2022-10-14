@@ -26,18 +26,23 @@ export default function DetailsScreen({ navigation, route }) {
   const Format = (number) => {
     return number.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
   };
+  const AnimatedView = Animated.createAnimatedComponent(View)
+  const animatedValue = useRef(new Animated.Value(0)).current;
+  const HeaderAnimated = {
+    opacity: animatedValue.interpolate({
+      inputRange: [330, 400],
+      outputRange: [0, 1],
+    }),
+  }
+  const HeaderAnimatedScroll = {
+    opacity: animatedValue.interpolate({
+      inputRange: [0, 200, 350],
+      outputRange: [1, 1, 0],
+    }),
+  }
   return (
     <View style={{ position: 'relative' }}>
-      <View style={{
-        position: 'absolute',
-        top: 40,
-        left: 0,
-        right: 0,
-        zIndex: 1,
-        height: 50,
-        width: '100%',
-        justifyContent: 'center',
-      }}>
+      <Animated.View style={[styles.HeadrView, HeaderAnimatedScroll]}>
         <View style={styles.header}>
           <Icon
             name="arrow-back-ios"
@@ -47,18 +52,30 @@ export default function DetailsScreen({ navigation, route }) {
           />
           <Icon name="bookmark-border" size={28} color={COLORS.white} />
         </View>
-      </View>
+      </Animated.View>
+      <Animated.View style={[styles.HeadrView1, HeaderAnimated]}>
+        <View style={styles.header}>
+          <Icon
+            name="arrow-back-ios"
+            size={28}
+            color='black'
+            onPress={navigation.goBack}
+          />
+          <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'orange' }}>{item.name}</Text>
+          <Icon name="bookmark-border" size={0} color='black' />
+        </View>
+      </Animated.View>
       <ScrollView
+        onScroll={e => {
+          const currentOffset = e.nativeEvent.contentOffset.y;
+          animatedValue.setValue(currentOffset)
+        }}
         scrollEventThrottle={16}
         contentContainerStyle={{
           backgroundColor: COLORS.white,
           paddingBottom: 80,
         }}>
-        <StatusBar
-          barStyle="light-content"
-          translucent
-          backgroundColor="rgba(0,0,0,0)"
-        />
+
         <ImageBackground style={styles.headerImage} source={{ uri: item.image[0] }}>
         </ImageBackground>
         <View>
@@ -179,7 +196,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginHorizontal: 20,
+    marginHorizontal: 10,
     justifyContent: 'space-between',
 
   },
@@ -228,6 +245,27 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#e0e0e0',
   },
+  HeadrView: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1,
+    height: 50,
+    width: '100%',
+    justifyContent: 'center',
+  },
+  HeadrView1: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1,
+    height: 50,
+    width: '100%',
+    justifyContent: 'center',
+    backgroundColor: 'white'
+  }
 });
 
 {/* <View
