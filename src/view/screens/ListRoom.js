@@ -23,7 +23,7 @@ const ListRoom = ({ navigation, route }) => {
         useEffect(() => {
                 var dis = getDistance(
                         { latitude: currentPosition.latitude, longitude: currentPosition.longitude },
-                        { latitude: item.position.latitude, longitude: item.position.longitude }
+                        { latitude: item.position[0], longitude: item.position[1] }
                 );
                 //format the distance to km with 2 decimal places
                 var km = (dis / 1000).toFixed(1);
