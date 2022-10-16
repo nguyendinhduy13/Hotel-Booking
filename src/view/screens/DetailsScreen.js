@@ -61,7 +61,7 @@ export default function DetailsScreen({ navigation, route }) {
             color='black'
             onPress={navigation.goBack}
           />
-          <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'orange' }}>{item.name}</Text>
+          <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'orange', textAlign: 'center' }}>{item.name}</Text>
           <Icon name="bookmark-border" size={0} color='black' />
         </View>
       </Animated.View>
@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
   },
   HeadrView: {
     position: 'absolute',
-    top: 0,
+    top: 10,
     left: 0,
     right: 0,
     zIndex: 1,
@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 1,
-    height: 50,
+    height: 60,
     width: '100%',
     justifyContent: 'center',
     backgroundColor: 'white'

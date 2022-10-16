@@ -9,6 +9,7 @@ import ListRoom from "../screens/ListRoom";
 import Booked from "../screens/Booked";
 import BookedCT from "../screens/BookedCT";
 import BookedFinal from "../screens/BookedFinal";
+import Map from "../screens/Map";
 const Stack = createNativeStackNavigator()
 
 export default function AppStack() {
@@ -73,6 +74,13 @@ export default function AppStack() {
                         <Stack.Screen
                                 name="BookedFinal"
                                 component={BookedFinal}
+                                options={{
+                                        headerShown: false
+                                }}
+                        />
+                        <Stack.Screen
+                                name="Map"
+                                component={Map}
                                 options={{
                                         headerShown: false
                                 }}

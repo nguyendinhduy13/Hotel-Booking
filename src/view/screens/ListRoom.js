@@ -6,9 +6,12 @@ import Icon3 from 'react-native-vector-icons/Feather';
 import firestore from '@react-native-firebase/firestore';
 import { TouchableOpacity, View, SafeAreaView, ScrollView, StatusBar, Text, Animated, Image, StyleSheet, Dimensions, Modal } from "react-native"
 import COLORS from '../../consts/colors';
+import { useSelector } from 'react-redux';
+import { getDistance } from 'geolib';
 const width = Dimensions.get('screen').width;
 const ListRoom = ({ navigation, route }) => {
         const item = route.params
+        const currentPosition = useSelector(state => state.currentPosition)
         const [DataRoom, setDataRoom] = useState([])
         const [show, setShow] = useState(false)
         const [showModalInfo, SetshowModalInfo] = useState(false)
@@ -16,7 +19,16 @@ const ListRoom = ({ navigation, route }) => {
         const Format = (number) => {
                 return number.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
         };
-
+        const [distance, setDistance] = useState(0)
+        useEffect(() => {
+                var dis = getDistance(
+                        { latitude: currentPosition.latitude, longitude: currentPosition.longitude },
+                        { latitude: item.position.latitude, longitude: item.position.longitude }
+                );
+                //format the distance to km with 2 decimal places
+                var km = (dis / 1000).toFixed(1);
+                setDistance(km)
+        }, []);
         useEffect(() => {
                 firestore()
                         .collection('HotelList')
@@ -27,6 +39,7 @@ const ListRoom = ({ navigation, route }) => {
                                 setDataRoom(data.Room)
                         });
         }, [])
+
         const handleShow = () => {
                 setShow(!show)
         }
@@ -53,9 +66,9 @@ const ListRoom = ({ navigation, route }) => {
                                         color="black"
                                         onPress={navigation.goBack}
                                 />
-                                <View style={{ alignItems: 'center', }}>
+                                <View style={{ alignItems: 'center', paddingRight: 20 }}>
                                         <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'orange' }}>{item.name}</Text>
-                                        <Text>{item.location}</Text>
+                                        <Text style={{ textAlign: 'center' }}>{item.location}</Text>
                                 </View>
                                 <Icon2 name="heart-outline" size={0} color='black' style={{}} />
                         </AnimatedView>
@@ -87,8 +100,8 @@ const ListRoom = ({ navigation, route }) => {
                                                 </View>
                                                 <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 10 }}>
                                                         <Icon2 name="md-location-sharp" size={25} color="orange" style={{}} />
-                                                        <View style={{ paddingHorizontal: 2 }}>
-                                                                <Text style={{ color: 'black', fontSize: 15 }}><Text style={{ color: 'orange' }}>6.6km</Text> | {item.location}</Text>
+                                                        <View style={{ paddingHorizontal: 2, paddingRight: 20 }}>
+                                                                <Text style={{ color: 'black', fontSize: 15 }}><Text style={{ color: 'orange' }}>{distance} km</Text> | {item.location}</Text>
                                                         </View>
                                                 </View>
                                         </View>
@@ -168,7 +181,7 @@ const styles = StyleSheet.create({
         },
         HeaderBack: {
                 width: width,
-                height: 50,
+                height: 70,
                 flexDirection: 'row',
                 position: 'absolute',
                 zIndex: 1,
@@ -190,7 +203,7 @@ const styles = StyleSheet.create({
                 paddingHorizontal: 10,
                 position: 'absolute',
                 zIndex: 1,
-                top: 10,
+                top: 20,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
         },

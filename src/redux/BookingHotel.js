@@ -1,4 +1,4 @@
-import {createSlice} from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 
 const initialState = {
@@ -19,6 +19,6 @@ export default createSlice({
                         state.price = action.payload.price;
                         state.star = action.payload.star;
                         state.rating = action.payload.rating;
-                }
-        }
+                },
+        },
 })
