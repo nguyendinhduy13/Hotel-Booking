@@ -1,6 +1,6 @@
 
 import React,{useState,useEffect} from "react";
-import {View,Text,StyleSheet, TouchableOpacity} from "react-native"
+import {View,Text,StyleSheet, TouchableOpacity,TextInput,ScrollView} from "react-native"
 import Icon2 from "react-native-vector-icons/AntDesign"
 import Icon1 from 'react-native-vector-icons/Entypo';
 import COLORS from "../../consts/colors";
@@ -45,22 +45,11 @@ export default function Booked({navigation,route}){
         };
         
         const addbooking=()=>{
-                const booking=[]
-                booking.push({
-                        startDate:startDate,
-                        endDate:endDate,
-                        gueust:Number,
-                })
-                const hello=[]
-                hello.push({
-                        booking:booking,
-                        startDate:startDate,
-                })
-                console.log(hello)
+                
         }
 
         return (
-                <View style={{backgroundColor:COLORS.white,flex:1}}>
+                <ScrollView style={{backgroundColor:COLORS.white,flex:1}}>
                         <View style={{flexDirection:"row",marginVertical:30}}>
                         <Icon2
                         onPress={()=> {}}
@@ -114,6 +103,29 @@ export default function Booked({navigation,route}){
                                 )}
                                 </View>
                         </View>
+                        <View style={{justifyContent:"center",alignItems:"center",marginTop:20}}>
+        <TextInput
+        placeholder='Họ tên'
+        style={{width:350,height:55,borderRadius:10,marginTop:20,backgroundColor:COLORS.textinput}}
+        />
+       <TextInput
+        placeholder='Ngày sinh'
+        style={{width:350,height:55,borderRadius:10,marginTop:20,backgroundColor:COLORS.textinput}}
+        />
+        <TextInput
+        placeholder='Email'
+        style={{width:350,height:55,borderRadius:10,marginTop:20,backgroundColor:COLORS.textinput}}
+        />
+        <TextInput
+        placeholder='Giới tính'
+        style={{width:350,height:55,borderRadius:10,marginTop:20,backgroundColor:COLORS.textinput}}
+        />
+        <TextInput
+        placeholder='Số điện thoại'
+        style={{width:350,height:55,borderRadius:10,marginTop:20,backgroundColor:COLORS.textinput}}
+        />
+    </View>
+    
                         <View style={{marginVertical:25}}>
                         <Text style={{fontSize:18,color:COLORS.dark, fontWeight:"bold",marginTop:15,marginLeft:23}}>Guest</Text>
                         <View style={{flexDirection:"row",justifyContent:"center",width:350,alignSelf:"center",height:55,alignItems:"center",borderRadius:10,marginTop:10}}>
@@ -126,11 +138,11 @@ export default function Booked({navigation,route}){
                                 </TouchableOpacity>
                         </View>
                         <Text style={{alignSelf:"center",paddingTop:30,fontSize:20,fontWeight:"bold",color:COLORS.dark}}>Total: $435</Text>
-                        <TouchableOpacity style={{backgroundColor:COLORS.primary,height:45,width:350,alignSelf:"center",alignItems:"center",justifyContent:"center",borderRadius:20,marginTop:15}} onPress={()=>{navigation.navigate("BookedCT",item);addbooking()}}>
+                        <TouchableOpacity style={{backgroundColor:COLORS.primary,height:45,width:350,alignSelf:"center",alignItems:"center",justifyContent:"center",borderRadius:20,marginTop:15}} onPress={()=>{navigation.navigate("BookedFinal",item)}}>
                                 <Text style={{fontSize:15,fontWeight:"bold",color:COLORS.white}}>Continue</Text>
                         </TouchableOpacity>
                         </View>
-                </View>
+                </ScrollView>
         )
 }
 const styles = StyleSheet.create({

@@ -11,7 +11,7 @@ import Icon5 from "react-native-vector-icons/AntDesign"
 import auth from "@react-native-firebase/auth"
 import { SignInContext } from "../../contexts/authContext";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
-export default function Profile() {
+export default function Profile({navigation}) {
         const { dispatchSignedIn } = useContext(SignInContext)
         async function signOut() {
                 try {
@@ -39,7 +39,7 @@ export default function Profile() {
                                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginRight: 20 }}>
                                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                         <Text style={{ fontSize: 27, fontWeight: 'bold', color: 'black' }}>{auth().currentUser.displayName}</Text>
-                                                        <TouchableOpacity>
+                                                        <TouchableOpacity onPress={()=>navigation.navigate("InfoProfile")}>
                                                                 <Icon2 name="edit-3" size={20} color="red" style={{ marginLeft: 5 }} />
                                                         </TouchableOpacity>
                                                 </View>

@@ -7,8 +7,9 @@ import HotelPhotos from "../screens/HotelPhotos";
 import Test from "../screens/Test";
 import ListRoom from "../screens/ListRoom";
 import Booked from "../screens/Booked";
-import BookedCT from "../screens/BookedCT";
 import BookedFinal from "../screens/BookedFinal";
+import Map from "../screens/Map";
+import InfoProfile from "../screens/InfoProfile";
 const Stack = createNativeStackNavigator()
 
 export default function AppStack() {
@@ -63,19 +64,27 @@ export default function AppStack() {
                                         headerShown: false
                                 }}
                         />
-                        <Stack.Screen
-                                name="BookedCT"
-                                component={BookedCT}
-                                options={{
-                                        headerShown: false
-                                }}
-                        />
+
                         <Stack.Screen
                                 name="BookedFinal"
                                 component={BookedFinal}
                                 options={{
                                         headerShown: false
                                 }}
+                        />
+                        <Stack.Screen
+                                name="Map"
+                                component={Map}
+                                options={{
+                                        headerShown: false
+                                }}
+                        />
+                        <Stack.Screen
+                        name="InfoProfile"
+                        component={InfoProfile}
+                        options={{
+                                headerShown: false
+                        }}
                         />
                 </Stack.Navigator>
         )

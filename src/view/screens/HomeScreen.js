@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { SafeAreaView, Text, StyleSheet, View, ScrollView, Alert, TextInput, TouchableOpacity, FlatList, Dimensions, Image, Animated, LogBox, Modal } from "react-native";
+import { SafeAreaView, Text, StyleSheet, View, ScrollView, Alert, TextInput, PermissionsAndroid, TouchableOpacity, FlatList, Dimensions, Image, Animated, LogBox, Modal } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Icon1 from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon2 from "react-native-vector-icons/Entypo";
@@ -8,12 +8,51 @@ import Icon4 from "react-native-vector-icons/Ionicons";
 import Icon5 from "react-native-vector-icons/EvilIcons";
 import COLORS from "../../consts/colors";
 import firestore, { firebase } from '@react-native-firebase/firestore';
+import Geolocation from '@react-native-community/geolocation';
+import { useDispatch } from "react-redux";
+import CurrentPosition from '../../redux/CurrentPosition';
 import auth from "@react-native-firebase/auth"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width } = Dimensions.get('screen');
 const cardWidth = width / 1.8
 export default function HomeScreen({ navigation }) {
+        //get current position
+        const dispatch = useDispatch();
+        const requestLocation = async () => {
+                try {
+                        const granted = await PermissionsAndroid.request(
+                                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                                {
+                                        title: "Location Permission",
+                                        message:
+                                                "Hotel Booking App needs access to your location " +
+                                                "so you can see your current location.",
+                                        buttonNeutral: "Ask Me Later",
+                                        buttonNegative: "Cancel",
+                                        buttonPositive: "OK"
+                                }
+                        );
+                } catch (err) {
+                        console.warn(err);
+                }
+        };
+        const componentDidMount = () => {
+                Geolocation.getCurrentPosition((position) => {
+                        var lat = parseFloat(position.coords.latitude)
+                        var long = parseFloat(position.coords.longitude)
+                        dispatch(CurrentPosition.actions.addCurrentPosition({
+                                latitude: lat,
+                                longitude: long,
+                        }));
+                },
+                        (error) => alert(JSON.stringify(error)),
+                        { enableHighAccuracy: true });
+        }
+        useEffect(() => {
+                componentDidMount()
+        }, []);
+
         const [ListHotelData, setListHotelData] = useState([]);
         useEffect(() => {
                 firestore()
@@ -66,9 +105,6 @@ export default function HomeScreen({ navigation }) {
                                                 </View>
 
                                         </Animated.View>
-                                </TouchableOpacity>
-                                <TouchableOpacity>
-                                        <Icon style={{ position: 'absolute', top: -42, left: 170 }} name="bookmark-border" size={26} color={COLORS.white} />
                                 </TouchableOpacity>
                         </View>
                 )
@@ -203,6 +239,7 @@ export default function HomeScreen({ navigation }) {
                 setModalVisible(true)
         }
         return (
+                requestLocation(),
                 <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
                         <View style={{ paddingHorizontal: 20, height: 100, }}>
                                 <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
@@ -216,7 +253,9 @@ export default function HomeScreen({ navigation }) {
                                                                 <Icon5 name="search" size={32} color="#FF6347" />
                                                         </TouchableOpacity>
                                                 </Animated.View>
-                                                <Icon1 name="bell-ring-outline" size={26} color={COLORS.grey} />
+                                                <TouchableOpacity onPress={() => { navigation.navigate("Map") }}>
+                                                        <Icon1 name="bell-ring-outline" size={26} color={COLORS.grey} />
+                                                </TouchableOpacity>
                                         </View>
                                 </View>
                                 <View style={{ marginTop: 15 }}>
@@ -236,7 +275,6 @@ export default function HomeScreen({ navigation }) {
                                 onScroll={e => {
                                         const currentOffset = e.nativeEvent.contentOffset.y;
                                         animatedValue.setValue(currentOffset)
-                                        console.log(currentOffset)
                                 }}
                                 scrollEventThrottle={16}
                         >
