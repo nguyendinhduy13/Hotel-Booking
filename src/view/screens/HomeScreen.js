@@ -259,7 +259,7 @@ export default function HomeScreen({ navigation }) {
                                         </View>
                                 </View>
                                 <View style={{ marginTop: 15 }}>
-                                        <Text style={{ fontWeight: 'bold', fontSize: 28, color: 'black' }}>Hello, {auth().currentUser.displayName}
+                                        <Text style={{ fontWeight: 'bold', fontSize: 28, color: 'black' }}>Hello, {auth().currentUser.displayName + " "}
                                                 < Icon1
                                                         name="hand-wave-outline"
                                                         size={26}
@@ -388,7 +388,7 @@ export default function HomeScreen({ navigation }) {
                                                                                                 onPress={() => { navigateTo(item) }}
                                                                                         >
                                                                                                 <Image source={{ uri: item.image }} style={{ width: 30, height: 30, resizeMode: 'cover' }} />
-                                                                                                <View>
+                                                                                                <View style={{ width: '85%' }}>
                                                                                                         <Text style={{ marginLeft: 10, fontSize: 17, height: 22, color: 'black', fontWeight: 'bold' }}>{item.name}</Text>
                                                                                                         <Text style={{ marginLeft: 10, fontSize: 15, height: 20 }}>{item.location}</Text>
                                                                                                 </View>

@@ -4,6 +4,7 @@ import Icon1 from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/Ionicons';
 import Icon3 from 'react-native-vector-icons/Feather';
 import firestore from '@react-native-firebase/firestore';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import {
     TouchableOpacity,
     View,
@@ -23,6 +24,11 @@ import { getDistance } from 'geolib';
 const width = Dimensions.get('screen').width;
 const ListRoom = ({ navigation, route }) => {
     const item = route.params;
+    const mapRef = useRef(null);
+    const { height } = Dimensions.get('window');
+    const ASPECT_RATIO = width / height;
+    const LATITUDE_DELTA = 0.01;
+    const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
     const currentPosition = useSelector(state => state.currentPosition);
     const [DataRoom, setDataRoom] = useState([]);
     const [show, setShow] = useState(false);
@@ -32,15 +38,15 @@ const ListRoom = ({ navigation, route }) => {
         return number.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
     };
     const [distance, setDistance] = useState(0);
-    // useEffect(() => {
-    //         var dis = getDistance(
-    //                 { latitude: currentPosition.latitude, longitude: currentPosition.longitude },
-    //                 { latitude: item.position.latitude, longitude: item.position.longitude }
-    //         );
-    //         //format the distance to km with 2 decimal places
-    //         var km = (dis / 1000).toFixed(1);
-    //         setDistance(km)
-    // }, []);
+    useEffect(() => {
+        var dis = getDistance(
+            { latitude: currentPosition.latitude, longitude: currentPosition.longitude },
+            { latitude: item.position[0], longitude: item.position[1] }
+        );
+        //format the distance to km with 2 decimal places
+        var km = (dis / 1000).toFixed(1);
+        setDistance(km)
+    }, []);
     useEffect(() => {
         firestore()
             .collection('HotelList')
@@ -219,6 +225,54 @@ const ListRoom = ({ navigation, route }) => {
                             {item.description}
                         </Text>
                     </View>
+                    <View style={{
+                        marginTop: 10,
+                    }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: "space-between" }}>
+                            <Text
+                                style={{
+                                    fontSize: 20,
+                                    fontWeight: 'bold',
+                                    color: 'black',
+                                }}>
+                                Bản đồ
+                            </Text>
+                            <TouchableOpacity>
+                                <Text
+                                    style={{
+                                        fontSize: 15,
+                                        fontWeight: 'bold',
+                                        color: 'blue',
+                                        marginRight: 5
+                                    }}>
+                                    Xem</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View
+                            style={{
+                                width: "99%",
+                                height: 150,
+                                marginTop: 10,
+                            }}>
+                            <MapView
+                                ref={mapRef}
+                                style={{ flex: 1 }}
+                                provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+                                region={{
+                                    latitude: item.position[0],
+                                    longitude: item.position[1],
+                                    latitudeDelta: LATITUDE_DELTA,
+                                    longitudeDelta: LONGITUDE_DELTA,
+                                }}>
+                                <Marker
+                                    coordinate={{
+                                        latitude: item.position[0],
+                                        longitude: item.position[1],
+                                    }}
+                                />
+                            </MapView>
+                        </View>
+                    </View>
                     <Text
                         style={{
                             fontSize: 20,
@@ -307,36 +361,36 @@ const ListRoom = ({ navigation, route }) => {
 
                                 {ItemShow
                                     ? items.icon.map((item, index) => (
-                                          <View
-                                              key={index}
-                                              style={{
-                                                  width: 300,
-                                                  marginTop: 15,
-                                                  flexDirection: 'row',
-                                              }}>
-                                              <Image
-                                                  source={{
-                                                      uri:
-                                                          index <= 2
-                                                              ? item
-                                                              : null,
-                                                  }}
-                                                  style={{
-                                                      width: 30,
-                                                      tintColor: COLORS.primary,
-                                                  }}
-                                              />
-                                              <Text
-                                                  style={{
-                                                      marginTop: 3,
-                                                      marginLeft: 20,
-                                                  }}>
-                                                  {index <= 2
-                                                      ? items.tienich[index]
-                                                      : null}
-                                              </Text>
-                                          </View>
-                                      ))
+                                        <View
+                                            key={index}
+                                            style={{
+                                                width: 300,
+                                                marginTop: 15,
+                                                flexDirection: 'row',
+                                            }}>
+                                            <Image
+                                                source={{
+                                                    uri:
+                                                        index <= 2
+                                                            ? item
+                                                            : null,
+                                                }}
+                                                style={{
+                                                    width: 30,
+                                                    tintColor: COLORS.primary,
+                                                }}
+                                            />
+                                            <Text
+                                                style={{
+                                                    marginTop: 3,
+                                                    marginLeft: 20,
+                                                }}>
+                                                {index <= 2
+                                                    ? items.tienich[index]
+                                                    : null}
+                                            </Text>
+                                        </View>
+                                    ))
                                     : null}
                             </View>
                         </View>
@@ -460,6 +514,9 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         borderWidth: 1,
         borderColor: '#eeeeee',
+    },
+    map: {
+        ...StyleSheet.absoluteFillObject,
     },
 });
 

@@ -80,11 +80,11 @@ export default function AppStack() {
                                 }}
                         />
                         <Stack.Screen
-                        name="InfoProfile"
-                        component={InfoProfile}
-                        options={{
-                                headerShown: false
-                        }}
+                                name="InfoProfile"
+                                component={InfoProfile}
+                                options={{
+                                        headerShown: false
+                                }}
                         />
                 </Stack.Navigator>
         )
