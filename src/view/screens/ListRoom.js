@@ -4,18 +4,19 @@ import Icon1 from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/Ionicons';
 import Icon3 from 'react-native-vector-icons/Feather';
 import firestore from '@react-native-firebase/firestore';
-import { TouchableOpacity, View, SafeAreaView, ScrollView, StatusBar, Text, Animated, Image, StyleSheet, Dimensions } from "react-native"
+import { TouchableOpacity, View, SafeAreaView, ScrollView, StatusBar, Text, Animated, Image, StyleSheet, Dimensions, Modal } from "react-native"
 import COLORS from '../../consts/colors';
 const width = Dimensions.get('screen').width;
 const ListRoom = ({ navigation, route }) => {
         const item = route.params
         const [DataRoom, setDataRoom] = useState([])
-        const [Pos, setPos] = useState(true)
         const [show, setShow] = useState(false)
+        const [showModalInfo, SetshowModalInfo] = useState(false)
+        const [ItemShow, setItemShow] = useState(0)
         const Format = (number) => {
                 return number.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
         };
-        let PosY = 0
+
         useEffect(() => {
                 firestore()
                         .collection('HotelList')
@@ -107,7 +108,7 @@ const ListRoom = ({ navigation, route }) => {
                                                                 <View style={{ width: "100%", height: 150, alignSelf: 'center' }}>
                                                                         <Image style={styles.IMGRecent} source={{ uri: items.image[0] }} />
                                                                 </View>
-                                                                <View style={{ marginTop: 35 }}>
+                                                                <View style={{ marginTop: 25 }}>
                                                                         <View style={{ paddingHorizontal: 15 }}>
                                                                                 <Text style={{ fontSize: 20, height: 25, color: "black" }}>{items.name}</Text>
                                                                                 <Text style={{ fontSize: 18, paddingVertical: 10, fontWeight: "700", color: COLORS.primary }}>{
@@ -116,21 +117,39 @@ const ListRoom = ({ navigation, route }) => {
                                                                         </View>
                                                                 </View>
                                                         </TouchableOpacity>
-                                                        <TouchableOpacity style={{ position: 'absolute', backgroundColor: 'white', borderRadius: 20, top: 10, left: 335 }}>
+                                                        <TouchableOpacity
+                                                                onPressIn={() => { setItemShow(items.id) }}
+                                                                onPressOut={() => { setItemShow(null) }}
+                                                                style={{ position: 'absolute', backgroundColor: 'white', borderRadius: 20, top: 200, left: 335 }}>
                                                                 <Icon3 name="info" size={26} color="orange" />
                                                         </TouchableOpacity>
+                                                        <View style={[styles.ViewInfo, { height: items.id == ItemShow ? 110 : 0 }]}>
+                                                                <Text>{items.name}</Text>
+                                                        </View>
                                                 </View>
                                         ))}
+                                        <View>
+                                                <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'black' }}>Đánh giá</Text>
+                                                <View style={{ marginTop: 10 }}>
+                                                        <View style={styles.ViewDG}>
+                                                                <View style={{ padding: 10 }}>
+                                                                        <Text style={{ color: 'black', fontWeight: "bold", fontSize: 17 }}>Name<Text style={{ color: 'gray', fontSize: 15 }}>      |       Time</Text></Text>
+                                                                        <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 16, marginTop: 5 }}>Name Room</Text>
+                                                                        <Text style={{ marginTop: 5 }}>Comment </Text>
+                                                                </View>
+                                                        </View>
+                                                </View>
+                                        </View>
                                 </View>
                         </ScrollView>
-                </SafeAreaView>
+                </SafeAreaView >
         )
 }
 
 const styles = StyleSheet.create({
         RecentlyBox: {
                 width: "100%",
-                height: 260,
+                height: 250,
                 color: "black",
                 backgroundColor: COLORS.white,
                 marginBottom: 15,
@@ -138,7 +157,7 @@ const styles = StyleSheet.create({
                 borderRadius: 10,
                 elevation: 15,
                 shadowColor: COLORS.black,
-
+                marginBottom: 20,
         },
         IMGRecent: {
                 height: '100%',
@@ -158,7 +177,7 @@ const styles = StyleSheet.create({
                 paddingHorizontal: 10,
                 borderStyle: 'solid',
                 borderBottomWidth: 1,
-                borderColor: '#e0e0e0',
+                borderColor: 'white',
                 elevation: 10,
                 shadowColor: COLORS.black,
                 backgroundColor: '#fffafa',
@@ -175,6 +194,30 @@ const styles = StyleSheet.create({
                 flexDirection: 'row',
                 justifyContent: 'space-between',
         },
+        ViewInfo: {
+                position: 'absolute',
+                zIndex: 1,
+                top: 20,
+                width: '90%',
+                backgroundColor: 'white',
+                borderRadius: 10,
+                elevation: 10,
+                shadowColor: COLORS.black,
+                justifyContent: 'center',
+                alignItems: 'center',
+                alignSelf: 'center',
+        },
+        ViewDG: {
+                width: '100%',
+                height: 170,
+                backgroundColor: 'white',
+                borderRadius: 10,
+                elevation: 5,
+                shadowColor: COLORS.black,
+                alignSelf: 'center',
+                borderWidth: 1,
+                borderColor: '#eeeeee'
+        }
 })
 
 export default ListRoom
