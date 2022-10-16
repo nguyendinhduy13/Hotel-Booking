@@ -5,8 +5,8 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { useSelector } from 'react-redux';
 import { getDistance } from 'geolib';
 import CurrentPosition from '../../redux/CurrentPosition';
-const Map = () => {
-
+const Map = ({ navigation, route }) => {
+    const Data = route.params
     const { width, height } = Dimensions.get('window')
     const ASPECT_RATIO = width / height
     const LATITUDE_DELTA = 0.0922
@@ -14,22 +14,11 @@ const Map = () => {
     const mapRef = useRef(null)
     const currentPosition = useSelector(state => state.currentPosition)
     const [region, setRegion] = useState({
-        latitude: 0,
-        longitude: 0,
-        latitudeDelta: 0,
-        longitudeDelta: 0,
+        latitude: currentPosition.latitude,
+        longitude: currentPosition.longitude,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
     });
-
-    useEffect(() => {
-        if (currentPosition.latitude && currentPosition.longitude) {
-            setRegion({
-                latitude: currentPosition.latitude,
-                longitude: currentPosition.longitude,
-                latitudeDelta: LATITUDE_DELTA,
-                longitudeDelta: LONGITUDE_DELTA,
-            })
-        }
-    }, []);
     const [posi, Setposi] = useState({
         latitude: 0,
         longitude: 0,
@@ -75,12 +64,23 @@ const Map = () => {
                     longitudeDelta: parseFloat(region.longitudeDelta),
                 }}
             >
-                <Marker
-                    coordinate={{ latitude: posi.latitude, longitude: posi.longitude }}
-                />
+                {Data.map((item, index) => {
+                    return (
+                        <Marker
+                            key={index}
+                            coordinate={{ latitude: item.position[0], longitude: item.position[1] }}
+                            title={item.name}
+                            description={item.address}
+                            pinColor={'blue'}
+                        />
+                    )
+                }
+                )}
                 <Marker
                     coordinate={{ latitude: region.latitude, longitude: region.longitude }}
+
                 />
+
             </MapView>
         </View >
     );
