@@ -36,7 +36,7 @@ export default function HomeScreen({ navigation }) {
         const animatedValue = useRef(new Animated.Value(0)).current;
         const SearchShow = {
                 opacity: animatedValue.interpolate({
-                        inputRange: [0, 50],
+                        inputRange: [0, 70],
                         outputRange: [0, 1]
                 }),
         }
