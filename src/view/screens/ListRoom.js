@@ -123,9 +123,16 @@ const ListRoom = ({ navigation, route }) => {
                                                                 style={{ position: 'absolute', backgroundColor: 'white', borderRadius: 20, top: 200, left: 335 }}>
                                                                 <Icon3 name="info" size={26} color="orange" />
                                                         </TouchableOpacity>
-                                                        <View style={[styles.ViewInfo, { height: items.id == ItemShow ? 110 : 0 }]}>
-                                                                <Text>{items.name}</Text>
-                                                        </View>
+                                                        <View style={[styles.ViewInfo, { height: items.id == ItemShow ? 170 : 0 }]}>
+                                                        <Text style={{color:COLORS.dark,fontSize:20,fontWeight:"600"}}>{items.name}</Text>
+                                                        
+                                                                {ItemShow?items.icon.map((item,index)=>(
+                                                                         <View key={index} style={{width:300,marginTop:15 ,flexDirection:"row"}}>
+                                                                                <Image source={{uri:index<=2?item:null}} style={{width:30,tintColor:COLORS.primary}}/>
+                                                                                <Text style={{marginTop:3,marginLeft:20}}>{index<=2?items.tienich[index]:null}</Text>
+                                                                         </View>
+                                                                )):null}
+                                                        </View>  
                                                 </View>
                                         ))}
                                         <View>
@@ -202,8 +209,7 @@ const styles = StyleSheet.create({
                 backgroundColor: 'white',
                 borderRadius: 10,
                 elevation: 10,
-                shadowColor: COLORS.black,
-                justifyContent: 'center',
+                shadowColor: COLORS.black,           
                 alignItems: 'center',
                 alignSelf: 'center',
         },
