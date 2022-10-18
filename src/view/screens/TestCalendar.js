@@ -23,18 +23,19 @@ export default function TestCalendar() {
             if (kt[1] == bd[1]) {
                 const sub = (kt[2] - bd[2])
                 for (let i = 1; i < sub; i++) {
-                    arr.push(`${kt[0]}-${kt[1]}-${kt[2] - i}`)
+                    var day = kt[2] - i < 10 ? '0' + (kt[2] - i) : kt[2] - i
+                    arr.push(`${kt[0]}-${kt[1]}-${day}`)
                 }
             }
             else {
                 var maxDayOfMonth = new Date(bd[0], bd[1], 0).getDate();
                 const sub = (maxDayOfMonth - bd[2])
                 for (let i = 1; i <= sub; i++) {
-                    var day = (bd[2] - 0) + i
-                    arr.push(`${bd[0]}-${bd[1]}-${day}`)
+                    arr.push(`${bd[0]}-${bd[1]}-${(bd[2] - 0) + i}`)
                 }
                 for (let i = 1; i < kt[2]; i++) {
-                    arr.push(`${kt[0]}-${kt[1]}-${i}`)
+                    var day = i < 10 ? '0' + i : i
+                    arr.push(`${kt[0]}-${kt[1]}-${day}`)
                 }
             }
             setMiddle(arr)
@@ -66,18 +67,26 @@ export default function TestCalendar() {
                     markingType={'period'}
                     markedDates={
                         {
-                            [start]: { startingDay: true, color: 'green', textColor: 'white' },
-                            [end]: { endingDay: true, color: 'green', textColor: 'white' },
+                            [start]: { startingDay: true, color: '#50cebb', textColor: 'white' },
+                            [end]: { endingDay: true, color: '#50cebb', textColor: 'white' },
                             ...middle.reduce((acc, cur) => {
-                                acc[cur] = { color: 'green', textColor: 'white' }
+                                acc[cur] = { startingDay: false, endingDay: false, color: '#70d7c7', textColor: 'white' }
                                 return acc
-                            }, {})
+                            }, {}),
                         }
                     }
                     onDayPress={(day) => handleTest(day)}
                     hideExtraDays={true}
-                // minDate={minDay}
+                    minDate={minDay}
                 />
+            </View>
+            <View style={{ marginTop: 20, justifyContent: 'space-between', flexDirection: 'row', padding: 10 }}>
+                <View style={{ width: 150, height: 50, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }}>
+                    <Text style={{ color: 'orange', fontSize: 15, fontWeight: 'bold' }}>Start: {start}</Text>
+                </View>
+                <View style={{ width: 150, height: 50, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }}>
+                    <Text style={{ color: 'orange', fontSize: 15, fontWeight: 'bold' }}>Start: {end}</Text>
+                </View>
             </View>
         </View>
     )
