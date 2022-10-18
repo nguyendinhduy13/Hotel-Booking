@@ -10,6 +10,8 @@ import Booked from "../screens/Booked";
 import BookedFinal from "../screens/BookedFinal";
 import Map from "../screens/Map";
 import InfoProfile from "../screens/InfoProfile";
+import MapHotel from "../screens/MapHotel";
+import TestCalendar from "../screens/TestCalendar";
 const Stack = createNativeStackNavigator()
 
 export default function AppStack() {
@@ -82,6 +84,20 @@ export default function AppStack() {
                         <Stack.Screen
                                 name="InfoProfile"
                                 component={InfoProfile}
+                                options={{
+                                        headerShown: false
+                                }}
+                        />
+                        <Stack.Screen
+                                name="MapHotel"
+                                component={MapHotel}
+                                options={{
+                                        headerShown: false
+                                }}
+                        />
+                        <Stack.Screen
+                                name="TestCalendar"
+                                component={TestCalendar}
                                 options={{
                                         headerShown: false
                                 }}

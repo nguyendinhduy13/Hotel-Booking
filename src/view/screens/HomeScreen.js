@@ -253,7 +253,7 @@ export default function HomeScreen({ navigation }) {
                                                                 <Icon5 name="search" size={32} color="#FF6347" />
                                                         </TouchableOpacity>
                                                 </Animated.View>
-                                                <TouchableOpacity onPress={() => { navigation.navigate("Map", ListHotelData) }}>
+                                                <TouchableOpacity onPress={() => { navigation.navigate("TestCalendar") }}>
                                                         <Icon1 name="bell-ring-outline" size={26} color={COLORS.grey} />
                                                 </TouchableOpacity>
                                         </View>

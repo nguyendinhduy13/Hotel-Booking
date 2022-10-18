@@ -118,12 +118,12 @@ const ListRoom = ({ navigation, route }) => {
                     source={{ uri: item.image }}
                     style={{ width: width, height: 300, resizeMode: 'cover' }}
                 />
-                <View style={{ paddingHorizontal: 10, paddingBottom: 50 }}>
+                <View style={{ paddingHorizontal: 15, paddingBottom: 50 }}>
                     <View
                         style={{
                             borderBottomWidth: 1,
                             borderBottomColor: COLORS.primary,
-                            paddingVertical: 10,
+                            paddingVertical: 5,
                         }}>
                         <Text
                             style={{
@@ -177,7 +177,7 @@ const ListRoom = ({ navigation, route }) => {
                                 }}>
                                 <Text style={{ color: 'black', fontSize: 15 }}>
                                     <Text style={{ color: 'orange' }}>
-                                        {distance} km
+                                        ~{distance} km
                                     </Text>{' '}
                                     | {item.location}
                                 </Text>
@@ -237,12 +237,12 @@ const ListRoom = ({ navigation, route }) => {
                                 }}>
                                 Bản đồ
                             </Text>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={() => { navigation.navigate('MapHotel', item) }}>
                                 <Text
                                     style={{
                                         fontSize: 15,
                                         fontWeight: 'bold',
-                                        color: 'blue',
+                                        color: COLORS.primary,
                                         marginRight: 5
                                     }}>
                                     Xem</Text>
@@ -256,6 +256,8 @@ const ListRoom = ({ navigation, route }) => {
                             }}>
                             <MapView
                                 ref={mapRef}
+                                zoomEnabled={false}
+                                scrollEnabled={false}
                                 style={{ flex: 1 }}
                                 provider={PROVIDER_GOOGLE} // remove if not using Google Maps
                                 region={{
