@@ -7,7 +7,7 @@ export default function TestCalendar() {
     const [middle, setMiddle] = useState([])
     const [end, setEnd] = useState('')
     const showMid = () => {
-        console.log(middle)
+        console.log(middle.length)
     }
     const aaaaa = [
         '2022-10-3',
@@ -85,7 +85,7 @@ export default function TestCalendar() {
                     <Text style={{ color: 'orange', fontSize: 15, fontWeight: 'bold' }}>Start: {start}</Text>
                 </View>
                 <View style={{ width: 150, height: 50, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }}>
-                    <Text style={{ color: 'orange', fontSize: 15, fontWeight: 'bold' }}>Start: {end}</Text>
+                    <Text style={{ color: 'orange', fontSize: 15, fontWeight: 'bold' }}>End: {end}</Text>
                 </View>
             </View>
         </View>

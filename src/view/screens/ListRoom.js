@@ -3,8 +3,10 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon1 from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/Ionicons';
 import Icon3 from 'react-native-vector-icons/Feather';
+import Icon4 from 'react-native-vector-icons/FontAwesome5';
 import firestore from '@react-native-firebase/firestore';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
 import {
     TouchableOpacity,
     View,
@@ -17,11 +19,19 @@ import {
     StyleSheet,
     Dimensions,
     Modal,
+    PanResponder,
+    TouchableHighlight,
 } from 'react-native';
 import COLORS from '../../consts/colors';
 import { useSelector } from 'react-redux';
 import { getDistance } from 'geolib';
 const width = Dimensions.get('screen').width;
+const WINDOW_HEIGHT = Dimensions.get('screen').height;
+const SHEET_MAX_HEIGHT = WINDOW_HEIGHT * 0.8;
+const SHEET_MIN_HEIGHT = WINDOW_HEIGHT * 0.1;
+const MAX_UPWARD_TRANSLATE_Y = -SHEET_MIN_HEIGHT - SHEET_MAX_HEIGHT; // negative number
+const MAX_DOWNWARD_TRANSLATE_Y = 0;
+const DRAG_THRESHOLD = 50;
 const ListRoom = ({ navigation, route }) => {
     const item = route.params;
     const mapRef = useRef(null);
@@ -75,6 +85,127 @@ const ListRoom = ({ navigation, route }) => {
             outputRange: [1, 0],
         }),
     };
+    //Bottom Sheet
+    const animatedValueBottom = useRef(new Animated.Value(0)).current;
+    const lastGestureDy = useRef(0);
+    const panResponder = useRef(
+        PanResponder.create({
+            onStartShouldSetPanResponder: () => true,
+            onPanResponderGrant: () => {
+                animatedValueBottom.setOffset(lastGestureDy.current);
+            },
+            onPanResponderMove: (e, gesture) => {
+                animatedValueBottom.setValue(gesture.dy);
+            },
+            onPanResponderRelease: (e, gesture) => {
+                animatedValueBottom.flattenOffset();
+                if (gesture.dy > 0) {
+                    // is dragging down
+                    if (lastGestureDy.current !== 0 && gesture.dy <= DRAG_THRESHOLD) {
+                        springAnimation('up');
+                    } else {
+                        springAnimation('down');
+                    }
+                } else {
+                    // is dragging up
+                    if (gesture.dy >= -DRAG_THRESHOLD) {
+                        springAnimation('down');
+                    } else {
+                        springAnimation('up');
+                    }
+                }
+            },
+        }),
+    ).current;
+    const springAnimation = (direction: 'up' | 'down') => {
+        lastGestureDy.current =
+            direction === 'down' ? MAX_DOWNWARD_TRANSLATE_Y : MAX_UPWARD_TRANSLATE_Y;
+        Animated.spring(animatedValueBottom, {
+            toValue: lastGestureDy.current,
+            useNativeDriver: true,
+        }).start();
+    };
+    const bottomSheetAnimation = {
+        transform: [
+            {
+                translateY: animatedValueBottom.interpolate({
+                    inputRange: [MAX_UPWARD_TRANSLATE_Y, MAX_DOWNWARD_TRANSLATE_Y],
+                    outputRange: [MAX_UPWARD_TRANSLATE_Y, MAX_DOWNWARD_TRANSLATE_Y],
+                    extrapolate: 'clamp',
+                }),
+            },
+        ],
+    };
+    //Calendar
+    const today = new Date().toISOString().split('T')[0]
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowDay = tomorrow.toISOString().split('T')[0]
+    const [start, setStart] = useState(today);
+    const [startTrue, setStartTrue] = useState(today);
+    const [middle, setMiddle] = useState([])
+    const [NumDays, setNumDays] = useState(0);
+    const [end, setEnd] = useState(tomorrowDay);
+    const [endTrue, setEndTrue] = useState(tomorrowDay);
+    const handleOpenCalendar = () => {
+        springAnimation('up');
+        setStart(startTrue)
+        setEnd(endTrue)
+    }
+    useEffect(() => {
+        if (start != '' && end != '') {
+            const bd = start.split('-')
+            const kt = end.split('-')
+            const arr = []
+            if (kt[1] == bd[1]) {
+                const sub = (kt[2] - bd[2])
+                for (let i = 1; i < sub; i++) {
+                    var day = kt[2] - i < 10 ? '0' + (kt[2] - i) : kt[2] - i
+                    arr.push(`${kt[0]}-${kt[1]}-${day}`)
+                }
+            }
+            else {
+                var maxDayOfMonth = new Date(bd[0], bd[1], 0).getDate();
+                const sub = (maxDayOfMonth - bd[2])
+                for (let i = 1; i <= sub; i++) {
+                    arr.push(`${bd[0]}-${bd[1]}-${(bd[2] - 0) + i}`)
+                }
+                for (let i = 1; i < kt[2]; i++) {
+                    var day = i < 10 ? '0' + i : i
+                    arr.push(`${kt[0]}-${kt[1]}-${day}`)
+                }
+            }
+            setMiddle(arr)
+        }
+    }, [end])
+    const handleTest = (day) => {
+        if (start !== "" && end !== "") {
+            setStart(day.dateString)
+            setEnd('')
+            setMiddle([])
+        }
+        if (start === "") {
+            setStart(day.dateString)
+        }
+        else if (end === "" && day.dateString > start) {
+            setEnd(day.dateString)
+        }
+        else if (day.dateString < start) {
+            setStart(day.dateString)
+        }
+    }
+    const handleConfirm = () => {
+        springAnimation('down');
+        setStartTrue(start)
+        setEndTrue(end)
+        console.log(middle.length + 1)
+    }
+    const formatDayShow = (day) => {
+        if (day != '') {
+            return day.split('-')[2] + ' tháng ' + day.split('-')[1]
+        }
+        return ''
+    }
     return (
         <SafeAreaView style={{ backgroundColor: 'white' }}>
             <AnimatedView style={[styles.HeaderBack, HeaderAnimated]}>
@@ -97,7 +228,6 @@ const ListRoom = ({ navigation, route }) => {
                 </View>
                 <Icon2 name="heart-outline" size={0} color="black" style={{}} />
             </AnimatedView>
-
             <AnimatedView style={[styles.HeaderTitle, HeaderAnimatedScroll]}>
                 <Icon
                     name="arrow-back-ios"
@@ -118,7 +248,7 @@ const ListRoom = ({ navigation, route }) => {
                     source={{ uri: item.image }}
                     style={{ width: width, height: 300, resizeMode: 'cover' }}
                 />
-                <View style={{ paddingHorizontal: 15, paddingBottom: 50 }}>
+                <View style={{ paddingHorizontal: 15, paddingBottom: 100 }}>
                     <View
                         style={{
                             borderBottomWidth: 1,
@@ -443,6 +573,58 @@ const ListRoom = ({ navigation, route }) => {
                     </View>
                 </View>
             </ScrollView>
+            <Animated.View style={[styles.bottomSheet, bottomSheetAnimation]}>
+                <View style={styles.draggableArea} {...panResponder.panHandlers}>
+                    <Text style={{ color: 'orange', fontSize: 18, fontWeight: 'bold', paddingBottom: 15 }}>Chọn ngày đặt phòng</Text>
+                    <View style={{ flexDirection: 'row', }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: "space-around", width: '95%', height: 60, backgroundColor: '#f3f6f4', borderRadius: 10 }}>
+                            <View style={{ width: '33%' }}>
+                                <Text style={{ fontSize: 14 }}>Nhận phòng</Text>
+                                <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 16 }}>{formatDayShow(start)}</Text>
+                            </View>
+                            <Icon4 name="long-arrow-alt-right" size={25} color="orange" />
+                            <View style={{ width: '33%' }}>
+                                <Text style={{ fontSize: 14 }}>Trả phòng</Text>
+                                <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 16 }}>{formatDayShow(end)}</Text>
+                            </View>
+                        </View>
+                    </View>
+                </View>
+                <View style={{ marginTop: 10 }}>
+                    <Calendar
+                        markingType={'period'}
+                        markedDates={
+                            {
+                                [start]: { startingDay: true, color: '#50cebb', textColor: 'white' },
+                                [end]: { endingDay: true, color: '#50cebb', textColor: 'white' },
+                                ...middle.reduce((acc, cur) => {
+                                    acc[cur] = { startingDay: false, endingDay: false, color: '#70d7c7', textColor: 'white' }
+                                    return acc
+                                }, {}),
+                            }
+                        }
+                        onDayPress={(day) => handleTest(day)}
+                        hideExtraDays={true}
+                        minDate={today}
+                    />
+                </View>
+                <View style={{ position: 'absolute', zIndex: 1, bottom: 15, borderTopWidth: 1, borderTopColor: 'gray', width: '100%', height: 60, justifyContent: 'center', alignItems: 'center' }}>
+                    <TouchableOpacity
+                        onPress={() => { handleConfirm() }}
+                        disabled={end == "" ? true : false}
+                        style={{ width: '90%', height: 40, backgroundColor: end == "" ? '#d1bebd' : '#f44336', borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
+                        <Text style={{ color: 'white', fontSize: 17, fontWeight: 'bold' }}>Xác nhận</Text>
+                    </TouchableOpacity>
+                </View>
+            </Animated.View>
+            <TouchableOpacity style={styles.bottomSheet1} onPress={() => { handleOpenCalendar() }}>
+                <View style={{ padding: 15 }}>
+                    <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'black' }}>Ngày đặt phòng</Text>
+                    <View style={{ flexDirection: 'row', marginTop: 10, }}>
+                        <Text style={{ color: 'black', textDecorationStyle: 'dashed', textDecorationLine: 'underline', fontSize: 15, fontWeight: 'bold', }}>{formatDayShow(startTrue) + " - " + formatDayShow(endTrue)}</Text>
+                    </View>
+                </View>
+            </TouchableOpacity>
         </SafeAreaView>
     );
 };
@@ -519,6 +701,70 @@ const styles = StyleSheet.create({
     },
     map: {
         ...StyleSheet.absoluteFillObject,
+    },
+    bottomSheet: {
+        position: 'absolute',
+        width: '100%',
+        height: SHEET_MAX_HEIGHT,
+        bottom: -SHEET_MAX_HEIGHT - SHEET_MIN_HEIGHT - 15,
+        ...Platform.select({
+            android: { elevation: 3 },
+            ios: {
+                shadowColor: '#a8bed2',
+                shadowOpacity: 1,
+                shadowRadius: 6,
+                shadowOffset: {
+                    width: 2,
+                    height: 2,
+                },
+            },
+        }),
+        backgroundColor: 'white',
+        borderTopLeftRadius: 25,
+        borderTopRightRadius: 25,
+        zIndex: 2,
+        elevation: 10,
+        borderWidth: 1,
+        borderColor: '#eeeeee',
+    },
+    bottomSheet1: {
+        position: 'absolute',
+        width: '100%',
+        height: SHEET_MAX_HEIGHT,
+        bottom: -SHEET_MAX_HEIGHT + SHEET_MIN_HEIGHT,
+        ...Platform.select({
+            android: { elevation: 3 },
+            ios: {
+                shadowColor: '#a8bed2',
+                shadowOpacity: 1,
+                shadowRadius: 6,
+                shadowOffset: {
+                    width: 2,
+                    height: 2,
+                },
+            },
+        }),
+        backgroundColor: 'white',
+        borderTopLeftRadius: 25,
+        borderTopRightRadius: 25,
+        zIndex: 1,
+        elevation: 10,
+        borderWidth: 1,
+        borderColor: '#eeeeee',
+    },
+    draggableArea: {
+        width: '100%',
+        height: 120,
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 10,
+    },
+    dragHandle: {
+        width: 100,
+        height: 6,
+        backgroundColor: '#d3d3d3',
+        borderRadius: 10,
     },
 });
 
