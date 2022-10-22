@@ -3,6 +3,7 @@ import authReducer from "./authReducer";
 import BookingHotel from "./BookingHotel";
 import UserReducer from "./UserReducer";
 import CurrentPosition from "./CurrentPosition";
+import Globalreducer from "./Globalreducer";
 
 const store = configureStore({
         reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
                 authToken: authReducer.reducer,
                 bookingHotel: BookingHotel.reducer,
                 currentPosition: CurrentPosition.reducer,
+                Globalreducer: Globalreducer.reducer
         }
 })
 

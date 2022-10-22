@@ -7,6 +7,7 @@ import Icon4 from 'react-native-vector-icons/FontAwesome5';
 import firestore from '@react-native-firebase/firestore';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
+import { useDispatch} from 'react-redux';
 import {
     TouchableOpacity,
     View,
@@ -25,6 +26,7 @@ import {
 import COLORS from '../../consts/colors';
 import { useSelector } from 'react-redux';
 import { getDistance } from 'geolib';
+import Globalreducer from '../../redux/Globalreducer';
 const width = Dimensions.get('screen').width;
 const WINDOW_HEIGHT = Dimensions.get('screen').height;
 const SHEET_MAX_HEIGHT = WINDOW_HEIGHT * 0.8;
@@ -33,6 +35,7 @@ const MAX_UPWARD_TRANSLATE_Y = -SHEET_MIN_HEIGHT - SHEET_MAX_HEIGHT; // negative
 const MAX_DOWNWARD_TRANSLATE_Y = 0;
 const DRAG_THRESHOLD = 50;
 const ListRoom = ({ navigation, route }) => {
+    const dispatch=useDispatch();
     const item = route.params;
     const mapRef = useRef(null);
     const { height } = Dimensions.get('window');
@@ -44,6 +47,11 @@ const ListRoom = ({ navigation, route }) => {
     const [show, setShow] = useState(false);
     const [showModalInfo, SetshowModalInfo] = useState(false);
     const [ItemShow, setItemShow] = useState(0);
+    const {
+        dayamount,
+        startday,
+        endday,
+     } = useSelector((state) => state.Globalreducer);
     const Format = number => {
         return number.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
     };
@@ -66,6 +74,7 @@ const ListRoom = ({ navigation, route }) => {
                 const data = documentSnapshot.data();
                 setDataRoom(data.Room);
             });
+        //dispatch(Globalreducer.actions.setnullvariable(""));
     }, []);
 
     const handleShow = () => {
@@ -137,16 +146,13 @@ const ListRoom = ({ navigation, route }) => {
         ],
     };
     //Calendar
-    const today = new Date().toISOString().split('T')[0]
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowDay = tomorrow.toISOString().split('T')[0]
-    const [start, setStart] = useState(today);
-    const [startTrue, setStartTrue] = useState(today);
+    const minday = new Date();
+    const [start, setStart] = useState(startday);
+    const [startTrue, setStartTrue] = useState(startday);
     const [middle, setMiddle] = useState([])
     const [NumDays, setNumDays] = useState(0);
-    const [end, setEnd] = useState(tomorrowDay);
-    const [endTrue, setEndTrue] = useState(tomorrowDay);
+    const [end, setEnd] = useState(endday);
+    const [endTrue, setEndTrue] = useState(endday);
     const handleOpenCalendar = () => {
         springAnimation('up');
         setStart(startTrue)
@@ -199,6 +205,9 @@ const ListRoom = ({ navigation, route }) => {
         setStartTrue(start)
         setEndTrue(end)
         console.log(middle.length + 1)
+        dispatch(Globalreducer.actions.changedayamount(middle.length + 1))
+        dispatch(Globalreducer.actions.changestartday(start))
+        dispatch(Globalreducer.actions.changeendday(end));
     }
     const formatDayShow = (day) => {
         if (day != '') {
@@ -605,7 +614,7 @@ const ListRoom = ({ navigation, route }) => {
                         }
                         onDayPress={(day) => handleTest(day)}
                         hideExtraDays={true}
-                        minDate={today}
+                        minDate={minday}
                     />
                 </View>
                 <View style={{ position: 'absolute', zIndex: 1, bottom: 15, borderTopWidth: 1, borderTopColor: 'gray', width: '100%', height: 60, justifyContent: 'center', alignItems: 'center' }}>
