@@ -18,27 +18,49 @@ import Icon1 from 'react-native-vector-icons/FontAwesome5';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/FontAwesome';
 import ListItemSwipeable from 'react-native-elements/dist/list/ListItemSwipeable';
+import { useSelector } from 'react-redux';
+
+
 
 export default function DetailsScreen({ navigation, route }) {
   const item = route.params;
+  const {
+    dayamount,
+    startday,
+    endday,
+  } = useSelector((state) => state.Globalreducer);
   const DataIcon = [...item.icon];
   const DataDetail = [...item.tienich];
   const Format = (number) => {
-    return number.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+    var prices = dayamount * number;
+    return prices.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
   };
   const AnimatedView = Animated.createAnimatedComponent(View)
   const animatedValue = useRef(new Animated.Value(0)).current;
   const HeaderAnimated = {
     opacity: animatedValue.interpolate({
-      inputRange: [330, 400],
+      inputRange: [350, 400],
       outputRange: [0, 1],
     }),
   }
   const HeaderAnimatedScroll = {
     opacity: animatedValue.interpolate({
-      inputRange: [0, 200, 350],
-      outputRange: [1, 1, 0],
+      inputRange: [0, 100],
+      outputRange: [1, 0],
     }),
+  }
+  const HeaderAnimatedScrollWhite = {
+    opacity: animatedValue.interpolate({
+      inputRange: [100, 350],
+      outputRange: [0, 1],
+    }),
+  }
+  const FormatDayMonthYear = (date) => {
+    const arr = date.split('-');
+    const day = arr[2];
+    const month = arr[1];
+    const year = arr[0];
+    return `${day}/${month}/${year}`;
   }
   return (
     <View style={{ position: 'relative' }}>
@@ -53,7 +75,7 @@ export default function DetailsScreen({ navigation, route }) {
           <Icon name="bookmark-border" size={28} color={COLORS.white} />
         </View>
       </Animated.View>
-      <Animated.View style={[styles.HeadrView1, HeaderAnimated]}>
+      <Animated.View style={[styles.HeadrViewWhite, HeaderAnimatedScrollWhite]}>
         <View style={styles.header}>
           <Icon
             name="arrow-back-ios"
@@ -61,8 +83,18 @@ export default function DetailsScreen({ navigation, route }) {
             color='black'
             onPress={navigation.goBack}
           />
-          <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'orange', textAlign: 'center' }}>{item.name}</Text>
-          <Icon name="bookmark-border" size={0} color='black' />
+          <Icon name="bookmark-border" size={0} color={COLORS.white} />
+        </View>
+      </Animated.View>
+      <Animated.View style={[styles.HeadrView1, HeaderAnimated]}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 10 }}>
+          <Icon
+            name="arrow-back-ios"
+            size={28}
+            color='black'
+            onPress={navigation.goBack}
+          />
+          <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'black', textAlign: 'center' }}>{item.name}</Text>
         </View>
       </Animated.View>
       <ScrollView
@@ -76,16 +108,40 @@ export default function DetailsScreen({ navigation, route }) {
           paddingBottom: 80,
         }}>
 
-        <ImageBackground style={styles.headerImage} source={{ uri: item.image[0] }}>
-        </ImageBackground>
+        <ImageBackground style={styles.headerImage} source={{ uri: item.image[0] }} />
         <View>
           <View style={{ marginTop: 15, paddingHorizontal: 20 }}>
             <Text style={{ fontSize: 27, fontWeight: 'bold', color: COLORS.dark }}>{item.name}</Text>
-            <Text style={{ color: 'orange', fontWeight: 'bold', fontSize: 16, paddingTop: '1%' }}>Qua đêm</Text>
-            <Text style={{ fontSize: 25, color: 'black', paddingTop: '3%' }}>{
-              Format(item.price)
-            } đ</Text>
-            <View style={{ paddingTop: '3%' }}>
+            <Text style={{ color: 'orange', fontWeight: 'bold', fontSize: 16, paddingTop: '1%' }}>{dayamount} ngày</Text>
+            <Text style={{ fontSize: 20, paddingTop: '1%', fontWeight: 'bold', color: 'black', }}>{Format(item.price)}{' '}<Text style={{ fontSize: 13, color: 'black', }}>đ</Text>
+            </Text>
+            <View style={{ width: '100%', flexDirection: 'row', marginTop: 15, height: 80, borderWidth: 1, borderColor: 'gray', borderRadius: 10 }}>
+              <View style={{
+                width: '50%',
+                height: '100%',
+                borderRightWidth: 1,
+                justifyContent: 'center',
+                borderRightColor: 'gray',
+              }}>
+                <View style={{ paddingHorizontal: 10 }}>
+                  <Text style={{ fontSize: 16 }}>Nhận phòng</Text>
+                  <Text style={{ fontSize: 18, marginTop: 5, fontWeight: 'bold', color: 'black' }}>{FormatDayMonthYear(startday)}</Text>
+                </View>
+              </View>
+              <View style={{
+                width: '50%',
+                height: '100%',
+                borderRightWidth: 1,
+                justifyContent: 'center',
+                borderRightColor: 'gray',
+              }}>
+                <View style={{ paddingHorizontal: 10 }}>
+                  <Text style={{ fontSize: 16 }}>Trả phòng</Text>
+                  <Text style={{ fontSize: 18, marginTop: 5, fontWeight: 'bold', color: 'black' }}>{FormatDayMonthYear(endday)}</Text>
+                </View>
+              </View>
+            </View>
+            <View style={{ paddingTop: '4%' }}>
               <View
                 style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <Text
@@ -111,8 +167,8 @@ export default function DetailsScreen({ navigation, route }) {
                       key={index}
                       source={{ uri: item }}
                       style={{
-                        width: 160,
-                        height: 115,
+                        width: 165,
+                        height: 150,
                         borderRadius: 20,
                         marginRight: 20,
                       }}
@@ -128,16 +184,16 @@ export default function DetailsScreen({ navigation, route }) {
               </Text>
               <View style={{ marginTop: 10 }}>
                 {DataDetail.map((item, index) => ((
-                  <View style={{ flexDirection: 'row', paddingVertical: 3 }}>
+                  <View style={{ flexDirection: 'row', paddingVertical: 5 }}>
                     <Image
                       key={index}
                       source={{ uri: DataIcon[index] }}
                       style={{
-                        width: 20,
-                        height: 20,
+                        width: 22,
+                        height: 22,
                       }}
                     />
-                    <Text style={{ paddingHorizontal: 10 }}>{item}</Text>
+                    <Text style={{ paddingHorizontal: 15, fontSize: 15, }}>{item}</Text>
                   </View>
                 )))}
               </View>
@@ -157,16 +213,16 @@ export default function DetailsScreen({ navigation, route }) {
             </View>
           </View>
         </View>
-      </ScrollView>
+      </ScrollView >
       <TouchableOpacity
         style={styles.bottomButton}
         onPress={() => {
-          navigation.navigate('Booked',item);
+          navigation.navigate('Booked', item);
         }}>
         <View
           style={{
             backgroundColor: COLORS.primary,
-            width: '80%',
+            width: '90%',
             height: 47,
             justifyContent: 'center',
             borderRadius: 18,
@@ -182,7 +238,7 @@ export default function DetailsScreen({ navigation, route }) {
           </Text>
         </View>
       </TouchableOpacity>
-    </View>
+    </View >
   );
 }
 
@@ -190,8 +246,8 @@ const styles = StyleSheet.create({
   headerImage: {
     height: 400,
     overflow: 'hidden',
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
   },
   header: {
     flexDirection: 'row',
@@ -254,6 +310,17 @@ const styles = StyleSheet.create({
     height: 50,
     width: '100%',
     justifyContent: 'center',
+  },
+  HeadrViewWhite: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1,
+    height: 60,
+    width: '100%',
+    justifyContent: 'center',
+    backgroundColor: 'white'
   },
   HeadrView1: {
     position: 'absolute',

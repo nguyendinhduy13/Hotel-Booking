@@ -17,7 +17,7 @@ export default function HotelPhotos({ route, navigation }) {
                         flex: 1,
                         paddingBottom: 20,
                 }}>
-                        <View style={{ paddingTop: "10%", marginHorizontal: 15, flexDirection: "row" }}>
+                        <View style={{ marginHorizontal: 15, flexDirection: "row" }}>
                                 <Icon
                                         name="arrowleft"
                                         size={30}
@@ -28,8 +28,8 @@ export default function HotelPhotos({ route, navigation }) {
                                 </Text>
                         </View>
 
-                        <View  style={{flexDirection:"row", flexWrap:"wrap"}}>
-                                {!modalVisible&&
+                        <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+                                {!modalVisible &&
                                         item.image.map((image, index) => (
                                                 <TouchableOpacity onPress={() => { setModalVisible(!modalVisible), setitemzoom(item), setIndex(index) }}>
                                                         <Image
@@ -38,7 +38,7 @@ export default function HotelPhotos({ route, navigation }) {
                                                         />
                                                 </TouchableOpacity>
                                         ))}
-                                </View>
+                        </View>
                         <Modal
                                 transparent={true}
                                 visible={modalVisible}
@@ -46,7 +46,7 @@ export default function HotelPhotos({ route, navigation }) {
                                         setModalVisible(!modalVisible);
                                 }}
                         >
-                                <TouchableOpacity style={{ alignItems: "center", marginTop: "50%" }} onPress={()=>{setModalVisible(!modalVisible)}}>
+                                <TouchableOpacity style={{ alignItems: "center", marginTop: "50%" }} onPress={() => { setModalVisible(!modalVisible) }}>
                                         <Image
                                                 source={{ uri: modalVisible ? itemzoom.image[index] : item.image[0] }}
                                                 style={{ width: 300, height: 290, borderRadius: 20 }}

@@ -327,8 +327,6 @@ export default function HomeScreen({ navigation }) {
                                                 <Text style={{ fontWeight: "bold", color: COLORS.primary }}>See All</Text>
                                         </TouchableOpacity>
                                 </View>
-
-
                                 <View>
                                         {ListHotelData.map((item, index) =>
                                         (<View key={index}>
@@ -356,13 +354,11 @@ export default function HomeScreen({ navigation }) {
                                                                         />
                                                                 </TouchableOpacity>
                                                                 <View style={styles.searchInputContainer1}>
-                                                                        <TouchableOpacity onPress={() => { }}>
-                                                                                <Icon5 name="search"
-                                                                                        size={30}
-                                                                                        style={{ marginLeft: 10 }}
-                                                                                        color="#FF6347"
-                                                                                />
-                                                                        </TouchableOpacity>
+                                                                        <Icon5 name='search'
+                                                                                size={30}
+                                                                                style={{ marginLeft: 10 }}
+                                                                                color="#FF6347"
+                                                                        />
                                                                         <TextInput
                                                                                 style={{ fontSize: 17, paddingLeft: 10 }}
                                                                                 placeholder="Tìm địa điểm, khách sạn"
