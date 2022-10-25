@@ -7,7 +7,7 @@ import Icon4 from 'react-native-vector-icons/FontAwesome5';
 import firestore from '@react-native-firebase/firestore';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
-import { useDispatch} from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
     TouchableOpacity,
     View,
@@ -35,7 +35,7 @@ const MAX_UPWARD_TRANSLATE_Y = -SHEET_MIN_HEIGHT - SHEET_MAX_HEIGHT; // negative
 const MAX_DOWNWARD_TRANSLATE_Y = 0;
 const DRAG_THRESHOLD = 50;
 const ListRoom = ({ navigation, route }) => {
-    const dispatch=useDispatch();
+    const dispatch = useDispatch();
     const item = route.params;
     const mapRef = useRef(null);
     const { height } = Dimensions.get('window');
@@ -51,9 +51,10 @@ const ListRoom = ({ navigation, route }) => {
         dayamount,
         startday,
         endday,
-     } = useSelector((state) => state.Globalreducer);
+    } = useSelector((state) => state.Globalreducer);
     const Format = number => {
-        return number.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+        var price = number * dayamount;
+        return price.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
     };
     const [distance, setDistance] = useState(0);
     useEffect(() => {
@@ -442,8 +443,8 @@ const ListRoom = ({ navigation, route }) => {
                                         source={{ uri: items.image[0] }}
                                     />
                                 </View>
-                                <View style={{ marginTop: 25 }}>
-                                    <View style={{ paddingHorizontal: 15 }}>
+                                <View>
+                                    <View style={{ paddingHorizontal: 15, paddingVertical: 5 }}>
                                         <Text
                                             style={{
                                                 fontSize: 20,
@@ -452,89 +453,44 @@ const ListRoom = ({ navigation, route }) => {
                                             }}>
                                             {items.name}
                                         </Text>
-                                        <Text
-                                            style={{
-                                                fontSize: 18,
-                                                paddingVertical: 10,
-                                                fontWeight: '700',
-                                                color: COLORS.primary,
-                                            }}>
-                                            {Format(items.price)}{' '}
+                                        <View style={{ flexDirection: 'row', paddingVertical: 5 }}>
+                                            {items.icon.map((item, index) => (
+                                                index < 2 ?
+                                                    <View key={index} style={{ alignContent: 'center', justifyContent: 'flex-start', marginRight: 10 }}>
+                                                        <Text style={{ color: 'gray', fontSize: 14 }}>
+                                                            {items.tienich[index]} <Text style={{ color: 'black' }}>{index == 0 ? ' |' : ''}</Text>
+                                                        </Text>
+                                                    </View>
+                                                    : <></>
+                                            ))
+                                            }
+                                        </View>
+                                        <Text style={{ color: 'black', fontSize: 14, marginTop: 5, fontWeight: '500' }}>{dayamount} ngày</Text>
+                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                             <Text
                                                 style={{
-                                                    fontSize: 14,
-                                                    color: 'gray',
+                                                    fontSize: 20,
+                                                    paddingVertical: 10,
+                                                    fontWeight: 'bold',
+                                                    color: 'black',
                                                 }}>
-                                                VND/đêm
+                                                {Format(items.price)}{' '}
+                                                <Text
+                                                    style={{
+                                                        fontSize: 13,
+                                                        color: 'black',
+                                                    }}>
+                                                    đ
+                                                </Text>
                                             </Text>
-                                        </Text>
+                                            <View style={{ width: 100, height: 35, alignItems: 'center', justifyContent: 'center', borderRadius: 5, backgroundColor: COLORS.primary }}>
+                                                <Text style={{ color: 'white', fontSize: 15, fontWeight: 'bold' }}>Chọn phòng</Text>
+                                            </View>
+                                        </View>
                                     </View>
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity
-                                onPressIn={() => {
-                                    setItemShow(items.id);
-                                }}
-                                onPressOut={() => {
-                                    setItemShow(null);
-                                }}
-                                style={{
-                                    position: 'absolute',
-                                    backgroundColor: 'white',
-                                    borderRadius: 20,
-                                    top: 200,
-                                    left: 335,
-                                }}>
-                                <Icon3 name="info" size={26} color="orange" />
-                            </TouchableOpacity>
-                            <View
-                                style={[
-                                    styles.ViewInfo,
-                                    { height: items.id == ItemShow ? 170 : 0 },
-                                ]}>
-                                <Text
-                                    style={{
-                                        color: COLORS.dark,
-                                        fontSize: 20,
-                                        fontWeight: '600',
-                                    }}>
-                                    {items.name}
-                                </Text>
 
-                                {ItemShow
-                                    ? items.icon.map((item, index) => (
-                                        <View
-                                            key={index}
-                                            style={{
-                                                width: 300,
-                                                marginTop: 15,
-                                                flexDirection: 'row',
-                                            }}>
-                                            <Image
-                                                source={{
-                                                    uri:
-                                                        index <= 2
-                                                            ? item
-                                                            : null,
-                                                }}
-                                                style={{
-                                                    width: 30,
-                                                    tintColor: COLORS.primary,
-                                                }}
-                                            />
-                                            <Text
-                                                style={{
-                                                    marginTop: 3,
-                                                    marginLeft: 20,
-                                                }}>
-                                                {index <= 2
-                                                    ? items.tienich[index]
-                                                    : null}
-                                            </Text>
-                                        </View>
-                                    ))
-                                    : null}
-                            </View>
                         </View>
                     ))}
                     <View>
@@ -642,7 +598,7 @@ const ListRoom = ({ navigation, route }) => {
 const styles = StyleSheet.create({
     RecentlyBox: {
         width: '100%',
-        height: 250,
+        height: 280,
         color: 'black',
         backgroundColor: COLORS.white,
         marginBottom: 15,
