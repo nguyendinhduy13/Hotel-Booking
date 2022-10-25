@@ -13,7 +13,7 @@ import MapHotel from '../screens/MapHotel';
 import TestCalendar from '../screens/TestCalendar';
 import ChangePassword from '../screens/ChangePassword';
 import DetailInfoBooking from '../screens/DetailInfoBooking';
-import NewAddress from '../screens/NewAddress';
+import EditUserBooking from '../screens/EditUserBooking';
 const Stack = createNativeStackNavigator();
 
 export default function AppStack() {
@@ -77,8 +77,8 @@ export default function AppStack() {
             component={DetailInfoBooking}
             />
             <Stack.Screen
-            name="Thông tin mới"
-            component={NewAddress}
+            name="Chỉnh sửa thông tin"
+            component={EditUserBooking}
             />
             <Stack.Screen
                 name="InfoProfile"

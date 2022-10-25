@@ -1,25 +1,28 @@
 import React,{useState} from 'react'
 import {View,TextInput,TouchableOpacity,Text} from "react-native"
 import COLORS from '../../consts/colors'
-import {useDispatch} from "react-redux"
+import {useDispatch,useSelector} from "react-redux"
 import BookingHotel from '../../redux/BookingHotel';
-const NewAddress = () => {
+import Auth from '@react-native-firebase/auth';
+const EditUserBooking = ({navigation}) => {
     const dispatch=useDispatch();
+    const {userbooking}=useSelector(state=>state.BookingHotel);
+    const userinfo=Auth().currentUser;
     const adduserbooking=()=>{
         const a={
             name:name,
             phone:phone,
             birthday:birthday,
-            choose:false,
             email:email,
         };
         dispatch(BookingHotel.actions.addBookingHotelUser(a));
+        navigation.goBack();
     }
 
-    const [name,setName]=useState('');
-    const [phone,setPhone]=useState('');
-    const [birthday,setBirthday]=useState('');
-    const [email,setEmail]=useState('');
+    const [name,setName]=useState(userinfo.displayName?userinfo.displayName:"");
+    const [phone,setPhone]=useState(userbooking.phone?userbooking.phone:"");
+    const [birthday,setBirthday]=useState(userbooking.birthday?userbooking.birthday:"");
+    const [email,setEmail]=useState(userinfo.email);
   return (
     <View>
         <TextInput
@@ -96,7 +99,7 @@ const NewAddress = () => {
                         borderRadius: 20,
                         marginTop: 20,
                     }}
-                    onPress={() => {adduserbooking()}}>
+                    onPress={() => {adduserbooking();}}>
                     <Text
                         style={{
                             fontSize: 15,
@@ -110,4 +113,4 @@ const NewAddress = () => {
   )
 }
 
-export default NewAddress
+export default EditUserBooking

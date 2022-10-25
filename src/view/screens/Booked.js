@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
     View,
     Text,
@@ -12,37 +12,64 @@ import {
 import Icon1 from 'react-native-vector-icons/MaterialIcons';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import COLORS from '../../consts/colors';
+import BookingHotel from '../../redux/BookingHotel';
+import firestore from '@react-native-firebase/firestore';
+import Auth from '@react-native-firebase/auth';
 export default function Booked({ navigation, route }) {
     const item = route.params;
+    const dispatch = useDispatch();
     const [Number, setNumber] = useState(1);
-    const {
-        dayamount,
-        startday,
-        endday,
-     } =useSelector((state) => state.Globalreducer);
+    const { dayamount, startday, endday, namehotel } = useSelector(
+        state => state.Globalreducer,
+    );
+    const { userbooking } = useSelector(state => state.BookingHotel);
+    const user=Auth().currentUser;
+    const addbooking = () => {
+        let x=start.getDate()+'/'+(start.getMonth())+'/'+start.getFullYear()
+        let y=end.getDate()+'/'+(end.getMonth())+'/'+end.getFullYear()
+        const a = [
+            {
+                name: namehotel,
+                roomname: item.name,
+                price: item.price,
+                checkin: x,
+                checkout: y,
+                dayamount: amount,
+                status:'ongoing',
+                guess: Number,
+                image: item.image[1],
+                total: sum,
+            },
+        ];
+        dispatch(BookingHotel.actions.addBookingHotel(a));
+        firestore()
+            .collection(user.uid)
+            .add({
+                name: namehotel,
+                roomname: item.name,
+                price: item.price,
+                checkin: x,
+                checkout: y,
+                dayamount: amount,
+                status:'ongoing',
+                guess: Number,
+                image: item.image[1],
+                total: sum,
+            })
+            .then(() => {
+                console.log('Booking added!');
+            });
+    };
 
-   const {userbooking} = useSelector((state)=>state.BookingHotel);
-
-     const addbooking=()=>{
-        const a=[{
-            name:item.name,
-            price:item.price,
-            checkin:start,
-            checkout:end,
-            dayamount:amount,
-            guess:Number,
-            image:item.image,
-            total:sum, 
-        }]
-     }
-
-     const day=new Date();
-     const amount=dayamount>0?dayamount:1;
-     const day1=day.setDate(day.getDate()+1);
-     console.log(userbooking.email)
-     const start= new Date(startday!==""?startday:Date.now());
-    const end= new Date(endday!==""?endday:day1);
-     const sum=Math.floor(item.price*amount+item.price*amount*(Number*2)/1000)
+    const day = new Date();
+    const amount = dayamount > 0 ? dayamount : 1;
+    const day1 = day.setDate(day.getDate() + 1);
+    console.log(userbooking.email);
+    const start = new Date(startday !== '' ? startday : Date.now());
+    const end = new Date(endday !== '' ? endday : day1);
+    const sum = Math.floor(
+        item.price * amount + (item.price * amount * (Number * 2)) / 1000,
+    );
     return (
         <ScrollView style={{ flex: 1 }}>
             <View
@@ -84,7 +111,9 @@ export default function Booked({ navigation, route }) {
                         name="arrow-forward-ios"
                         size={20}
                         style={{ right: 7 }}
-                        onPress={()=>{navigation.navigate('Chọn thông tin đặt phòng')}}
+                        onPress={() => {
+                            navigation.navigate('Chỉnh sửa thông tin');
+                        }}
                     />
                 </View>
             </View>
@@ -160,7 +189,8 @@ export default function Booked({ navigation, route }) {
                             fontSize: 17,
                             color: COLORS.dark,
                         }}>
-                        {start.getDate()}/{start.getMonth()}/{start.getFullYear()}
+                        {start.getDate()}/{start.getMonth()}/
+                        {start.getFullYear()}
                     </Text>
                 </View>
                 <View
@@ -230,7 +260,7 @@ export default function Booked({ navigation, route }) {
                             fontSize: 17,
                             color: COLORS.dark,
                         }}>
-                        {item.price*amount} VNĐ
+                        {item.price * amount} VNĐ
                     </Text>
                 </View>
                 <View
@@ -250,7 +280,10 @@ export default function Booked({ navigation, route }) {
                             fontSize: 17,
                             color: COLORS.dark,
                         }}>
-                        {Math.floor(item.price*amount*(Number*2)/1000)} VNĐ
+                        {Math.floor(
+                            (item.price * amount * (Number * 2)) / 1000,
+                        )}{' '}
+                        VNĐ
                     </Text>
                 </View>
                 <View
@@ -352,7 +385,9 @@ export default function Booked({ navigation, route }) {
                         borderRadius: 20,
                         marginTop: 15,
                     }}
-                    onPress={() => {}}>
+                    onPress={() => {
+                        addbooking();
+                    }}>
                     <Text
                         style={{
                             fontSize: 15,
