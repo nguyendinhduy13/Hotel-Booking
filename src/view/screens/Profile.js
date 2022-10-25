@@ -11,7 +11,7 @@ import Icon5 from "react-native-vector-icons/AntDesign"
 import auth from "@react-native-firebase/auth"
 import { SignInContext } from "../../contexts/authContext";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
-export default function Profile({navigation}) {
+export default function Profile({ navigation }) {
         const { dispatchSignedIn } = useContext(SignInContext)
         async function signOut() {
                 try {
@@ -33,13 +33,13 @@ export default function Profile({navigation}) {
                 !isEnabled ? console.log("Dark Mode") : console.log("Light Mode")
         };
         return (
-                <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
+                <View style={{ flex: 1, backgroundColor: "white" }}>
                         <View style={{ backgroundColor: 'white', elevation: 15 }}>
                                 <View style={styles.heaerProfile}>
                                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginRight: 20 }}>
                                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                         <Text style={{ fontSize: 27, fontWeight: 'bold', color: 'black' }}>{auth().currentUser.displayName}</Text>
-                                                        <TouchableOpacity onPress={()=>navigation.navigate("InfoProfile")}>
+                                                        <TouchableOpacity onPress={() => navigation.navigate("InfoProfile")}>
                                                                 <Icon2 name="edit-3" size={20} color="red" style={{ marginLeft: 5 }} />
                                                         </TouchableOpacity>
                                                 </View>
@@ -58,7 +58,7 @@ export default function Profile({navigation}) {
                                         <Text style={{ color: 'black', fontSize: 15, paddingTop: 5 }}>{auth().currentUser.email}</Text>
                                 </View>
                         </View>
-                        <View style={{ backgroundColor: 'white', marginVertical: 10 }}>
+                        <ScrollView style={{ backgroundColor: 'white', marginVertical: 10 }}>
                                 <View style={styles.bodyProfile}>
                                         <Text style={styles.tittle}>Trang của tôi</Text>
                                         <TouchableOpacity style={styles.view}>
@@ -102,8 +102,8 @@ export default function Profile({navigation}) {
                                                 <Text style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}>Đăng suất</Text>
                                         </TouchableOpacity>
                                 </View>
-                        </View>
-                </ScrollView >
+                        </ScrollView>
+                </View >
         )
 }
 

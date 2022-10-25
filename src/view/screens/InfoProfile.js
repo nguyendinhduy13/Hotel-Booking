@@ -21,7 +21,7 @@ const InfoProfile = ({ navigation }) => {
     const [password, setPassword] = useState('**************');
     const [name, setName] = useState(user.displayName ? user.displayName : '');
 
-    const pickImage = ({navigation}) => {
+    const pickImage = ({ navigation }) => {
         setLoadingImg(true);
 
         setTimeout(() => {
@@ -94,8 +94,8 @@ const InfoProfile = ({ navigation }) => {
                                 imageUri
                                     ? { uri: imageUri }
                                     : {
-                                          uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEOYhim6YXtwZUy9_SFOSldir4qH23VR5oaJImJXrj-Q&s',
-                                      }
+                                        uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEOYhim6YXtwZUy9_SFOSldir4qH23VR5oaJImJXrj-Q&s',
+                                    }
                             }
                         />
                     )}
@@ -116,8 +116,8 @@ const InfoProfile = ({ navigation }) => {
                     placeholder="Email"
                     style={{
                         borderWidth: 1,
-                        borderRadius: 20,
-                        borderColor: 'gray',
+                        borderRadius: 10,
+                        paddingLeft: 10,
                         width: 350,
                         alignSelf: 'center',
                         marginTop: 50,
@@ -129,8 +129,8 @@ const InfoProfile = ({ navigation }) => {
                     placeholder="Tên"
                     style={{
                         borderWidth: 1,
-                        borderRadius: 20,
-                        borderColor: 'gray',
+                        borderRadius: 10,
+                        paddingLeft: 10,
                         width: 350,
                         alignSelf: 'center',
                         marginVertical: 50,
@@ -143,8 +143,8 @@ const InfoProfile = ({ navigation }) => {
                         placeholder="Mật khẩu"
                         style={{
                             borderWidth: 1,
-                            borderRadius: 20,
-                            borderColor: 'gray',
+                            borderRadius: 10,
+                            paddingLeft: 10,
                             width: 350,
                             alignSelf: 'center',
                             borderColor: '#d0d0d0',
@@ -160,7 +160,7 @@ const InfoProfile = ({ navigation }) => {
                             right: 15,
                             alignSelf: 'center',
                         }}
-                        onPress={() => {navigation.navigate("Change Password")}}
+                        onPress={() => { navigation.navigate("Change Password") }}
                     />
                 </View>
             </View>
