@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import {
     View,
     Text,
@@ -7,11 +7,16 @@ import {
     ScrollView,
     TouchableOpacity,
 } from 'react-native';
+import Auth from '@react-native-firebase/auth';
 import CheckBox from '@react-native-community/checkbox';
 import COLORS from '../../consts/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useSelector } from 'react-redux';
+
 const DetailInfoBooking = ({ navigation }) => {
+    const user=Auth().currentUser;
     const [toggleCheckBox, setToggleCheckBox] = useState(false);
+
     return (
         <ScrollView>
             <View style={{ flex: 1 }}>
@@ -22,7 +27,7 @@ const DetailInfoBooking = ({ navigation }) => {
                         color: COLORS.dark,
                         left: 10,
                     }}>
-                    Địa chỉ
+                    Thông tin
                 </Text>
                 <View
                     style={{
@@ -60,7 +65,7 @@ const DetailInfoBooking = ({ navigation }) => {
                                         fontWeight: '600',
                                         fontSize: 16,
                                     }}>
-                                    Nguyen dinh duy{'  '}
+                                    {user.displayName?user.displayName:""}{'  '}
                                 </Text>
                                 <View
                                     style={{

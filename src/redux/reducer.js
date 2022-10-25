@@ -6,7 +6,7 @@ import UserReducer from "./UserReducer";
 const rootReducer=combineReducers({
         users:UserReducer,
         authToken:authReducer,
-        bookingHotel:BookingHotel,
+        BookingHotel:BookingHotel,
         Globalreducer:Globalreducer
 })
 

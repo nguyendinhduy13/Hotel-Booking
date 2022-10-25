@@ -20,11 +20,29 @@ export default function Booked({ navigation, route }) {
         startday,
         endday,
      } =useSelector((state) => state.Globalreducer);
+
+   const {userbooking} = useSelector((state)=>state.BookingHotel);
+
+     const addbooking=()=>{
+        const a=[{
+            name:item.name,
+            price:item.price,
+            checkin:start,
+            checkout:end,
+            dayamount:amount,
+            guess:Number,
+            image:item.image,
+            total:sum, 
+        }]
+     }
+
      const day=new Date();
+     const amount=dayamount>0?dayamount:1;
      const day1=day.setDate(day.getDate()+1);
+     console.log(userbooking.email)
      const start= new Date(startday!==""?startday:Date.now());
     const end= new Date(endday!==""?endday:day1);
-     const sum=Math.floor(item.price*dayamount+item.price*dayamount*(Number*2)/1000)
+     const sum=Math.floor(item.price*amount+item.price*amount*(Number*2)/1000)
     return (
         <ScrollView style={{ flex: 1 }}>
             <View
@@ -57,7 +75,10 @@ export default function Booked({ navigation, route }) {
                         marginTop: 5,
                     }}>
                     <Text style={{ left: 43, color: COLORS.dark }}>
-                        Nguyen dinh duy
+                        {userbooking.name} {'\n'}
+                        {userbooking.phone} {'\n'}
+                        {userbooking.birthday} {'\n'}
+                        {userbooking.email} {'\n'}
                     </Text>
                     <Icon1
                         name="arrow-forward-ios"
@@ -201,7 +222,7 @@ export default function Booked({ navigation, route }) {
                         marginTop: 20,
                     }}>
                     <Text style={{ fontWeight: '500', fontSize: 17 }}>
-                        {dayamount} ngày
+                        {amount} ngày
                     </Text>
                     <Text
                         style={{
@@ -209,7 +230,7 @@ export default function Booked({ navigation, route }) {
                             fontSize: 17,
                             color: COLORS.dark,
                         }}>
-                        {item.price*dayamount} VNĐ
+                        {item.price*amount} VNĐ
                     </Text>
                 </View>
                 <View
@@ -229,7 +250,7 @@ export default function Booked({ navigation, route }) {
                             fontSize: 17,
                             color: COLORS.dark,
                         }}>
-                        {Math.floor(item.price*dayamount*(Number*2)/1000)} VNĐ
+                        {Math.floor(item.price*amount*(Number*2)/1000)} VNĐ
                     </Text>
                 </View>
                 <View

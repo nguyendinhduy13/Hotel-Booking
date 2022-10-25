@@ -9,7 +9,7 @@ const store = configureStore({
         reducer: {
                 users: UserReducer.reducer,
                 authToken: authReducer.reducer,
-                bookingHotel: BookingHotel.reducer,
+                BookingHotel: BookingHotel.reducer,
                 currentPosition: CurrentPosition.reducer,
                 Globalreducer: Globalreducer.reducer
         }
