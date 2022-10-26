@@ -9,6 +9,7 @@ const initialState = {
     startday: today,
     endday: tomorrow.toISOString().split('T')[0],
     namehotel:'',
+    data:[],
 };
 
 export default createSlice({
@@ -31,18 +32,10 @@ export default createSlice({
       },
       setnamehotel(state, action) {
         state.namehotel = action.payload
+      },
+      setdatabooking(state, action) {
+        state.data.push(action.payload)
       }
     },
-    changestartday(state, action) {
-      state.startday = action.payload;
-    },
-    changeendday(state, action) {
-      state.endday = action.payload;
-    },
-    setnullvariable(state, action) {
-      state.dayamount = action.payload
-      state.startday = action.payload
-      state.endday = action.payload
-    }
   },
 );
