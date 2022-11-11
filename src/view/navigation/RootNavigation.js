@@ -16,10 +16,10 @@ export default function RootNavigation() {
       {signedIn.userToken === null? <AuthStack/>:
       <>
       {
-        auth().currentUser.email==="adminhotel@gmail.com"?<AdminHotelStack/> :
+        signedIn.userToken==="adminks"?<AdminHotelStack/> :
         <>
         {
-          auth().currentUser.email==="adminapp@gmail.com"?<AdminAppStack/>:<AppStack/>
+          signedIn.userToken==="adminapp"?<AdminAppStack/>:<AppStack/>
         }
         </>
       }
