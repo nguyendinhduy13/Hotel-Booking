@@ -19,7 +19,7 @@ export default function Booked({ navigation, route }) {
     const item = route.params;
     const dispatch = useDispatch();
     const [Number, setNumber] = useState(1);
-    const { dayamount, startday, endday, namehotel } = useSelector(
+    const { dayamount, startday, endday, namehotel,idhotel } = useSelector(
         state => state.Globalreducer,
     );
     const { userbooking } = useSelector(state => state.BookingHotel);
@@ -43,7 +43,7 @@ export default function Booked({ navigation, route }) {
         ];
         dispatch(BookingHotel.actions.addBookingHotel(a));
         firestore()
-            .collection(user.uid)
+            .collection(user.uid+'Booking')
             .add({
                 name: namehotel,
                 roomname: item.name,
@@ -59,6 +59,16 @@ export default function Booked({ navigation, route }) {
             .then(() => {
                 console.log('Booking added!');
             });
+        firestore()
+        .collection('ListBooking')
+        .doc(idhotel)
+        .set({
+            data:a
+        }
+        )
+        .then(() => {
+            console.log('Booking added!');
+        });
     };
 
     const day = new Date();

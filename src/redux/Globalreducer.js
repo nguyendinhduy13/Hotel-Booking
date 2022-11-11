@@ -9,6 +9,7 @@ const initialState = {
     startday: today,
     endday: tomorrow.toISOString().split('T')[0],
     namehotel:'',
+    idhotel:'',
     data:[],
 };
 
@@ -33,9 +34,13 @@ export default createSlice({
       setnamehotel(state, action) {
         state.namehotel = action.payload
       },
+      setidhotel(state, action) {
+        state.idhotel = action.payload
+      },
       setdatabooking(state, action) {
         state.data.push(action.payload)
       }
+      
     },
   },
 );
