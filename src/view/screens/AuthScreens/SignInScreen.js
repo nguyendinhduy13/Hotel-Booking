@@ -24,7 +24,7 @@ export default function SignInScreen({ navigation }) {
                         // Sign-in the user with the credential
                         const user = await auth().signInWithCredential(googleCredential);
                         if (user) {
-                                dispatchSignedIn({ type: "UPDATE_SIGN_IN", payload: { userToken: "signed-in" } })
+                                dispatchSignedIn({ type: "UPDATE_SIGN_IN", payload: { userToken: "user" } })
                         }
                         if (user.additionalUserInfo.isNewUser) {
                                 firestore()

@@ -34,7 +34,7 @@ const SHEET_MIN_HEIGHT = WINDOW_HEIGHT * 0.1;
 const MAX_UPWARD_TRANSLATE_Y = -SHEET_MIN_HEIGHT - SHEET_MAX_HEIGHT; // negative number
 const MAX_DOWNWARD_TRANSLATE_Y = 0;
 const DRAG_THRESHOLD = 50;
-const ListRoom = ({ navigation, route }) => {
+const InfoHotel = ({ navigation, route }) => {
     const dispatch = useDispatch();
     const item = route.params;
     const mapRef = useRef(null);
@@ -539,58 +539,6 @@ const ListRoom = ({ navigation, route }) => {
                     </View>
                 </View>
             </ScrollView>
-            <Animated.View style={[styles.bottomSheet, bottomSheetAnimation]}>
-                <View style={styles.draggableArea} {...panResponder.panHandlers}>
-                    <Text style={{ color: 'orange', fontSize: 18, fontWeight: 'bold', paddingBottom: 15 }}>Chọn ngày đặt phòng</Text>
-                    <View style={{ flexDirection: 'row', }}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: "space-around", width: '95%', height: 60, backgroundColor: '#f3f6f4', borderRadius: 10 }}>
-                            <View style={{ width: '33%' }}>
-                                <Text style={{ fontSize: 14 }}>Nhận phòng</Text>
-                                <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 16 }}>{formatDayShow(start)}</Text>
-                            </View>
-                            <Icon4 name="long-arrow-alt-right" size={25} color="orange" />
-                            <View style={{ width: '33%' }}>
-                                <Text style={{ fontSize: 14 }}>Trả phòng</Text>
-                                <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 16 }}>{formatDayShow(end)}</Text>
-                            </View>
-                        </View>
-                    </View>
-                </View>
-                <View style={{ marginTop: 10 }}>
-                    <Calendar
-                        markingType={'period'}
-                        markedDates={
-                            {
-                                [start]: { startingDay: true, color: '#50cebb', textColor: 'white' },
-                                [end]: { endingDay: true, color: '#50cebb', textColor: 'white' },
-                                ...middle.reduce((acc, cur) => {
-                                    acc[cur] = { startingDay: false, endingDay: false, color: '#70d7c7', textColor: 'white' }
-                                    return acc
-                                }, {}),
-                            }
-                        }
-                        onDayPress={(day) => handleTest(day)}
-                        hideExtraDays={true}
-                        minDate={String(minday)}
-                    />
-                </View>
-                <View style={{ position: 'absolute', zIndex: 1, bottom: 15, borderTopWidth: 1, borderTopColor: 'gray', width: '100%', height: 60, justifyContent: 'center', alignItems: 'center' }}>
-                    <TouchableOpacity
-                        onPress={() => { handleConfirm() }}
-                        disabled={end == "" ? true : false}
-                        style={{ width: '90%', height: 40, backgroundColor: end == "" ? '#d1bebd' : '#f44336', borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
-                        <Text style={{ color: 'white', fontSize: 17, fontWeight: 'bold' }}>Xác nhận</Text>
-                    </TouchableOpacity>
-                </View>
-            </Animated.View>
-            <TouchableOpacity style={styles.bottomSheet1} onPress={() => { handleOpenCalendar() }}>
-                <View style={{ padding: 15 }}>
-                    <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'black' }}>Ngày đặt phòng</Text>
-                    <View style={{ flexDirection: 'row', marginTop: 10, }}>
-                        <Text style={{ color: 'black', textDecorationStyle: 'dashed', textDecorationLine: 'underline', fontSize: 15, fontWeight: 'bold', }}>{formatDayShow(startTrue) + " - " + formatDayShow(endTrue)}</Text>
-                    </View>
-                </View>
-            </TouchableOpacity>
         </SafeAreaView>
     );
 };
@@ -734,4 +682,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ListRoom;
+export default InfoHotel;

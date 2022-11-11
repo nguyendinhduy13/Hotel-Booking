@@ -85,16 +85,19 @@ export default function HomeScreen({ navigation }) {
             });
     }, []);
 
-    const [ListHotelData, setListHotelData] = useState([]);
+    const [ListHotelDataFireBase, setListHotelDataFireBase] = useState([]);
     useEffect(() => {
         firestore()
             .collection('ListHotel')
             .doc('ListHotel')
             .get()
             .then(documentSnapshot => {
-                setListHotelData(documentSnapshot.data().ListHotel);
+                setListHotelDataFireBase(documentSnapshot.data().ListHotel);
             });
     }, []);
+    const ListHotelData = ListHotelDataFireBase.filter(
+        item => item.isActive === true,
+    );
     const [isShow, setIsShow] = useState(false);
     const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
     const [activeCardIndex, setActiveCardIndex] = useState(0);
@@ -695,7 +698,7 @@ export default function HomeScreen({ navigation }) {
                                                 <TouchableOpacity
                                                     key={index}
                                                     style={{
-                                                         flexDirection: 'row',
+                                                        flexDirection: 'row',
                                                         height: 50,
                                                         borderBottomWidth: 1,
                                                         borderBottomColor:
