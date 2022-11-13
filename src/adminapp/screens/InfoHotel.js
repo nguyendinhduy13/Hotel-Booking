@@ -2,11 +2,14 @@ import React, { useState, useRef, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon1 from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/Ionicons';
-import Icon3 from 'react-native-vector-icons/Feather';
-import Icon4 from 'react-native-vector-icons/FontAwesome5';
+import Icon3 from 'react-native-vector-icons/Entypo';
+import Icon4 from 'react-native-vector-icons/AntDesign';
+import Icon5 from 'react-native-vector-icons/Octicons';
+import Icon6 from 'react-native-vector-icons/MaterialCommunityIcons';
 import firestore from '@react-native-firebase/firestore';
+import { getAuth } from '@react-native-firebase/auth';
+import { firebase } from '@react-native-firebase/firestore';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
 import { useDispatch } from 'react-redux';
 import {
     TouchableOpacity,
@@ -20,23 +23,31 @@ import {
     StyleSheet,
     Dimensions,
     Modal,
-    PanResponder,
-    TouchableHighlight,
+    ToastAndroid,
+    Switch,
+    Alert,
 } from 'react-native';
 import COLORS from '../../consts/colors';
 import { useSelector } from 'react-redux';
 import { getDistance } from 'geolib';
 import Globalreducer from '../../redux/Globalreducer';
+import auth from '@react-native-firebase/auth';
+
 const width = Dimensions.get('screen').width;
 const WINDOW_HEIGHT = Dimensions.get('screen').height;
 const SHEET_MAX_HEIGHT = WINDOW_HEIGHT * 0.8;
 const SHEET_MIN_HEIGHT = WINDOW_HEIGHT * 0.1;
-const MAX_UPWARD_TRANSLATE_Y = -SHEET_MIN_HEIGHT - SHEET_MAX_HEIGHT; // negative number
-const MAX_DOWNWARD_TRANSLATE_Y = 0;
-const DRAG_THRESHOLD = 50;
 const InfoHotel = ({ navigation, route }) => {
     const dispatch = useDispatch();
-    const item = route.params;
+    const item = route.params.data;
+    const acc = route.params.account;
+    let uid = '';
+    acc.forEach(val => {
+        if (val._id === item.id) {
+            uid = val.uid;
+        }
+    });
+    console.log(uid);
     const mapRef = useRef(null);
     const { height } = Dimensions.get('window');
     const ASPECT_RATIO = width / height;
@@ -44,28 +55,147 @@ const InfoHotel = ({ navigation, route }) => {
     const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
     const currentPosition = useSelector(state => state.currentPosition);
     const [DataRoom, setDataRoom] = useState([]);
-    const [show, setShow] = useState(false);
-    const [showModalInfo, SetshowModalInfo] = useState(false);
-    const [ItemShow, setItemShow] = useState(0);
-    const {
-        dayamount,
-        startday,
-        endday,
-    } = useSelector((state) => state.Globalreducer);
+    const [Active, SetActive] = useState(false);
+    const ActiveOfHotel = async list => {
+        await list.map(i => {
+            if (i.id === item.id) {
+                SetActive(i.isActive);
+            }
+        });
+    };
+    useEffect(() => {
+        firestore()
+            .collection('ListHotel')
+            .doc('ListHotel')
+            .onSnapshot(documentSnapshot => {
+                ActiveOfHotel(documentSnapshot.data().ListHotel);
+            });
+    }, []);
+
+    const handleOpen = async () => {
+        setModalVisible(true);
+    };
+    const UpdateActive = async () => {
+        const arrayRemove = firestore.FieldValue.arrayRemove({
+            id: route.params.data.id,
+            name: route.params.data.name,
+            advantage: route.params.data.advantage,
+            description: route.params.data.description,
+            image: route.params.data.image,
+            location: route.params.data.location,
+            position: route.params.data.position,
+            review: route.params.data.review,
+            isActive: route.params.data.isActive,
+        });
+        item.isActive = !item.isActive;
+        const arrayUnion = firestore.FieldValue.arrayUnion({
+            id: route.params.data.id,
+            name: route.params.data.name,
+            advantage: route.params.data.advantage,
+            description: route.params.data.description,
+            image: route.params.data.image,
+            location: route.params.data.location,
+            position: route.params.data.position,
+            review: route.params.data.review,
+            isActive: route.params.data.isActive,
+        });
+        await firestore()
+            .collection('ListHotel')
+            .doc('ListHotel')
+            .update({
+                ListHotel: arrayRemove,
+            })
+            .then(() => {
+                console.log('Data deleted!');
+            });
+        await firestore()
+            .collection('ListHotel')
+            .doc('ListHotel')
+            .update({
+                ListHotel: arrayUnion,
+            })
+            .then(() => {
+                console.log('Data hotel added!');
+            });
+    };
+
+    const toggleSwitch = () => {
+        UpdateActive();
+    };
+    const getTargetHotel = async () => {
+        acc.map(i => {
+            if (i.id === item.id) {
+                console.log(i);
+                return i;
+            }
+        });
+    };
+
+    const handleDelete = async () => {
+         // //Delete ListHotel
+         const arrayRemove = firestore.FieldValue.arrayRemove({
+            id: route.params.data.id,
+            name: route.params.data.name,
+            advantage: route.params.data.advantage,
+            description: route.params.data.description,
+            image: route.params.data.image,
+            location: route.params.data.location,
+            position: route.params.data.position,
+            review: route.params.data.review,
+            isActive: route.params.data.isActive,
+        });
+        await firestore()
+            .collection('ListHotel')
+            .doc('ListHotel')
+            .update({
+                ListHotel: arrayRemove,
+            })
+            .then(() => {
+                console.log('Data deleted!');
+            });
+            
+        // //Delete Account
+        await firestore()
+            .collection('AdminAccounts')
+            .doc(item.id)
+            .delete()
+            .then(() => {
+                console.log('Data account deleted!');
+            });
+        // //Delete Authenication
+       
+        // //Delete ListRoom
+        await firestore()
+            .collection('HotelList')
+            .doc(item.id)
+            .delete()
+            .then(() => {
+                console.log('Data account deleted!');
+            });
+        ToastAndroid.show('Xóa thành công', ToastAndroid.SHORT);
+        navigation.navigate('HomeScreen');
+    };
+
+    const { dayamount, startday, endday } = useSelector(
+        state => state.Globalreducer,
+    );
     const Format = number => {
         var price = number * dayamount;
         return price.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
     };
     const [distance, setDistance] = useState(0);
     useEffect(() => {
-        dispatch(Globalreducer.actions.setnamehotel(item.name))
+        dispatch(Globalreducer.actions.setnamehotel(item.name));
         var dis = getDistance(
-            { latitude: currentPosition.latitude, longitude: currentPosition.longitude },
-            { latitude: item.position[0], longitude: item.position[1] }
+            {
+                latitude: currentPosition.latitude,
+                longitude: currentPosition.longitude,
+            },
+            { latitude: item.position[0], longitude: item.position[1] },
         );
         //format the distance to km with 2 decimal places
         var km = (dis / 1000).toFixed(1);
-        setDistance(km)
+        setDistance(km);
     }, []);
     useEffect(() => {
         firestore()
@@ -79,9 +209,6 @@ const InfoHotel = ({ navigation, route }) => {
         //dispatch(Globalreducer.actions.setnullvariable(""));
     }, []);
 
-    const handleShow = () => {
-        setShow(!show);
-    };
     const AnimatedView = Animated.createAnimatedComponent(View);
     const animatedValue = useRef(new Animated.Value(0)).current;
     const HeaderAnimated = {
@@ -96,127 +223,135 @@ const InfoHotel = ({ navigation, route }) => {
             outputRange: [1, 0],
         }),
     };
-    //Bottom Sheet
-    const animatedValueBottom = useRef(new Animated.Value(0)).current;
-    const lastGestureDy = useRef(0);
-    const panResponder = useRef(
-        PanResponder.create({
-            onStartShouldSetPanResponder: () => true,
-            onPanResponderGrant: () => {
-                animatedValueBottom.setOffset(lastGestureDy.current);
-            },
-            onPanResponderMove: (e, gesture) => {
-                animatedValueBottom.setValue(gesture.dy);
-            },
-            onPanResponderRelease: (e, gesture) => {
-                animatedValueBottom.flattenOffset();
-                if (gesture.dy > 0) {
-                    // is dragging down
-                    if (lastGestureDy.current !== 0 && gesture.dy <= DRAG_THRESHOLD) {
-                        springAnimation('up');
-                    } else {
-                        springAnimation('down');
-                    }
-                } else {
-                    // is dragging up
-                    if (gesture.dy >= -DRAG_THRESHOLD) {
-                        springAnimation('down');
-                    } else {
-                        springAnimation('up');
-                    }
-                }
-            },
-        }),
-    ).current;
-    const springAnimation = (direction: 'up' | 'down') => {
-        lastGestureDy.current =
-            direction === 'down' ? MAX_DOWNWARD_TRANSLATE_Y : MAX_UPWARD_TRANSLATE_Y;
-        Animated.spring(animatedValueBottom, {
-            toValue: lastGestureDy.current,
-            useNativeDriver: true,
-        }).start();
+    const [modalVisible, setModalVisible] = useState(false);
+
+    const ShowRoom = () => {
+        try {
+            return DataRoom.map((items, index) => (
+                <View key={index}>
+                    <TouchableOpacity
+                        style={styles.RecentlyBox}
+                        onPress={() => {
+                            navigation.navigate('DetailsScreen', items);
+                        }}>
+                        <View
+                            style={{
+                                width: '100%',
+                                height: 150,
+                                alignSelf: 'center',
+                            }}>
+                            <Image
+                                style={styles.IMGRecent}
+                                source={{ uri: items.image[0] }}
+                            />
+                        </View>
+                        <View>
+                            <View
+                                style={{
+                                    paddingHorizontal: 15,
+                                    paddingVertical: 5,
+                                }}>
+                                <Text
+                                    style={{
+                                        fontSize: 20,
+                                        height: 25,
+                                        color: 'black',
+                                    }}>
+                                    {items.name}
+                                </Text>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        paddingVertical: 5,
+                                    }}>
+                                    {items.icon.map((item, index) =>
+                                        index < 2 ? (
+                                            <View
+                                                key={index}
+                                                style={{
+                                                    alignContent: 'center',
+                                                    justifyContent:
+                                                        'flex-start',
+                                                    marginRight: 10,
+                                                }}>
+                                                <Text
+                                                    style={{
+                                                        color: 'gray',
+                                                        fontSize: 14,
+                                                    }}>
+                                                    {items.tienich[index]}{' '}
+                                                    <Text
+                                                        style={{
+                                                            color: 'black',
+                                                        }}>
+                                                        {index == 0 ? ' |' : ''}
+                                                    </Text>
+                                                </Text>
+                                            </View>
+                                        ) : (
+                                            <></>
+                                        ),
+                                    )}
+                                </View>
+                                <Text
+                                    style={{
+                                        color: 'black',
+                                        fontSize: 14,
+                                        marginTop: 5,
+                                        fontWeight: '500',
+                                    }}>
+                                    {dayamount} ngày
+                                </Text>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        justifyContent: 'space-between',
+                                    }}>
+                                    <Text
+                                        style={{
+                                            fontSize: 20,
+                                            paddingVertical: 10,
+                                            fontWeight: 'bold',
+                                            color: 'black',
+                                        }}>
+                                        {Format(items.price)}{' '}
+                                        <Text
+                                            style={{
+                                                fontSize: 13,
+                                                color: 'black',
+                                            }}>
+                                            đ
+                                        </Text>
+                                    </Text>
+                                    <View
+                                        style={{
+                                            width: 100,
+                                            height: 35,
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            borderRadius: 5,
+                                            backgroundColor: COLORS.primary,
+                                        }}>
+                                        <Text
+                                            style={{
+                                                color: 'white',
+                                                fontSize: 15,
+                                                fontWeight: 'bold',
+                                            }}>
+                                            Chọn phòng
+                                        </Text>
+                                    </View>
+                                </View>
+                            </View>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            ));
+        } catch (error) {
+            return <></>;
+        }
     };
-    const bottomSheetAnimation = {
-        transform: [
-            {
-                translateY: animatedValueBottom.interpolate({
-                    inputRange: [MAX_UPWARD_TRANSLATE_Y, MAX_DOWNWARD_TRANSLATE_Y],
-                    outputRange: [MAX_UPWARD_TRANSLATE_Y, MAX_DOWNWARD_TRANSLATE_Y],
-                    extrapolate: 'clamp',
-                }),
-            },
-        ],
-    };
-    //Calendar
-    const minday = new Date();
-    const [start, setStart] = useState(startday);
-    const [startTrue, setStartTrue] = useState(startday);
-    const [middle, setMiddle] = useState([])
-    const [NumDays, setNumDays] = useState(0);
-    const [end, setEnd] = useState(endday);
-    const [endTrue, setEndTrue] = useState(endday);
-    const handleOpenCalendar = () => {
-        springAnimation('up');
-        setStart(startTrue)
-        setEnd(endTrue)
-    }
-    useEffect(() => {
-        if (start != '' && end != '') {
-            const bd = start.split('-')
-            const kt = end.split('-')
-            const arr = []
-            if (kt[1] == bd[1]) {
-                const sub = (kt[2] - bd[2])
-                for (let i = 1; i < sub; i++) {
-                    var day = kt[2] - i < 10 ? '0' + (kt[2] - i) : kt[2] - i
-                    arr.push(`${kt[0]}-${kt[1]}-${day}`)
-                }
-            }
-            else {
-                var maxDayOfMonth = new Date(bd[0], bd[1], 0).getDate();
-                const sub = (maxDayOfMonth - bd[2])
-                for (let i = 1; i <= sub; i++) {
-                    arr.push(`${bd[0]}-${bd[1]}-${(bd[2] - 0) + i}`)
-                }
-                for (let i = 1; i < kt[2]; i++) {
-                    var day = i < 10 ? '0' + i : i
-                    arr.push(`${kt[0]}-${kt[1]}-${day}`)
-                }
-            }
-            setMiddle(arr)
-        }
-    }, [end])
-    const handleTest = (day) => {
-        if (start !== "" && end !== "") {
-            setStart(day.dateString)
-            setEnd('')
-            setMiddle([])
-        }
-        if (start === "") {
-            setStart(day.dateString)
-        }
-        else if (end === "" && day.dateString > start) {
-            setEnd(day.dateString)
-        }
-        else if (day.dateString < start) {
-            setStart(day.dateString)
-        }
-    }
-    const handleConfirm = () => {
-        springAnimation('down');
-        setStartTrue(start)
-        setEndTrue(end)
-        console.log(middle.length + 1)
-        dispatch(Globalreducer.actions.changedayamount(middle.length + 1))
-        dispatch(Globalreducer.actions.changestartday(start))
-        dispatch(Globalreducer.actions.changeendday(end));
-    }
-    const formatDayShow = (day) => {
-        if (day != '') {
-            return day.split('-')[2] + ' tháng ' + day.split('-')[1]
-        }
-        return ''
-    }
+
     return (
         <SafeAreaView style={{ backgroundColor: 'white' }}>
             <AnimatedView style={[styles.HeaderBack, HeaderAnimated]}>
@@ -226,7 +361,7 @@ const InfoHotel = ({ navigation, route }) => {
                     color="black"
                     onPress={navigation.goBack}
                 />
-                <View style={{ alignItems: 'center', paddingRight: 20 }}>
+                <View style={{ alignItems: 'center', width: '85%' }}>
                     <Text
                         style={{
                             fontSize: 18,
@@ -237,16 +372,30 @@ const InfoHotel = ({ navigation, route }) => {
                     </Text>
                     <Text style={{ textAlign: 'center' }}>{item.location}</Text>
                 </View>
-                <Icon2 name="heart-outline" size={0} color="black" style={{}} />
+                <Icon3
+                    name="dots-three-vertical"
+                    size={25}
+                    color="black"
+                    onPress={() => {
+                        handleOpen();
+                    }}
+                />
             </AnimatedView>
             <AnimatedView style={[styles.HeaderTitle, HeaderAnimatedScroll]}>
                 <Icon
                     name="arrow-back-ios"
                     size={28}
-                    color={COLORS.white}
+                    color={'white'}
                     onPress={navigation.goBack}
                 />
-                <Icon1 name={'bookmark-o'} size={25} color="white" style={{}} />
+                <Icon3
+                    name="dots-three-vertical"
+                    size={25}
+                    color="white"
+                    onPress={() => {
+                        handleOpen();
+                    }}
+                />
             </AnimatedView>
             <ScrollView
                 onScroll={e => {
@@ -255,11 +404,136 @@ const InfoHotel = ({ navigation, route }) => {
                 }}
                 scrollEventThrottle={16}
                 showsVerticalScrollIndicator={false}>
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                        setModalVisible(!modalVisible);
+                    }}>
+                    <View style={styles.centeredView}>
+                        <View style={styles.modalView}>
+                            <TouchableOpacity
+                                style={{
+                                    width: 50,
+                                    height: 5,
+                                    position: 'absolute',
+                                    zIndex: 1,
+                                    top: 10,
+                                    alignSelf: 'center',
+                                    backgroundColor: 'gray',
+                                    borderRadius: 5,
+                                }}
+                                onPress={() => setModalVisible(false)}>
+                                <View />
+                            </TouchableOpacity>
+                            <View
+                                style={{
+                                    paddingHorizontal: 10,
+                                    paddingVertical: 10,
+                                }}>
+                                <View
+                                    style={{
+                                        alignItems: 'center',
+                                        flexDirection: 'row',
+                                        marginLeft: 4,
+                                        justifyContent: 'space-between',
+                                    }}>
+                                    <View style={{ flexDirection: 'row' }}>
+                                        <Icon5
+                                            name="dot-fill"
+                                            size={25}
+                                            color={Active ? 'green' : 'gray'}
+                                            style={{ marginRight: 10 }}
+                                        />
+                                        <Text
+                                            style={{
+                                                marginLeft: 20,
+                                                fontSize: 15,
+                                                color: 'black',
+                                                fontWeight: 'bold',
+                                            }}>
+                                            Khách sạn đang hoạt động
+                                        </Text>
+                                    </View>
+                                    <Switch
+                                        trackColor={{
+                                            false: '#767577',
+                                            true: '#81b0ff',
+                                        }}
+                                        thumbColor={
+                                            Active ? '#f5dd4b' : '#f4f3f4'
+                                        }
+                                        ios_backgroundColor="#3e3e3e"
+                                        onValueChange={toggleSwitch}
+                                        value={Active}
+                                        style={{ marginLeft: 20 }}
+                                    />
+                                </View>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                        marginTop: 10,
+                                    }}>
+                                    <View style={{ flexDirection: 'row' }}>
+                                        <Icon4
+                                            name="delete"
+                                            size={20}
+                                            color="black"
+                                            style={{ marginRight: 10 }}
+                                        />
+                                        <Text
+                                            style={{
+                                                marginLeft: 17,
+                                                fontSize: 15,
+                                                color: 'black',
+                                                fontWeight: 'bold',
+                                            }}>
+                                            Xóa khách sạn
+                                        </Text>
+                                    </View>
+                                    <Icon6
+                                        name="delete-empty"
+                                        size={25}
+                                        color="red"
+                                        style={{
+                                            marginRight: 10,
+                                        }}
+                                        onPress={() => {
+                                            Alert.alert(
+                                                'Thông báo',
+                                                'Bạn có muốn xóa khách sạn này không?\nKhách sạn sẽ không thể khôi phục lại được!!',
+                                                [
+                                                    {
+                                                        text: 'Hủy',
+                                                        onPress: () =>
+                                                            console.log(
+                                                                'Cancel Pressed',
+                                                            ),
+                                                        style: 'cancel',
+                                                    },
+                                                    {
+                                                        text: 'Đồng ý',
+                                                        onPress: () => {
+                                                            handleDelete();
+                                                        },
+                                                    },
+                                                ],
+                                            );
+                                        }}
+                                    />
+                                </View>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
                 <Image
                     source={{ uri: item.image }}
                     style={{ width: width, height: 300, resizeMode: 'cover' }}
                 />
-                <View style={{ paddingHorizontal: 15, paddingBottom: 100 }}>
+                <View style={{ paddingHorizontal: 15, paddingBottom: 200 }}>
                     <View
                         style={{
                             borderBottomWidth: 1,
@@ -344,18 +618,13 @@ const InfoHotel = ({ navigation, route }) => {
                                 }}>
                                 Mô tả
                             </Text>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    handleShow();
+                            <Text
+                                style={{
+                                    fontSize: 15,
+                                    color: COLORS.primary,
                                 }}>
-                                <Text
-                                    style={{
-                                        fontSize: 15,
-                                        color: COLORS.primary,
-                                    }}>
-                                    More
-                                </Text>
-                            </TouchableOpacity>
+                                More
+                            </Text>
                         </View>
                         <Text
                             style={{
@@ -366,10 +635,16 @@ const InfoHotel = ({ navigation, route }) => {
                             {item.description}
                         </Text>
                     </View>
-                    <View style={{
-                        marginTop: 10,
-                    }}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: "space-between" }}>
+                    <View
+                        style={{
+                            marginTop: 10,
+                        }}>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                            }}>
                             <Text
                                 style={{
                                     fontSize: 20,
@@ -378,20 +653,24 @@ const InfoHotel = ({ navigation, route }) => {
                                 }}>
                                 Bản đồ
                             </Text>
-                            <TouchableOpacity onPress={() => { navigation.navigate('MapHotel', item) }}>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    navigation.navigate('MapHotel', item);
+                                }}>
                                 <Text
                                     style={{
                                         fontSize: 15,
                                         fontWeight: 'bold',
                                         color: COLORS.primary,
-                                        marginRight: 5
+                                        marginRight: 5,
                                     }}>
-                                    Xem</Text>
+                                    Xem
+                                </Text>
                             </TouchableOpacity>
                         </View>
                         <View
                             style={{
-                                width: "99%",
+                                width: '99%',
                                 height: 150,
                                 marginTop: 10,
                             }}>
@@ -425,74 +704,7 @@ const InfoHotel = ({ navigation, route }) => {
                         }}>
                         Danh sách phòng
                     </Text>
-                    {DataRoom.map((items, index) => (
-                        <View key={index}>
-                            <TouchableOpacity
-                                style={styles.RecentlyBox}
-                                onPress={() => {
-                                    navigation.navigate('DetailsScreen', items);
-                                }}>
-                                <View
-                                    style={{
-                                        width: '100%',
-                                        height: 150,
-                                        alignSelf: 'center',
-                                    }}>
-                                    <Image
-                                        style={styles.IMGRecent}
-                                        source={{ uri: items.image[0] }}
-                                    />
-                                </View>
-                                <View>
-                                    <View style={{ paddingHorizontal: 15, paddingVertical: 5 }}>
-                                        <Text
-                                            style={{
-                                                fontSize: 20,
-                                                height: 25,
-                                                color: 'black',
-                                            }}>
-                                            {items.name}
-                                        </Text>
-                                        <View style={{ flexDirection: 'row', paddingVertical: 5 }}>
-                                            {items.icon.map((item, index) => (
-                                                index < 2 ?
-                                                    <View key={index} style={{ alignContent: 'center', justifyContent: 'flex-start', marginRight: 10 }}>
-                                                        <Text style={{ color: 'gray', fontSize: 14 }}>
-                                                            {items.tienich[index]} <Text style={{ color: 'black' }}>{index == 0 ? ' |' : ''}</Text>
-                                                        </Text>
-                                                    </View>
-                                                    : <></>
-                                            ))
-                                            }
-                                        </View>
-                                        <Text style={{ color: 'black', fontSize: 14, marginTop: 5, fontWeight: '500' }}>{dayamount} ngày</Text>
-                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                            <Text
-                                                style={{
-                                                    fontSize: 20,
-                                                    paddingVertical: 10,
-                                                    fontWeight: 'bold',
-                                                    color: 'black',
-                                                }}>
-                                                {Format(items.price)}{' '}
-                                                <Text
-                                                    style={{
-                                                        fontSize: 13,
-                                                        color: 'black',
-                                                    }}>
-                                                    đ
-                                                </Text>
-                                            </Text>
-                                            <View style={{ width: 100, height: 35, alignItems: 'center', justifyContent: 'center', borderRadius: 5, backgroundColor: COLORS.primary }}>
-                                                <Text style={{ color: 'white', fontSize: 15, fontWeight: 'bold' }}>Chọn phòng</Text>
-                                            </View>
-                                        </View>
-                                    </View>
-                                </View>
-                            </TouchableOpacity>
-
-                        </View>
-                    ))}
+                    <ShowRoom />
                     <View>
                         <Text
                             style={{
@@ -679,6 +891,36 @@ const styles = StyleSheet.create({
         height: 6,
         backgroundColor: '#d3d3d3',
         borderRadius: 10,
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        backgroundColor: 'rgba(0,0,0,0.05)',
+    },
+    modalView: {
+        width: '90%',
+        height: 110,
+        margin: 20,
+        backgroundColor: 'white',
+        padding: 20,
+        borderRadius: 15,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    textStyle: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: 'center',
     },
 });
 

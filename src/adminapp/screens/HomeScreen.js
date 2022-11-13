@@ -9,19 +9,26 @@ import {
 import React, { useEffect, useState } from 'react';
 import firestore from '@react-native-firebase/firestore';
 
+
 export default function HomeScreen({ navigation }) {
     const [ListHotelData, setListHotelData] = useState([]);
+    let dataAccountFireBase = [];
+    const handleSort = data => {
+        const sorted = [].concat(data).sort((a, b) => {
+            return a.name.localeCompare(b.name);
+        });
+        setListHotelData(sorted);
+    };
     useEffect(() => {
         firestore()
             .collection('ListHotel')
             .doc('ListHotel')
             .get()
             .then(documentSnapshot => {
-                setListHotelData(documentSnapshot.data().ListHotel);
+                handleSort(documentSnapshot.data().ListHotel);
             });
     }, []);
     const loadAccount = async () => {
-        let dataAccountFireBase = [];
         await firestore()
             .collection('AdminAccounts')
             .get()
@@ -30,9 +37,23 @@ export default function HomeScreen({ navigation }) {
                     dataAccountFireBase.push(documentSnapshot.data());
                 });
             });
-        navigation.navigate('AddHotel', {
-            data: dataAccountFireBase,
-        });
+            navigation.navigate('AddHotel', {
+                data: dataAccountFireBase,
+            });
+    };
+    const loadAccount1 = async (item) => {
+        await firestore()
+            .collection('AdminAccounts')
+            .get()
+            .then(querySnapshot => {
+                querySnapshot.forEach(documentSnapshot => {
+                    dataAccountFireBase.push(documentSnapshot.data());
+                });
+            })
+            navigation.navigate('InfoHotel', {
+                data: item,
+                account: dataAccountFireBase,
+            })
     };
     return (
         <View style={styles.container}>
@@ -66,7 +87,7 @@ export default function HomeScreen({ navigation }) {
                                 style={styles.item}
                                 key={index}
                                 onPress={() => {
-                                    navigation.navigate('InfoHotel', item);
+                                    loadAccount1(item);
                                 }}>
                                 <Image
                                     source={{
@@ -101,7 +122,8 @@ export default function HomeScreen({ navigation }) {
                 <TouchableOpacity
                     style={styles.fab}
                     onPress={() => {
-                        loadAccount();
+                        loadAccount()
+                            
                     }}>
                     <Text>+</Text>
                 </TouchableOpacity>

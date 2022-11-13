@@ -51,11 +51,6 @@ export default function AddHotel({ navigation, route }) {
         setPassword('');
     };
     const handleAddHotel = async () => {
-        let dataAccount = {
-            _id: id,
-            email: email,
-            roll: roll,
-        };
         console.log('Email: ' + email, 'Password: ' + password);
         if (
             email === '' ||
@@ -83,6 +78,12 @@ export default function AddHotel({ navigation, route }) {
                     .catch(error => {
                         console.log(error);
                     });
+                let dataAccount = {
+                    _id: id,
+                    email: email,
+                    roll: roll,
+                    uid: auth().currentUser.uid,
+                };
                 await firestore()
                     .collection('AdminAccounts')
                     .doc(id)

@@ -86,6 +86,7 @@ export default function HomeScreen({ navigation }) {
     }, []);
 
     const [ListHotelDataFireBase, setListHotelDataFireBase] = useState([]);
+    
     useEffect(() => {
         firestore()
             .collection('ListHotel')
