@@ -424,7 +424,7 @@ export const ListItemHotel = [
         },
 ]
 
-const ListRoom=[
+export const ListRoom=[
         {
                 id: 1,
                 room: "Phòng 2 Giường Đơn",
@@ -481,61 +481,73 @@ export const ListHotel=[
         {
                 id: "AmisHotel",
                 name: "Amis Hotel",
-                location: "147-149 Hoang Hoa Tham,Vũng Tàu",
+                location: "149 Đ. Hoàng Hoa Thám, Phường 2, Thành phố Vũng Tầu, Bà Rịa - Vũng Tàu",
                 description: "Chỉ cách Bãi biển Bãi Sau 200 m và có tầm nhìn tuyệt đẹp hướng ra biển, Amis Hotel cung cấp truy cập Wi-Fi miễn phí trong toàn bộ khuôn viên và có 1 nhà hàng trong nhà.\nVới đồ nội thất trang nhã, các phòng máy lạnh tại đây được trang bị truyền hình cáp màn hình phẳng cũng như minibar và bàn làm việc. Phòng tắm riêng đi kèm với máy sấy tóc và đồ vệ sinh cá nhân miễn phí.\nBộ phận lễ tân làm việc 24 giờ sẽ vui lòng hỗ trợ khách các dịch vụ để hành lý và giặt thường/giặt hấp. Để tạo sự thuận tiện cho khách, nơi đây cung cấp dịch vụ đưa đón sân bay kèm phụ phí.",
                 advantage: "Cách bãi biển 450m",
                 image: "https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/347750447.jpg?k=ee91a5954be973ce7ee01afbc5acca0a290e29d15bd340e30be2189a30ff47a1&o=&hp=1",
                 review: 4.5,
                 amount: 10,     
+                isActive: true,
+                position:[10.3363236,107.0853581]
         },
         {
                 id: "AzuraResort",
                 name: "Azura Resort",
-                location: "Duong Dong, Phú Quốc",
+                location: "Hem 91 Trần Hưng Đạo, Dương Đông Phu Quoc Island, Kiên Giang",
                 description: "Nằm trên đảo Phú Quốc, Azura Resort có nhà hàng, quầy bar, sảnh khách chung và khu vườn. Resort này có các phòng gia đình và tiện nghi BBQ. Chỗ nghỉ cung cấp dịch vụ lễ tân 24 giờ, dịch vụ phòng và dịch vụ thu đổi ngoại tệ cho khách.\nMỗi phòng nghỉ của resort đều được bố trí máy điều hòa, khu vực ghế ngồi, TV truyền hình cáp màn hình phẳng, két an toàn, ấm đun nước và phòng tắm riêng với vòi xịt/chậu rửa vệ sinh, áo choàng tắm cùng dép. Một số phòng có sân trong trong khi những phòng còn lại nhìn ra hồ bơi. Tại Azura Resort, các phòng được trang bị ga trải giường và khăn tắm.",
                 advantage: "Cách trung tâm 1.4km",
                 image: "https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/156818404.jpg?k=93a36fefc4a22f9e979b6a345a45fa3fe3fa430c13994da6eb3102c34f924a6d&o=&hp=1",
                 review: 4.5,
                 amount: 10,  
+                isActive:true,
+                position:[10.2056941,103.9621192]
         },
         {
                 id: "AaronHotel",
                 name: "Aaron Hotel",
-                location: "Nha Trang Beach, Nha Trang",
+                location: "6 Trần Quang Khải, Lộc Thọ, Nha Trang, Khánh Hòa",
                 description: "https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/387110268.jpg?k=6ef80d83ca786d4ce711c765e177fdae5fdf649ae0e4ecc2809557fa47f28de4&o=&hp=1",
                 advantage: "Cách trung tâm 0.6km",
                 image: "https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/387110268.jpg?k=6ef80d83ca786d4ce711c765e177fdae5fdf649ae0e4ecc2809557fa47f28de4&o=&hp=1",
                 review: 4.5,
                 amount: 10,
+                isActive:true,
+                position:[12.2335072,109.1942785]
         },
         {
                 id: "MayBungalow",
                 name: "May Bungalow",
-                location: "East Ham Tien Beach, Mũi Né",
+                location: "246/2 Nguyễn Đình Chiểu, Phường Hàm Tiến, Thành phố Phan Thiết, Bình Thuận",
                 description: "Tọa lạc tại một vị trí thuận tiện ở khu Bãi biển Đông Hàm Tiến thuộc Mũi Né, MAY Bungalow nằm cách Bãi biển Hàm Tiến 150 m, Trung tâm Lướt ván diều Surfpoint 1,7 km và Trường dạy Lướt ván diều Windchimes 5 km. Khách sạn 2 sao này có hồ bơi ngoài trời và phòng nghỉ lắp máy điều hòa với WiFi miễn phí cùng phòng tắm riêng. Khách sạn cung cấp các phòng gia đình.\nPhòng nghỉ tại MAY Bungalow có tủ để quần áo, ban công, TV màn hình phẳng và dép. Một số phòng nhìn ra hồ bơi.",
                 advantage: "Cách bãi biển 150m",
                 image: "https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/379475218.jpg?k=f29b7cbde31a60c3137d02cff900bc0897272ab37e4ae80ee18774c1bdf5b525&o=&hp=1",
                 review: 4.5,
                 amount: 10,
+                isActive:true,
+                position:[10.9534026,108.2448922]
         },
         {
                 id: "RaonDalat",
                 name: "Raon Dalat",
-                location: "Đà lạt",
+                location: "46 Đường Trần Khánh Dư, Phường 8, Thành phố Đà Lạt, Lâm Đồng",
                 description: "Tọa lạc ở thành phố Đà Lạt, cách Quảng trường Lâm Viên 1,2 km, Raon Hotel cung cấp chỗ nghỉ với sảnh khách chung, chỗ đỗ xe riêng miễn phí, khu vườn và sân hiên. Khách sạn 3 sao này có WiFi miễn phí, dịch vụ phòng và dịch vụ tiền sảnh. Chỗ nghỉ có lễ tân 24 giờ, bếp chung và dịch vụ thu đổi ngoại tệ cho khách.\nPhòng nghỉ tại Raon Hotel được bố trí khu vực ghế ngồi, TV truyền hình cáp màn hình phẳng, ấm đun nước và phòng tắm riêng đi kèm dép cùng vòi xịt/chậu rửa vệ sinh. Một số phòng nhìn ra khu vườn. Mỗi phòng đều được trang bị ga trải giường và khăn tắm.\nĐi bộ đường dài và đi xe đạp là các hoạt động được ưa chuộng trong khu vực trong khi du khách cũng có thể thuê xe hơi tại Raon Hotel",
                 advantage: "Cách trung tâm 1.8km",
                 image: "https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/365127907.jpg?k=161dcaf1d0f01ade517e5a028d675158a3061dddee7bc17a11a9acb7faa144d9&o=&hp=1",
                 review: 4.5,
                 amount: 10,
+                isActive:true,
+                position:[11.9622764,108.4381788]
         },
         {
                 id: "TheArrivalsHotel",
                 name: "The Arrivals Hotel",
-                location: "Quận 1, Hồ Chí Minh",
+                location: "176/40, 1123 Trần Huy Liệu, Phường 15, Phú Nhuận, Thành phố Hồ Chí Minh",
                 description: "Tọa lạc tại Thành phố Hồ Chí Minh, The Arrivals Hotel có nhà hàng, hồ bơi ngoài trời, trung tâm thể dục, quán bar và khu vườn. Khách sạn này nằm gần một số điểm tham quan nổi tiếng, cách Bảo tàng Mỹ thuật khoảng 500 m, Bến Nhà Rồng 700 m và Chợ Bến Thành 800 m. Chỗ nghỉ cung cấp dịch vụ lễ tân 24 giờ, dịch vụ phòng và tổ chức các tour du lịch cho khách.\nMột số phòng nghỉ tại đây có khu vực bếp ăn với lò vi sóng, tủ lạnh và lò nướng. Các phòng được trang bị máy điều hòa, két an toàn và TV màn hình phẳng.\nKhách nghỉ tại khách sạn có thể thưởng thức bữa sáng buffet hoặc bữa sáng à la carte.",
                 advantage: "Cách trung tâm 0.7km",
                 image: "https://t-cf.bstatic.com/xdata/images/hotel/max1280x900/356724924.jpg?k=d755c5261e900df05c53ef693fbcbe343a8a9843879dff480c3ffcde610c418e&o=&hp=1",
                 review: 4.5,
                 amount: 10,
+                isActive:true,
+                position:[10.7985303,106.6763216]
         }
 ]

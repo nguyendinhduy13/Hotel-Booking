@@ -19,7 +19,7 @@ export default function Profile({ navigation }) {
                                 () => {
                                         GoogleSignin.revokeAccess();
                                         GoogleSignin.signOut();
-                                        dispatchSignedIn({ type: "UPDATE_SIGN_IN", payload: { userToken: null } })
+                                        dispatchSignedIn({ type: "UPDATE_SIGN_IN", payload: { userToken: null,_id:'' } })
                                 }
                         )
                 }
