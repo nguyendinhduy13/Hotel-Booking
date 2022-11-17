@@ -234,6 +234,8 @@ export default function DetailsScreen({ navigation, route }) {
             Book Now !
           </Text>
         </View>
+        </TouchableOpacity>
+    </View>
     );
 }
 
