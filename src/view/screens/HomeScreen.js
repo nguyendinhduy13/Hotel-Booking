@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react'
 import {
     SafeAreaView,
     Text,
@@ -15,26 +15,26 @@ import {
     Animated,
     LogBox,
     Modal,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons';
-import Icon2 from 'react-native-vector-icons/Entypo';
-import Icon3 from 'react-native-vector-icons/Feather';
-import Icon4 from 'react-native-vector-icons/Ionicons';
-import Icon5 from 'react-native-vector-icons/EvilIcons';
-import COLORS from '../../consts/colors';
-import firestore, { firebase } from '@react-native-firebase/firestore';
-import Geolocation from '@react-native-community/geolocation';
-import { useDispatch } from 'react-redux';
-import CurrentPosition from '../../redux/CurrentPosition';
-import auth from '@react-native-firebase/auth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Globalreducer from '../../redux/Globalreducer';
-const { width } = Dimensions.get('screen');
-const cardWidth = width / 1.8;
+} from 'react-native'
+import Icon from 'react-native-vector-icons/MaterialIcons'
+import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons'
+import Icon2 from 'react-native-vector-icons/Entypo'
+import Icon3 from 'react-native-vector-icons/Feather'
+import Icon4 from 'react-native-vector-icons/Ionicons'
+import Icon5 from 'react-native-vector-icons/EvilIcons'
+import COLORS from '../../consts/colors'
+import firestore, { firebase } from '@react-native-firebase/firestore'
+import Geolocation from '@react-native-community/geolocation'
+import { useDispatch } from 'react-redux'
+import CurrentPosition from '../../redux/CurrentPosition'
+import auth from '@react-native-firebase/auth'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import Globalreducer from '../../redux/Globalreducer'
+const { width } = Dimensions.get('screen')
+const cardWidth = width / 1.8
 export default function HomeScreen({ navigation }) {
     //get current position
-    const dispatch = useDispatch();
+    const dispatch = useDispatch()
     const requestLocation = async () => {
         try {
             const granted = await PermissionsAndroid.request(
@@ -48,88 +48,83 @@ export default function HomeScreen({ navigation }) {
                     buttonNegative: 'Cancel',
                     buttonPositive: 'OK',
                 },
-            );
+            )
         } catch (err) {
-            console.warn(err);
+            console.warn(err)
         }
-    };
+    }
     const componentDidMount = () => {
         Geolocation.getCurrentPosition(
             position => {
-                var lat = parseFloat(position.coords.latitude);
-                var long = parseFloat(position.coords.longitude);
+                var lat = parseFloat(position.coords.latitude)
+                var long = parseFloat(position.coords.longitude)
                 dispatch(
                     CurrentPosition.actions.addCurrentPosition({
                         latitude: lat,
                         longitude: long,
                     }),
-                );
+                )
             },
             error => alert(JSON.stringify(error)),
             { enableHighAccuracy: true },
-        );
-    };
+        )
+    }
     useEffect(() => {
-        componentDidMount();
+        componentDidMount()
         firestore()
             .collection(user.uid)
             .get()
             .then(querySnapshot => {
                 querySnapshot.forEach(documentSnapshot => {
-                    dispatch(
-                        Globalreducer.actions.setdatabooking(
-                            documentSnapshot.data(),
-                        ),
-                    );
-                });
-            });
-    }, []);
+                    dispatch(Globalreducer.actions.setdatabooking(documentSnapshot.data()))
+                })
+            })
+    }, [])
 
-    const [ListHotelDataFireBase, setListHotelDataFireBase] = useState([]);
-    
+    const [ListHotelData, setListHotelData] = useState([])
+    const handleSort = data => {
+        const temp = data.filter(item => item.isActive === true)
+        const sorted = [].concat(temp).sort((a, b) => {
+            return a.name.localeCompare(b.name)
+        })
+        setListHotelData(sorted)
+    }
     useEffect(() => {
         firestore()
             .collection('ListHotel')
             .doc('ListHotel')
             .get()
             .then(documentSnapshot => {
-                setListHotelDataFireBase(documentSnapshot.data().ListHotel);
-            });
-    }, []);
-    const ListHotelData = ListHotelDataFireBase.filter(
-        item => item.isActive === true,
-    );
-    const [isShow, setIsShow] = useState(false);
-    const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
-    const [activeCardIndex, setActiveCardIndex] = useState(0);
-    const scrollX = useRef(new Animated.Value(0)).current;
-    const [countShow, setCountShow] = useState(0);
-    const user = auth().currentUser;
-    const [modalVisible, setModalVisible] = useState(false);
+                handleSort(documentSnapshot.data().ListHotel)
+            })
+    }, [])
+    const [isShow, setIsShow] = useState(false)
+    const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0)
+    const [activeCardIndex, setActiveCardIndex] = useState(0)
+    const scrollX = useRef(new Animated.Value(0)).current
+    const [countShow, setCountShow] = useState(0)
+    const user = auth().currentUser
+    const [modalVisible, setModalVisible] = useState(false)
 
-    const AnimatedView = Animated.createAnimatedComponent(View);
-    const animatedValue = useRef(new Animated.Value(0)).current;
+    const AnimatedView = Animated.createAnimatedComponent(View)
+    const animatedValue = useRef(new Animated.Value(0)).current
     const SearchShow = {
         opacity: animatedValue.interpolate({
             inputRange: [0, 70],
             outputRange: [0, 1],
         }),
-    };
+    }
 
     const Card = ({ hotel, index }) => {
-        const inputRange = [
-            (index - 1) * cardWidth,
-            index * cardWidth,
-            (index + 1) * cardWidth,
-        ];
+        const inputRange = [(index - 1) * cardWidth, index * cardWidth, (index + 1) * cardWidth]
         const opacity = scrollX.interpolate({
             inputRange,
             outputRange: [0.7, 0, 0.7],
-        });
+        })
         const scale = scrollX.interpolate({
             inputRange,
             outputRange: [0.8, 1, 0.8],
-        });
+        })
         return (
             <View>
                 <TouchableOpacity
@@ -137,19 +132,34 @@ export default function HomeScreen({ navigation }) {
                     activeOpacity={1}
                     onPress={() => navigation.navigate('ListRoom', hotel)}>
                     <Animated.View
-                        style={{ ...styles.card, transform: [{ scale }] }}>
+                        style={{
+                            ...styles.card,
+                            transform: [
+                                {
+                                    scale,
+                                },
+                            ],
+                        }}>
                         <Animated.View
-                            style={{ ...styles.cardOverplay, opacity }}
+                            style={{
+                                ...styles.cardOverplay,
+                                opacity,
+                            }}
                         />
                         <View style={styles.priceTag}>
                             <Icon name="star" size={15} color={COLORS.orange} />
                             <Text
-                                style={{ color: 'white', fontWeight: 'bold' }}>
+                                style={{
+                                    color: 'white',
+                                    fontWeight: 'bold',
+                                }}>
                                 4.8
                             </Text>
                         </View>
                         <Image
-                            source={{ uri: hotel.image }}
+                            source={{
+                                uri: hotel.image,
+                            }}
                             style={styles.cardImage}
                         />
                         <View style={styles.cardDetails}>
@@ -160,7 +170,10 @@ export default function HomeScreen({ navigation }) {
                                     marginTop: 10,
                                 }}>
                                 <View>
-                                    <View style={{ height: 20 }}>
+                                    <View
+                                        style={{
+                                            height: 20,
+                                        }}>
                                         <Text
                                             style={{
                                                 fontWeight: 'bold',
@@ -170,7 +183,10 @@ export default function HomeScreen({ navigation }) {
                                             {hotel.name}
                                         </Text>
                                     </View>
-                                    <View style={{ marginTop: 5 }}>
+                                    <View
+                                        style={{
+                                            marginTop: 5,
+                                        }}>
                                         <Text
                                             style={{
                                                 fontSize: 14,
@@ -185,8 +201,8 @@ export default function HomeScreen({ navigation }) {
                     </Animated.View>
                 </TouchableOpacity>
             </View>
-        );
-    };
+        )
+    }
     const TopHotelCard = ({ hotel, index }) => {
         if (index < 3) {
             return (
@@ -215,9 +231,15 @@ export default function HomeScreen({ navigation }) {
                     </View>
                     <Image
                         style={styles.topHotelCardImage}
-                        source={{ uri: hotel.image }}
+                        source={{
+                            uri: hotel.image,
+                        }}
                     />
-                    <View style={{ paddingHorizontal: 10, paddingVertical: 5 }}>
+                    <View
+                        style={{
+                            paddingHorizontal: 10,
+                            paddingVertical: 5,
+                        }}>
                         <Text
                             style={{
                                 fontsize: 17,
@@ -227,7 +249,11 @@ export default function HomeScreen({ navigation }) {
                             }}>
                             {hotel.name}
                         </Text>
-                        <View style={{ flexDirection: 'row', height: 35 }}>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                height: 35,
+                            }}>
                             <Image
                                 style={{
                                     width: 20,
@@ -252,25 +278,42 @@ export default function HomeScreen({ navigation }) {
                         </View>
                     </View>
                 </TouchableOpacity>
-            );
+            )
         }
-    };
+    }
     const RecentlyBookedCard = ({ hotel }) => {
         return (
             <View>
                 <TouchableOpacity
                     style={styles.RecentlyBox}
                     onPress={() => navigation.navigate('ListRoom', hotel)}>
-                    <View style={{ width: 120, height: 120 }}>
+                    <View
+                        style={{
+                            width: 120,
+                            height: 120,
+                        }}>
                         <Image
                             style={styles.IMGRecent}
-                            source={{ uri: hotel.image }}
+                            source={{
+                                uri: hotel.image,
+                            }}
                         />
                     </View>
                     <View>
-                        <View style={{ marginTop: 10, flexDirection: 'row' }}>
-                            <View style={{ width: 200 }}>
-                                <View style={{ width: 120, height: 29 }}>
+                        <View
+                            style={{
+                                marginTop: 10,
+                                flexDirection: 'row',
+                            }}>
+                            <View
+                                style={{
+                                    width: 200,
+                                }}>
+                                <View
+                                    style={{
+                                        width: 120,
+                                        height: 29,
+                                    }}>
                                     <Text
                                         style={{
                                             fontSize: 17,
@@ -285,7 +328,10 @@ export default function HomeScreen({ navigation }) {
                                         height: 40,
                                         justifyContent: 'center',
                                     }}>
-                                    <Text style={{ fontSize: 15 }}>
+                                    <Text
+                                        style={{
+                                            fontSize: 15,
+                                        }}>
                                         {hotel.location}
                                     </Text>
                                 </View>
@@ -308,11 +354,7 @@ export default function HomeScreen({ navigation }) {
                                         flexDirection: 'row',
                                         alignItems: 'center',
                                     }}>
-                                    <Icon
-                                        name="star"
-                                        size={15}
-                                        color={COLORS.orange}
-                                    />
+                                    <Icon name="star" size={15} color={COLORS.orange} />
                                     <Text
                                         style={{
                                             color: COLORS.primary,
@@ -323,7 +365,10 @@ export default function HomeScreen({ navigation }) {
                                         5.0
                                     </Text>
                                 </View>
-                                <Text style={{ marginLeft: 15 }}>
+                                <Text
+                                    style={{
+                                        marginLeft: 15,
+                                    }}>
                                     (5 reviews)
                                 </Text>
                             </View>
@@ -344,83 +389,89 @@ export default function HomeScreen({ navigation }) {
                     />
                 </TouchableOpacity>
             </View>
-        );
-    };
-    const textInput = useRef(0);
-    const [data, setData] = useState([]);
-    const [search, setSearch] = useState('');
+        )
+    }
+    const textInput = useRef(0)
+    const [data, setData] = useState([])
+    const [search, setSearch] = useState('')
     const handleSearch = text => {
         if (text) {
             const newData = ListHotelData.filter(item => {
-                const itemData = item.name
-                    ? item.name.toUpperCase()
-                    : ''.toUpperCase();
-                const textData = text.toUpperCase();
-                return itemData.indexOf(textData) > -1;
-            });
-            setData(newData);
-            setSearch(text);
+                const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase()
+                const textData = text.toUpperCase()
+                return itemData.indexOf(textData) > -1
+            })
+            setData(newData)
+            setSearch(text)
         } else {
-            setData([]);
-            setSearch('');
+            setData([])
+            setSearch('')
         }
-    };
+    }
 
-    const [historySearch, setHistorySearch] = useState([]);
+    const [historySearch, setHistorySearch] = useState([])
     const readItemFromStorage = async newValue => {
-        const value = await AsyncStorage.getItem('hotel');
+        const value = await AsyncStorage.getItem('hotel')
         if (value == null) {
-            await AsyncStorage.setItem('hotel', JSON.stringify([]));
-            setHistorySearch([]);
+            await AsyncStorage.setItem('hotel', JSON.stringify([]))
+            setHistorySearch([])
         } else {
-            setHistorySearch(JSON.parse(value));
+            setHistorySearch(JSON.parse(value))
         }
-    };
+    }
     useEffect(() => {
-        readItemFromStorage();
-    }, []);
+        readItemFromStorage()
+    }, [])
     const addItemToSearchHistory = async item => {
-        const value = await AsyncStorage.getItem('hotel');
-        const arr = JSON.parse(value);
+        const value = await AsyncStorage.getItem('hotel')
+        const arr = JSON.parse(value)
         if (arr) {
-            const index = arr.findIndex(e => e.id === item.id);
+            const index = arr.findIndex(e => e.id === item.id)
             if (index === -1) {
-                arr.push(item);
+                arr.push(item)
             } else {
-                arr.splice(index, 1);
-                arr.push(item);
+                arr.splice(index, 1)
+                arr.push(item)
             }
         }
-        await AsyncStorage.setItem('hotel', JSON.stringify(arr));
-        readItemFromStorage();
-    };
+        await AsyncStorage.setItem('hotel', JSON.stringify(arr))
+        readItemFromStorage()
+    }
     const removeItemFromSearchHistory = async item => {
-        const value = await AsyncStorage.getItem('hotel');
-        const arr = JSON.parse(value);
+        const value = await AsyncStorage.getItem('hotel')
+        const arr = JSON.parse(value)
         if (arr) {
-            const index = arr.findIndex(e => e.id === item.id);
+            const index = arr.findIndex(e => e.id === item.id)
             if (index !== -1) {
-                arr.splice(index, 1);
+                arr.splice(index, 1)
             }
         }
-        await AsyncStorage.setItem('hotel', JSON.stringify(arr));
-        readItemFromStorage();
-    };
+        await AsyncStorage.setItem('hotel', JSON.stringify(arr))
+        readItemFromStorage()
+    }
     const navigateTo = item => {
-        navigation.navigate('ListRoom', item);
-        setModalVisible(false);
+        navigation.navigate('ListRoom', item)
+        setModalVisible(false)
         // setData([])
         // setSearch("")
-        addItemToSearchHistory(item);
-    };
+        addItemToSearchHistory(item)
+    }
     const ShowModal = async () => {
-        setModalVisible(true);
-    };
+        setModalVisible(true)
+    }
     return (
         requestLocation(),
         (
-            <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
-                <View style={{ paddingHorizontal: 20, height: 100 }}>
+            <SafeAreaView
+                style={{
+                    flex: 1,
+                    backgroundColor: COLORS.white,
+                }}>
+                <View
+                    style={{
+                        paddingHorizontal: 20,
+                        height: 100,
+                    }}>
                     <View
                         style={{
                             flexDirection: 'row',
@@ -455,31 +506,31 @@ export default function HomeScreen({ navigation }) {
                                 alignItems: 'center',
                             }}>
                             <Animated.View
-                                style={[{ paddingRight: 10 }, SearchShow]}>
+                                style={[
+                                    {
+                                        paddingRight: 10,
+                                    },
+                                    SearchShow,
+                                ]}>
                                 <TouchableOpacity
                                     onPress={() => {
-                                        ShowModal();
+                                        ShowModal()
                                     }}>
-                                    <Icon5
-                                        name="search"
-                                        size={32}
-                                        color="#FF6347"
-                                    />
+                                    <Icon5 name="search" size={32} color="#FF6347" />
                                 </TouchableOpacity>
                             </Animated.View>
                             <TouchableOpacity
                                 onPress={() => {
-                                    navigation.navigate('TestCalendar');
+                                    navigation.navigate('TestCalendar')
                                 }}>
-                                <Icon1
-                                    name="bell-ring-outline"
-                                    size={26}
-                                    color={COLORS.grey}
-                                />
+                                <Icon1 name="bell-ring-outline" size={26} color={COLORS.grey} />
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <View style={{ marginTop: 15 }}>
+                    <View
+                        style={{
+                            marginTop: 15,
+                        }}>
                         <Text
                             style={{
                                 fontWeight: 'bold',
@@ -491,7 +542,9 @@ export default function HomeScreen({ navigation }) {
                                 name="hand-wave-outline"
                                 size={26}
                                 color={'#FF6347'}
-                                style={{ marginLeft: 10 }}
+                                style={{
+                                    marginLeft: 10,
+                                }}
                             />
                         </Text>
                     </View>
@@ -500,22 +553,28 @@ export default function HomeScreen({ navigation }) {
                     showsHorizontalScrollIndicator={false}
                     style={{ height: '100%' }}
                     onScroll={e => {
-                        const currentOffset = e.nativeEvent.contentOffset.y;
-                        animatedValue.setValue(currentOffset);
+                        const currentOffset = e.nativeEvent.contentOffset.y
+                        animatedValue.setValue(currentOffset)
                     }}
                     scrollEventThrottle={16}>
                     <TouchableOpacity
                         onPress={() => {
-                            ShowModal();
+                            ShowModal()
                         }}>
                         <View style={styles.searchInputContainer}>
                             <Icon5
                                 name="search"
                                 size={30}
-                                style={{ marginLeft: 10 }}
+                                style={{
+                                    marginLeft: 10,
+                                }}
                                 color="#FF6347"
                             />
-                            <Text style={{ fontSize: 17, paddingLeft: 10 }}>
+                            <Text
+                                style={{
+                                    fontSize: 17,
+                                    paddingLeft: 10,
+                                }}>
                                 Tìm địa điểm, khách sạn
                             </Text>
                         </View>
@@ -524,21 +583,22 @@ export default function HomeScreen({ navigation }) {
                         <Animated.FlatList
                             onMomentumScrollEnd={e => {
                                 setActiveCardIndex(
-                                    Math.round(
-                                        e.nativeEvent.contentOffset.x /
-                                            cardWidth,
-                                    ),
-                                );
+                                    Math.round(e.nativeEvent.contentOffset.x / cardWidth),
+                                )
                             }}
                             onScroll={Animated.event(
                                 [
                                     {
                                         nativeEvent: {
-                                            contentOffset: { x: scrollX },
+                                            contentOffset: {
+                                                x: scrollX,
+                                            },
                                         },
                                     },
                                 ],
-                                { useNativeDriver: true },
+                                {
+                                    useNativeDriver: true,
+                                },
                             )}
                             data={ListHotelData}
                             horizontal
@@ -548,9 +608,7 @@ export default function HomeScreen({ navigation }) {
                                 paddingRight: cardWidth / 2 - 40,
                             }}
                             showsHorizontalScrollIndicator={false}
-                            renderItem={({ item, index }) => (
-                                <Card hotel={item} index={index} />
-                            )}
+                            renderItem={({ item, index }) => <Card hotel={item} index={index} />}
                             snapToInterval={cardWidth}
                         />
                     </View>
@@ -570,7 +628,7 @@ export default function HomeScreen({ navigation }) {
                         </Text>
                         <TouchableOpacity
                             onPress={() => {
-                                navigation.navigate('Test');
+                                navigation.navigate('Test')
                             }}>
                             <Text
                                 style={{
@@ -631,7 +689,7 @@ export default function HomeScreen({ navigation }) {
                     transparent={true}
                     visible={modalVisible}
                     onRequestClose={() => {
-                        setModalVisible(!modalVisible);
+                        setModalVisible(!modalVisible)
                     }}>
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
@@ -644,12 +702,14 @@ export default function HomeScreen({ navigation }) {
                                     }}>
                                     <TouchableOpacity
                                         onPress={() => {
-                                            setModalVisible(!modalVisible);
+                                            setModalVisible(!modalVisible)
                                         }}>
                                         <Icon4
                                             name="chevron-back-outline"
                                             size={30}
-                                            style={{ marginLeft: 10 }}
+                                            style={{
+                                                marginLeft: 10,
+                                            }}
                                             color="#FF6347"
                                         />
                                     </TouchableOpacity>
@@ -657,7 +717,9 @@ export default function HomeScreen({ navigation }) {
                                         <Icon5
                                             name="search"
                                             size={30}
-                                            style={{ marginLeft: 10 }}
+                                            style={{
+                                                marginLeft: 10,
+                                            }}
                                             color="#FF6347"
                                         />
                                         <TextInput
@@ -670,7 +732,7 @@ export default function HomeScreen({ navigation }) {
                                             ref={textInput}
                                             value={search}
                                             onChangeText={text => {
-                                                handleSearch(text);
+                                                handleSearch(text)
                                             }}
                                         />
                                     </View>
@@ -702,15 +764,14 @@ export default function HomeScreen({ navigation }) {
                                                         flexDirection: 'row',
                                                         height: 50,
                                                         borderBottomWidth: 1,
-                                                        borderBottomColor:
-                                                            '#C8D8C3',
+                                                        borderBottomColor: '#C8D8C3',
                                                         alignItems: 'center',
                                                         width: '90%',
                                                         alignSelf: 'center',
                                                         marginBottom: 12,
                                                     }}
                                                     onPress={() => {
-                                                        navigateTo(item);
+                                                        navigateTo(item)
                                                     }}>
                                                     <Image
                                                         source={{
@@ -732,8 +793,7 @@ export default function HomeScreen({ navigation }) {
                                                                 fontSize: 17,
                                                                 height: 22,
                                                                 color: 'black',
-                                                                fontWeight:
-                                                                    'bold',
+                                                                fontWeight: 'bold',
                                                             }}>
                                                             {item.name}
                                                         </Text>
@@ -748,14 +808,11 @@ export default function HomeScreen({ navigation }) {
                                                     </View>
                                                     <TouchableOpacity
                                                         style={{
-                                                            position:
-                                                                'absolute',
+                                                            position: 'absolute',
                                                             right: 0,
                                                         }}
                                                         onPress={() => {
-                                                            removeItemFromSearchHistory(
-                                                                item,
-                                                            );
+                                                            removeItemFromSearchHistory(item)
                                                         }}>
                                                         <Icon5
                                                             name="close"
@@ -786,10 +843,10 @@ export default function HomeScreen({ navigation }) {
                                         {data.map((item, index) => (
                                             <TouchableOpacity
                                                 key={index}
-                                                style={{ paddingBottom: 20 }}
-                                                onPress={() =>
-                                                    navigateTo(item)
-                                                }>
+                                                style={{
+                                                    paddingBottom: 20,
+                                                }}
+                                                onPress={() => navigateTo(item)}>
                                                 <View style={styles.ModalBoxes}>
                                                     <Image
                                                         source={{
@@ -811,8 +868,7 @@ export default function HomeScreen({ navigation }) {
                                                         <Text
                                                             style={{
                                                                 fontSize: 17,
-                                                                fontWeight:
-                                                                    'bold',
+                                                                fontWeight: 'bold',
                                                                 color: 'black',
                                                             }}>
                                                             {item.name}
@@ -839,7 +895,7 @@ export default function HomeScreen({ navigation }) {
                 </Modal>
             </SafeAreaView>
         )
-    );
+    )
 }
 
 const styles = StyleSheet.create({
@@ -995,4 +1051,4 @@ const styles = StyleSheet.create({
         borderWidth: 1.25,
         borderColor: '#dddddd',
     },
-});
+})

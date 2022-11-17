@@ -184,9 +184,8 @@ export default function DetailsScreen({ navigation, route }) {
               </Text>
               <View style={{ marginTop: 10 }}>
                 {DataDetail.map((item, index) => ((
-                  <View style={{ flexDirection: 'row', paddingVertical: 5 }}>
+                  <View key={index} style={{ flexDirection: 'row', paddingVertical: 5 }}>
                     <Image
-                      key={index}
                       source={{ uri: DataIcon[index] }}
                       style={{
                         width: 22,

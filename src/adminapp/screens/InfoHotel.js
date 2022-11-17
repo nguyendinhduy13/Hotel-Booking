@@ -7,8 +7,6 @@ import Icon4 from 'react-native-vector-icons/AntDesign';
 import Icon5 from 'react-native-vector-icons/Octicons';
 import Icon6 from 'react-native-vector-icons/MaterialCommunityIcons';
 import firestore from '@react-native-firebase/firestore';
-import { getAuth } from '@react-native-firebase/auth';
-import { firebase } from '@react-native-firebase/firestore';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { useDispatch } from 'react-redux';
 import {
@@ -16,7 +14,6 @@ import {
     View,
     SafeAreaView,
     ScrollView,
-    StatusBar,
     Text,
     Animated,
     Image,
@@ -31,7 +28,6 @@ import COLORS from '../../consts/colors';
 import { useSelector } from 'react-redux';
 import { getDistance } from 'geolib';
 import Globalreducer from '../../redux/Globalreducer';
-import auth from '@react-native-firebase/auth';
 
 const width = Dimensions.get('screen').width;
 const WINDOW_HEIGHT = Dimensions.get('screen').height;

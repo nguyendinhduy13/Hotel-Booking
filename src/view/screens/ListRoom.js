@@ -1,141 +1,154 @@
-import React, { useState, useRef, useEffect } from 'react';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import Icon1 from 'react-native-vector-icons/FontAwesome';
-import Icon2 from 'react-native-vector-icons/Ionicons';
-import Icon3 from 'react-native-vector-icons/Feather';
-import Icon4 from 'react-native-vector-icons/FontAwesome5';
-import firestore from '@react-native-firebase/firestore';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
-import { useDispatch } from 'react-redux';
+import React, { useState, useRef, useEffect } from 'react'
+import Icon from 'react-native-vector-icons/MaterialIcons'
+import Icon1 from 'react-native-vector-icons/FontAwesome'
+import Icon2 from 'react-native-vector-icons/Ionicons'
+import Icon4 from 'react-native-vector-icons/FontAwesome5'
+import firestore from '@react-native-firebase/firestore'
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
+import { Calendar } from 'react-native-calendars'
+import { useDispatch } from 'react-redux'
 import {
     TouchableOpacity,
     View,
     SafeAreaView,
     ScrollView,
-    StatusBar,
     Text,
     Animated,
     Image,
     StyleSheet,
     Dimensions,
-    Modal,
     PanResponder,
-    TouchableHighlight,
-} from 'react-native';
-import COLORS from '../../consts/colors';
-import { useSelector } from 'react-redux';
-import { getDistance } from 'geolib';
-import Globalreducer from '../../redux/Globalreducer';
-const width = Dimensions.get('screen').width;
-const WINDOW_HEIGHT = Dimensions.get('screen').height;
-const SHEET_MAX_HEIGHT = WINDOW_HEIGHT * 0.8;
-const SHEET_MIN_HEIGHT = WINDOW_HEIGHT * 0.1;
-const MAX_UPWARD_TRANSLATE_Y = -SHEET_MIN_HEIGHT - SHEET_MAX_HEIGHT; // negative number
-const MAX_DOWNWARD_TRANSLATE_Y = 0;
-const DRAG_THRESHOLD = 50;
+} from 'react-native'
+import COLORS from '../../consts/colors'
+import { useSelector } from 'react-redux'
+import { getDistance } from 'geolib'
+import Globalreducer from '../../redux/Globalreducer'
+const width = Dimensions.get('screen').width
+const WINDOW_HEIGHT = Dimensions.get('screen').height
+const SHEET_MAX_HEIGHT = WINDOW_HEIGHT * 0.8
+const SHEET_MIN_HEIGHT = WINDOW_HEIGHT * 0.1
+const MAX_UPWARD_TRANSLATE_Y = -SHEET_MIN_HEIGHT - SHEET_MAX_HEIGHT // negative number
+const MAX_DOWNWARD_TRANSLATE_Y = 0
+const DRAG_THRESHOLD = 50
 const ListRoom = ({ navigation, route }) => {
-    const dispatch = useDispatch();
-    const item = route.params;
-    const mapRef = useRef(null);
-    const { height } = Dimensions.get('window');
-    const ASPECT_RATIO = width / height;
-    const LATITUDE_DELTA = 0.01;
-    const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-    const currentPosition = useSelector(state => state.currentPosition);
-    const [DataRoom, setDataRoom] = useState([]);
-    const [show, setShow] = useState(false);
-    const [showModalInfo, SetshowModalInfo] = useState(false);
-    const [ItemShow, setItemShow] = useState(0);
-    const {
-        dayamount,
-        startday,
-        endday,
-    } = useSelector((state) => state.Globalreducer);
+    const dispatch = useDispatch()
+    const item = route.params
+    const mapRef = useRef(null)
+    const { height } = Dimensions.get('window')
+    const ASPECT_RATIO = width / height
+    const LATITUDE_DELTA = 0.01
+    const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
+    const currentPosition = useSelector(state => state.currentPosition)
+    const [DataRoom, setDataRoom] = useState([])
+    const [show, setShow] = useState(false)
+    const { dayamount, startday, endday } = useSelector(state => state.Globalreducer)
     const Format = number => {
-        var price = number * dayamount;
-        return price.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
-    };
-    const [distance, setDistance] = useState(0);
+        var price = number * dayamount
+        return price.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
+    }
+    const [distance, setDistance] = useState(0)
     useEffect(() => {
         dispatch(Globalreducer.actions.setnamehotel(item.name))
         var dis = getDistance(
             { latitude: currentPosition.latitude, longitude: currentPosition.longitude },
-            { latitude: item.position[0], longitude: item.position[1] }
-        );
+            { latitude: item.position[0], longitude: item.position[1] },
+        )
         //format the distance to km with 2 decimal places
-        var km = (dis / 1000).toFixed(1);
+        var km = (dis / 1000).toFixed(1)
         setDistance(km)
-    }, []);
+    }, [])
+    const handleFilter = async data => {
+        const temp = await data.filter(item => item.isAvailable === true)
+        if (temp.length > 0) {
+            setDataRoom(temp)
+        } else {
+            const show = {
+                name: 'Không có phòng trống',
+            }
+            setDataRoom([show])
+        }
+    }
+    useEffect(() => {
+        const subscriber = firestore()
+            .collection('HotelList')
+            .doc(item.id)
+            .onSnapshot(documentSnapshot => {
+                handleFilter(documentSnapshot.data().Room)
+            })
+
+        // Stop listening for updates when no longer required
+        return () => subscriber()
+    }, [item.id])
+
     useEffect(() => {
         firestore()
             .collection('HotelList')
             .doc(item.id)
             .get()
             .then(documentSnapshot => {
-                const data = documentSnapshot.data();
-                setDataRoom(data.Room);
-            });
+                const data = documentSnapshot.data().Room
+                handleFilter(data)
+            })
         //dispatch(Globalreducer.actions.setnullvariable(""));
-    }, []);
+    }, [])
 
     const handleShow = () => {
-        setShow(!show);
-    };
-    const AnimatedView = Animated.createAnimatedComponent(View);
-    const animatedValue = useRef(new Animated.Value(0)).current;
+        setShow(!show)
+    }
+    const AnimatedView = Animated.createAnimatedComponent(View)
+    const animatedValue = useRef(new Animated.Value(0)).current
     const HeaderAnimated = {
         opacity: animatedValue.interpolate({
             inputRange: [150, 300],
             outputRange: [0, 1],
         }),
-    };
+    }
     const HeaderAnimatedScroll = {
         opacity: animatedValue.interpolate({
             inputRange: [0, 300],
             outputRange: [1, 0],
         }),
-    };
+    }
     //Bottom Sheet
-    const animatedValueBottom = useRef(new Animated.Value(0)).current;
-    const lastGestureDy = useRef(0);
+    const animatedValueBottom = useRef(new Animated.Value(0)).current
+    const lastGestureDy = useRef(0)
     const panResponder = useRef(
         PanResponder.create({
             onStartShouldSetPanResponder: () => true,
             onPanResponderGrant: () => {
-                animatedValueBottom.setOffset(lastGestureDy.current);
+                animatedValueBottom.setOffset(lastGestureDy.current)
             },
             onPanResponderMove: (e, gesture) => {
-                animatedValueBottom.setValue(gesture.dy);
+                animatedValueBottom.setValue(gesture.dy)
             },
             onPanResponderRelease: (e, gesture) => {
-                animatedValueBottom.flattenOffset();
+                animatedValueBottom.flattenOffset()
                 if (gesture.dy > 0) {
                     // is dragging down
                     if (lastGestureDy.current !== 0 && gesture.dy <= DRAG_THRESHOLD) {
-                        springAnimation('up');
+                        springAnimation('up')
                     } else {
-                        springAnimation('down');
+                        springAnimation('down')
                     }
                 } else {
                     // is dragging up
                     if (gesture.dy >= -DRAG_THRESHOLD) {
-                        springAnimation('down');
+                        springAnimation('down')
                     } else {
-                        springAnimation('up');
+                        springAnimation('up')
                     }
                 }
             },
         }),
-    ).current;
+    ).current
     const springAnimation = (direction: 'up' | 'down') => {
         lastGestureDy.current =
-            direction === 'down' ? MAX_DOWNWARD_TRANSLATE_Y : MAX_UPWARD_TRANSLATE_Y;
+            direction === 'down' ? MAX_DOWNWARD_TRANSLATE_Y : MAX_UPWARD_TRANSLATE_Y
         Animated.spring(animatedValueBottom, {
             toValue: lastGestureDy.current,
             useNativeDriver: true,
-        }).start();
-    };
+        }).start()
+    }
     const bottomSheetAnimation = {
         transform: [
             {
@@ -146,17 +159,16 @@ const ListRoom = ({ navigation, route }) => {
                 }),
             },
         ],
-    };
+    }
     //Calendar
-    const minday = new Date();
-    const [start, setStart] = useState(startday);
-    const [startTrue, setStartTrue] = useState(startday);
+    const minday = new Date()
+    const [start, setStart] = useState(startday)
+    const [startTrue, setStartTrue] = useState(startday)
     const [middle, setMiddle] = useState([])
-    const [NumDays, setNumDays] = useState(0);
-    const [end, setEnd] = useState(endday);
-    const [endTrue, setEndTrue] = useState(endday);
+    const [end, setEnd] = useState(endday)
+    const [endTrue, setEndTrue] = useState(endday)
     const handleOpenCalendar = () => {
-        springAnimation('up');
+        springAnimation('up')
         setStart(startTrue)
         setEnd(endTrue)
     }
@@ -166,17 +178,16 @@ const ListRoom = ({ navigation, route }) => {
             const kt = end.split('-')
             const arr = []
             if (kt[1] == bd[1]) {
-                const sub = (kt[2] - bd[2])
+                const sub = kt[2] - bd[2]
                 for (let i = 1; i < sub; i++) {
                     var day = kt[2] - i < 10 ? '0' + (kt[2] - i) : kt[2] - i
                     arr.push(`${kt[0]}-${kt[1]}-${day}`)
                 }
-            }
-            else {
-                var maxDayOfMonth = new Date(bd[0], bd[1], 0).getDate();
-                const sub = (maxDayOfMonth - bd[2])
+            } else {
+                var maxDayOfMonth = new Date(bd[0], bd[1], 0).getDate()
+                const sub = maxDayOfMonth - bd[2]
                 for (let i = 1; i <= sub; i++) {
-                    arr.push(`${bd[0]}-${bd[1]}-${(bd[2] - 0) + i}`)
+                    arr.push(`${bd[0]}-${bd[1]}-${bd[2] - 0 + i}`)
                 }
                 for (let i = 1; i < kt[2]; i++) {
                     var day = i < 10 ? '0' + i : i
@@ -186,32 +197,30 @@ const ListRoom = ({ navigation, route }) => {
             setMiddle(arr)
         }
     }, [end])
-    const handleTest = (day) => {
-        if (start !== "" && end !== "") {
+    const handleTest = day => {
+        if (start !== '' && end !== '') {
             setStart(day.dateString)
             setEnd('')
             setMiddle([])
         }
-        if (start === "") {
+        if (start === '') {
             setStart(day.dateString)
-        }
-        else if (end === "" && day.dateString > start) {
+        } else if (end === '' && day.dateString > start) {
             setEnd(day.dateString)
-        }
-        else if (day.dateString < start) {
+        } else if (day.dateString < start) {
             setStart(day.dateString)
         }
     }
     const handleConfirm = () => {
-        springAnimation('down');
+        springAnimation('down')
         setStartTrue(start)
         setEndTrue(end)
         console.log(middle.length + 1)
         dispatch(Globalreducer.actions.changedayamount(middle.length + 1))
         dispatch(Globalreducer.actions.changestartday(start))
-        dispatch(Globalreducer.actions.changeendday(end));
+        dispatch(Globalreducer.actions.changeendday(end))
     }
-    const formatDayShow = (day) => {
+    const formatDayShow = day => {
         if (day != '') {
             return day.split('-')[2] + ' tháng ' + day.split('-')[1]
         }
@@ -220,12 +229,7 @@ const ListRoom = ({ navigation, route }) => {
     return (
         <SafeAreaView style={{ backgroundColor: 'white' }}>
             <AnimatedView style={[styles.HeaderBack, HeaderAnimated]}>
-                <Icon
-                    name="arrow-back-ios"
-                    size={28}
-                    color="black"
-                    onPress={navigation.goBack}
-                />
+                <Icon name="arrow-back-ios" size={28} color="black" onPress={navigation.goBack} />
                 <View style={{ alignItems: 'center', paddingRight: 20 }}>
                     <Text
                         style={{
@@ -250,8 +254,8 @@ const ListRoom = ({ navigation, route }) => {
             </AnimatedView>
             <ScrollView
                 onScroll={e => {
-                    const currentOffset = e.nativeEvent.contentOffset.y;
-                    animatedValue.setValue(currentOffset);
+                    const currentOffset = e.nativeEvent.contentOffset.y
+                    animatedValue.setValue(currentOffset)
                 }}
                 scrollEventThrottle={16}
                 showsVerticalScrollIndicator={false}>
@@ -280,12 +284,7 @@ const ListRoom = ({ navigation, route }) => {
                                 flexDirection: 'row',
                                 alignItems: 'center',
                             }}>
-                            <Icon1
-                                name="star"
-                                size={20}
-                                color="orange"
-                                style={{ marginLeft: 2 }}
-                            />
+                            <Icon1 name="star" size={20} color="orange" style={{ marginLeft: 2 }} />
                             <Text
                                 style={{
                                     fontSize: 17,
@@ -293,10 +292,7 @@ const ListRoom = ({ navigation, route }) => {
                                     paddingHorizontal: 5,
                                     color: 'black',
                                 }}>
-                                {item.review}{' '}
-                                <Text style={{ color: 'gray' }}>
-                                    (n đánh giá)
-                                </Text>
+                                {item.review} <Text style={{ color: 'gray' }}>(n đánh giá)</Text>
                             </Text>
                         </View>
                         <View
@@ -305,71 +301,29 @@ const ListRoom = ({ navigation, route }) => {
                                 alignItems: 'center',
                                 paddingVertical: 10,
                             }}>
-                            <Icon2
-                                name="md-location-sharp"
-                                size={25}
-                                color="orange"
-                                style={{}}
-                            />
+                            <Icon2 name="md-location-sharp" size={25} color="orange" style={{}} />
                             <View
                                 style={{
                                     paddingHorizontal: 2,
                                     paddingRight: 20,
                                 }}>
                                 <Text style={{ color: 'black', fontSize: 15 }}>
-                                    <Text style={{ color: 'orange' }}>
-                                        ~{distance} km
-                                    </Text>{' '}
-                                    | {item.location}
+                                    <Text style={{ color: 'orange' }}>~{distance} km</Text> |{' '}
+                                    {item.location}
                                 </Text>
                             </View>
                         </View>
                     </View>
                     <View
                         style={{
-                            borderBottomWidth: 1,
-                            borderBottomColor: COLORS.primary,
+                            marginTop: 10,
                         }}>
                         <View
                             style={{
                                 flexDirection: 'row',
+                                alignItems: 'center',
                                 justifyContent: 'space-between',
-                                marginTop: 10,
                             }}>
-                            <Text
-                                style={{
-                                    fontSize: 20,
-                                    fontWeight: 'bold',
-                                    color: 'black',
-                                }}>
-                                Mô tả
-                            </Text>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    handleShow();
-                                }}>
-                                <Text
-                                    style={{
-                                        fontSize: 15,
-                                        color: COLORS.primary,
-                                    }}>
-                                    More
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                        <Text
-                            style={{
-                                color: 'black',
-                                fontSize: 15,
-                                paddingVertical: 10,
-                            }}>
-                            {item.description}
-                        </Text>
-                    </View>
-                    <View style={{
-                        marginTop: 10,
-                    }}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: "space-between" }}>
                             <Text
                                 style={{
                                     fontSize: 20,
@@ -378,20 +332,24 @@ const ListRoom = ({ navigation, route }) => {
                                 }}>
                                 Bản đồ
                             </Text>
-                            <TouchableOpacity onPress={() => { navigation.navigate('MapHotel', item) }}>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    navigation.navigate('MapHotel', item)
+                                }}>
                                 <Text
                                     style={{
                                         fontSize: 15,
                                         fontWeight: 'bold',
                                         color: COLORS.primary,
-                                        marginRight: 5
+                                        marginRight: 5,
                                     }}>
-                                    Xem</Text>
+                                    Xem
+                                </Text>
                             </TouchableOpacity>
                         </View>
                         <View
                             style={{
-                                width: "99%",
+                                width: '99%',
                                 height: 150,
                                 marginTop: 10,
                             }}>
@@ -425,12 +383,20 @@ const ListRoom = ({ navigation, route }) => {
                         }}>
                         Danh sách phòng
                     </Text>
-                    {DataRoom.map((items, index) => (
-                        <View key={index}>
+                    {DataRoom.map((items, index) =>
+                        items.name === 'Không có phòng trống' ? (
+                            <View key={index} style={{ alignSelf: 'center' }}>
+                                <Text style={{ fontSize: 17, color: 'black', fontWeight: 'bold' }}>
+                                    {items.name}
+                                </Text>
+                            </View>
+                        ) : (
                             <TouchableOpacity
+                                key={index}
                                 style={styles.RecentlyBox}
                                 onPress={() => {
-                                    navigation.navigate('DetailsScreen', items);
+                                    // navigation.navigate('DetailsScreen', items)
+                                    console.log(items.isAvailable)
                                 }}>
                                 <View
                                     style={{
@@ -454,19 +420,42 @@ const ListRoom = ({ navigation, route }) => {
                                             {items.name}
                                         </Text>
                                         <View style={{ flexDirection: 'row', paddingVertical: 5 }}>
-                                            {items.icon.map((item, index) => (
-                                                index < 2 ?
-                                                    <View key={index} style={{ alignContent: 'center', justifyContent: 'flex-start', marginRight: 10 }}>
-                                                        <Text style={{ color: 'gray', fontSize: 14 }}>
-                                                            {items.tienich[index]} <Text style={{ color: 'black' }}>{index == 0 ? ' |' : ''}</Text>
+                                            {items.icon.map((item, index) =>
+                                                index < 2 ? (
+                                                    <View
+                                                        key={index}
+                                                        style={{
+                                                            alignContent: 'center',
+                                                            justifyContent: 'flex-start',
+                                                            marginRight: 10,
+                                                        }}>
+                                                        <Text
+                                                            style={{ color: 'gray', fontSize: 14 }}>
+                                                            {items.tienich[index]}{' '}
+                                                            <Text style={{ color: 'black' }}>
+                                                                {index == 0 ? ' |' : ''}
+                                                            </Text>
                                                         </Text>
                                                     </View>
-                                                    : <></>
-                                            ))
-                                            }
+                                                ) : (
+                                                    <View key={index}></View>
+                                                ),
+                                            )}
                                         </View>
-                                        <Text style={{ color: 'black', fontSize: 14, marginTop: 5, fontWeight: '500' }}>{dayamount} ngày</Text>
-                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                        <Text
+                                            style={{
+                                                color: 'black',
+                                                fontSize: 14,
+                                                marginTop: 5,
+                                                fontWeight: '500',
+                                            }}>
+                                            {dayamount} ngày
+                                        </Text>
+                                        <View
+                                            style={{
+                                                flexDirection: 'row',
+                                                justifyContent: 'space-between',
+                                            }}>
                                             <Text
                                                 style={{
                                                     fontSize: 20,
@@ -483,17 +472,72 @@ const ListRoom = ({ navigation, route }) => {
                                                     đ
                                                 </Text>
                                             </Text>
-                                            <View style={{ width: 100, height: 35, alignItems: 'center', justifyContent: 'center', borderRadius: 5, backgroundColor: COLORS.primary }}>
-                                                <Text style={{ color: 'white', fontSize: 15, fontWeight: 'bold' }}>Chọn phòng</Text>
+                                            <View
+                                                style={{
+                                                    width: 100,
+                                                    height: 35,
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    borderRadius: 5,
+                                                    backgroundColor: COLORS.primary,
+                                                }}>
+                                                <Text
+                                                    style={{
+                                                        color: 'white',
+                                                        fontSize: 15,
+                                                        fontWeight: 'bold',
+                                                    }}>
+                                                    Chọn phòng
+                                                </Text>
                                             </View>
                                         </View>
                                     </View>
                                 </View>
                             </TouchableOpacity>
-
+                        ),
+                    )}
+                    <View
+                        style={{
+                            borderBottomWidth: 1,
+                            borderBottomColor: COLORS.primary,
+                        }}>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                marginTop: 10,
+                            }}>
+                            <Text
+                                style={{
+                                    fontSize: 20,
+                                    fontWeight: 'bold',
+                                    color: 'black',
+                                }}>
+                                Mô tả
+                            </Text>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    handleShow()
+                                }}>
+                                <Text
+                                    style={{
+                                        fontSize: 15,
+                                        color: COLORS.primary,
+                                    }}>
+                                    More
+                                </Text>
+                            </TouchableOpacity>
                         </View>
-                    ))}
-                    <View>
+                        <Text
+                            style={{
+                                color: 'black',
+                                fontSize: 15,
+                                paddingVertical: 10,
+                            }}>
+                            {item.description}
+                        </Text>
+                    </View>
+                    <View style={{ marginTop: 20 }}>
                         <Text
                             style={{
                                 fontSize: 20,
@@ -530,9 +574,7 @@ const ListRoom = ({ navigation, route }) => {
                                         }}>
                                         Name Room
                                     </Text>
-                                    <Text style={{ marginTop: 5 }}>
-                                        Comment{' '}
-                                    </Text>
+                                    <Text style={{ marginTop: 5 }}>Comment </Text>
                                 </View>
                             </View>
                         </View>
@@ -541,17 +583,38 @@ const ListRoom = ({ navigation, route }) => {
             </ScrollView>
             <Animated.View style={[styles.bottomSheet, bottomSheetAnimation]}>
                 <View style={styles.draggableArea} {...panResponder.panHandlers}>
-                    <Text style={{ color: 'orange', fontSize: 18, fontWeight: 'bold', paddingBottom: 15 }}>Chọn ngày đặt phòng</Text>
-                    <View style={{ flexDirection: 'row', }}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: "space-around", width: '95%', height: 60, backgroundColor: '#f3f6f4', borderRadius: 10 }}>
+                    <Text
+                        style={{
+                            color: 'orange',
+                            fontSize: 18,
+                            fontWeight: 'bold',
+                            paddingBottom: 15,
+                        }}>
+                        Chọn ngày đặt phòng
+                    </Text>
+                    <View style={{ flexDirection: 'row' }}>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'space-around',
+                                width: '95%',
+                                height: 60,
+                                backgroundColor: '#f3f6f4',
+                                borderRadius: 10,
+                            }}>
                             <View style={{ width: '33%' }}>
                                 <Text style={{ fontSize: 14 }}>Nhận phòng</Text>
-                                <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 16 }}>{formatDayShow(start)}</Text>
+                                <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 16 }}>
+                                    {formatDayShow(start)}
+                                </Text>
                             </View>
                             <Icon4 name="long-arrow-alt-right" size={25} color="orange" />
                             <View style={{ width: '33%' }}>
                                 <Text style={{ fontSize: 14 }}>Trả phòng</Text>
-                                <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 16 }}>{formatDayShow(end)}</Text>
+                                <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 16 }}>
+                                    {formatDayShow(end)}
+                                </Text>
                             </View>
                         </View>
                     </View>
@@ -559,41 +622,81 @@ const ListRoom = ({ navigation, route }) => {
                 <View style={{ marginTop: 10 }}>
                     <Calendar
                         markingType={'period'}
-                        markedDates={
-                            {
-                                [start]: { startingDay: true, color: '#50cebb', textColor: 'white' },
-                                [end]: { endingDay: true, color: '#50cebb', textColor: 'white' },
-                                ...middle.reduce((acc, cur) => {
-                                    acc[cur] = { startingDay: false, endingDay: false, color: '#70d7c7', textColor: 'white' }
-                                    return acc
-                                }, {}),
-                            }
-                        }
-                        onDayPress={(day) => handleTest(day)}
+                        markedDates={{
+                            [start]: { startingDay: true, color: '#50cebb', textColor: 'white' },
+                            [end]: { endingDay: true, color: '#50cebb', textColor: 'white' },
+                            ...middle.reduce((acc, cur) => {
+                                acc[cur] = {
+                                    startingDay: false,
+                                    endingDay: false,
+                                    color: '#70d7c7',
+                                    textColor: 'white',
+                                }
+                                return acc
+                            }, {}),
+                        }}
+                        onDayPress={day => handleTest(day)}
                         hideExtraDays={true}
                         minDate={String(minday)}
                     />
                 </View>
-                <View style={{ position: 'absolute', zIndex: 1, bottom: 15, borderTopWidth: 1, borderTopColor: 'gray', width: '100%', height: 60, justifyContent: 'center', alignItems: 'center' }}>
+                <View
+                    style={{
+                        position: 'absolute',
+                        zIndex: 1,
+                        bottom: 15,
+                        borderTopWidth: 1,
+                        borderTopColor: 'gray',
+                        width: '100%',
+                        height: 60,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}>
                     <TouchableOpacity
-                        onPress={() => { handleConfirm() }}
-                        disabled={end == "" ? true : false}
-                        style={{ width: '90%', height: 40, backgroundColor: end == "" ? '#d1bebd' : '#f44336', borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
-                        <Text style={{ color: 'white', fontSize: 17, fontWeight: 'bold' }}>Xác nhận</Text>
+                        onPress={() => {
+                            handleConfirm()
+                        }}
+                        disabled={end == '' ? true : false}
+                        style={{
+                            width: '90%',
+                            height: 40,
+                            backgroundColor: end == '' ? '#d1bebd' : '#f44336',
+                            borderRadius: 20,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}>
+                        <Text style={{ color: 'white', fontSize: 17, fontWeight: 'bold' }}>
+                            Xác nhận
+                        </Text>
                     </TouchableOpacity>
                 </View>
             </Animated.View>
-            <TouchableOpacity style={styles.bottomSheet1} onPress={() => { handleOpenCalendar() }}>
+            <TouchableOpacity
+                style={styles.bottomSheet1}
+                onPress={() => {
+                    handleOpenCalendar()
+                }}>
                 <View style={{ padding: 15 }}>
-                    <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'black' }}>Ngày đặt phòng</Text>
-                    <View style={{ flexDirection: 'row', marginTop: 10, }}>
-                        <Text style={{ color: 'black', textDecorationStyle: 'dashed', textDecorationLine: 'underline', fontSize: 15, fontWeight: 'bold', }}>{formatDayShow(startTrue) + " - " + formatDayShow(endTrue)}</Text>
+                    <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'black' }}>
+                        Ngày đặt phòng
+                    </Text>
+                    <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                        <Text
+                            style={{
+                                color: 'black',
+                                textDecorationStyle: 'dashed',
+                                textDecorationLine: 'underline',
+                                fontSize: 15,
+                                fontWeight: 'bold',
+                            }}>
+                            {formatDayShow(startTrue) + ' - ' + formatDayShow(endTrue)}
+                        </Text>
                     </View>
                 </View>
             </TouchableOpacity>
         </SafeAreaView>
-    );
-};
+    )
+}
 
 const styles = StyleSheet.create({
     RecentlyBox: {
@@ -732,6 +835,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#d3d3d3',
         borderRadius: 10,
     },
-});
+})
 
-export default ListRoom;
+export default ListRoom
