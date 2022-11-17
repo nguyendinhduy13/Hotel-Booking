@@ -1,15 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react';
 import {
-  ImageBackground,
-  ScrollView,
-  Text,
-  StyleSheet,
-  FlatList,
-  StatusBar,
-  View,
-  TouchableOpacity,
-  Image,
-  Animated,
+    ImageBackground,
+    ScrollView,
+    Text,
+    StyleSheet,
+    FlatList,
+    StatusBar,
+    View,
+    TouchableOpacity,
+    Image,
+    Animated,
 } from 'react-native';
 import COLORS from '../../consts/colors';
 import firestore, { firebase } from '@react-native-firebase/firestore';
@@ -19,8 +19,6 @@ import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/FontAwesome';
 import ListItemSwipeable from 'react-native-elements/dist/list/ListItemSwipeable';
 import { useSelector } from 'react-redux';
-
-
 
 export default function DetailsScreen({ navigation, route }) {
   const item = route.params;
@@ -236,105 +234,103 @@ export default function DetailsScreen({ navigation, route }) {
             Book Now !
           </Text>
         </View>
-      </TouchableOpacity>
-    </View >
-  );
+    );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    height: 400,
-    overflow: 'hidden',
-    borderBottomLeftRadius: 15,
-    borderBottomRightRadius: 15,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: 10,
-    justifyContent: 'space-between',
-
-  },
-  iconContainer: {
-    position: 'absolute',
-    height: 60,
-    width: 60,
-    backgroundColor: COLORS.primary,
-    top: -30,
-    right: 20,
-    borderRadius: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  priceTag: {
-    height: 40,
-    alignItems: 'center',
-    marginLeft: 40,
-    paddingLeft: 20,
-    flex: 1,
-    backgroundColor: COLORS.secondary,
-    borderTopLeftRadius: 20,
-    borderBottomLeftRadius: 20,
-    flexDirection: 'row',
-  },
-  btn: {
-    height: 55,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 40,
-    backgroundColor: COLORS.primary,
-    marginHorizontal: 20,
-    borderRadius: 10,
-  },
-  bottomButton: {
-    alignItems: 'center',
-    padding: 10,
-    borderTopLeftRadius: 15,
-    borderTopRightRadius: 15,
-    backgroundColor: 'white',
-    position: 'absolute',
-    zIndex: 1,
-    width: '100%',
-    bottom: 0,
-    borderStyle: 'solid',
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-  },
-  HeadrView: {
-    position: 'absolute',
-    top: 10,
-    left: 0,
-    right: 0,
-    zIndex: 1,
-    height: 50,
-    width: '100%',
-    justifyContent: 'center',
-  },
-  HeadrViewWhite: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 1,
-    height: 60,
-    width: '100%',
-    justifyContent: 'center',
-    backgroundColor: 'white'
-  },
-  HeadrView1: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 1,
-    height: 60,
-    width: '100%',
-    justifyContent: 'center',
-    backgroundColor: 'white'
-  }
+    headerImage: {
+        height: 400,
+        overflow: 'hidden',
+        borderBottomLeftRadius: 15,
+        borderBottomRightRadius: 15,
+    },
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginHorizontal: 10,
+        justifyContent: 'space-between',
+    },
+    iconContainer: {
+        position: 'absolute',
+        height: 60,
+        width: 60,
+        backgroundColor: COLORS.primary,
+        top: -30,
+        right: 20,
+        borderRadius: 30,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    priceTag: {
+        height: 40,
+        alignItems: 'center',
+        marginLeft: 40,
+        paddingLeft: 20,
+        flex: 1,
+        backgroundColor: COLORS.secondary,
+        borderTopLeftRadius: 20,
+        borderBottomLeftRadius: 20,
+        flexDirection: 'row',
+    },
+    btn: {
+        height: 55,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 40,
+        backgroundColor: COLORS.primary,
+        marginHorizontal: 20,
+        borderRadius: 10,
+    },
+    bottomButton: {
+        alignItems: 'center',
+        padding: 10,
+        borderTopLeftRadius: 15,
+        borderTopRightRadius: 15,
+        backgroundColor: 'white',
+        position: 'absolute',
+        zIndex: 1,
+        width: '100%',
+        bottom: 0,
+        borderStyle: 'solid',
+        borderWidth: 1,
+        borderColor: '#e0e0e0',
+    },
+    HeadrView: {
+        position: 'absolute',
+        top: 10,
+        left: 0,
+        right: 0,
+        zIndex: 1,
+        height: 50,
+        width: '100%',
+        justifyContent: 'center',
+    },
+    HeadrViewWhite: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1,
+        height: 60,
+        width: '100%',
+        justifyContent: 'center',
+        backgroundColor: 'white',
+    },
+    HeadrView1: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1,
+        height: 60,
+        width: '100%',
+        justifyContent: 'center',
+        backgroundColor: 'white',
+    },
 });
 
-{/* <View
+{
+    /* <View
             style={{
               flexDirection: 'row',
               paddingTop: '5%',
@@ -393,4 +389,5 @@ const styles = StyleSheet.create({
                 Hotels
               </Text>
             </View>
-          </View> */}
+          </View> */
+}

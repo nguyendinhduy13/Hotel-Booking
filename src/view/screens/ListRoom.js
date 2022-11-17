@@ -48,7 +48,8 @@ const ListRoom = ({ navigation, route }) => {
     }
     const [distance, setDistance] = useState(0)
     useEffect(() => {
-        dispatch(Globalreducer.actions.setnamehotel(item.name))
+        dispatch(Globalreducer.actions.setnamehotel(item.name));
+        dispatch(Globalreducer.actions.setidhotel(item.id));
         var dis = getDistance(
             { latitude: currentPosition.latitude, longitude: currentPosition.longitude },
             { latitude: item.position[0], longitude: item.position[1] },

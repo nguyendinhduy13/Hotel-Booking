@@ -11,7 +11,10 @@ export default createSlice({
         initialState,
         reducers: {
                 addBookingHotel(state, action) {
-                        state.hotel.push(action.payload)
+                        state.hotel.push({
+                                userinfo: action.payload.userinfo,
+                                hotelinfo: action.payload.hotelinfo,
+                        })
                 },
                 addBookingHotelUser(state, action) {
                         state.userbooking=action.payload

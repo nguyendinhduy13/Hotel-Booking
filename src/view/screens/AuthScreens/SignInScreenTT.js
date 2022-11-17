@@ -13,14 +13,17 @@ import Icon3 from 'react-native-vector-icons/FontAwesome';
 import { SocialIcon, Icon } from 'react-native-elements';
 import COLORS from '../../../consts/colors';
 import { Formik } from 'formik';
+import {useDispatch} from 'react-redux';
 import auth from '@react-native-firebase/auth';
 import { SignInContext } from '../../../contexts/authContext';
 import firestore from '@react-native-firebase/firestore';
+import Globalreducer from '../../../redux/Globalreducer';
 
 export default function SignInScreenTT({ navigation }) {
     const { dispatchSignedIn } = useContext(SignInContext);
     const [getVisible, setVisible] = useState(false);
     let dataAccount = [];
+    const dispatch=useDispatch();
     useEffect(() => {
         firestore()
             .collection('AdminAccounts')
@@ -41,13 +44,16 @@ export default function SignInScreenTT({ navigation }) {
             );
             let roll = 'signed-In';
             let _id = '';
+            let adminuid = '';
             dataAccount.filter(item => {
                 if (item.email === email) {
                     roll = item.roll;
                     _id = item._id;
+                    adminuid = item.adminuid;
                 }
             });
-            console.log(roll);
+            dispatch(Globalreducer.actions.setidks(_id))
+            dispatch(Globalreducer.actions.setadminuid(adminuid))
             if (user) {
                 dispatchSignedIn({
                     type: 'UPDATE_SIGN_IN',
@@ -79,8 +85,8 @@ export default function SignInScreenTT({ navigation }) {
             </View>
             <Formik
                 initialValues={{
-                    email: 'adminapp@gmail.com',
-                    password: '123456',
+                    email: 'adminamis@gmail.com',
+                    password: 'adminamis123',
                 }}
                 onSubmit={values => {
                     signIn(values);

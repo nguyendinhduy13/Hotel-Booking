@@ -9,7 +9,11 @@ const initialState = {
     startday: today,
     endday: tomorrow.toISOString().split('T')[0],
     namehotel:'',
+    idhotel:'',
     data:[],
+    id_ks:'',
+    datatemp:[],
+    adminuid:'',
 };
 
 export default createSlice({
@@ -33,8 +37,20 @@ export default createSlice({
       setnamehotel(state, action) {
         state.namehotel = action.payload
       },
+      setidhotel(state, action) {
+        state.idhotel = action.payload
+      },
       setdatabooking(state, action) {
         state.data.push(action.payload)
+      },
+      setidks(state, action) {
+        state.id_ks = action.payload
+      },
+      setdatatemp(state, action) {
+        state.datatemp=action.payload
+      },
+      setadminuid(state, action) {
+        state.adminuid=action.payload
       }
     },
   },

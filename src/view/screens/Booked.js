@@ -19,52 +19,170 @@ export default function Booked({ navigation, route }) {
     const item = route.params;
     const dispatch = useDispatch();
     const [Number, setNumber] = useState(1);
-    const { dayamount, startday, endday, namehotel } = useSelector(
+    const { dayamount, startday, endday, namehotel,idhotel } = useSelector(
         state => state.Globalreducer,
     );
     const { userbooking } = useSelector(state => state.BookingHotel);
     const user=Auth().currentUser;
+
+    const [checkdata, setcheckdata] = useState(false);
+    const [checkdata1, setcheckdata1] = useState(false);
+
+    useEffect(() => {
+        firestore()
+        .collection('Booking')
+        .doc(user.uid)
+        .get()
+        .then(documentSnapshot => {
+            if(documentSnapshot.exists){
+              setcheckdata(true);
+            }
+        })
+        firestore()
+        .collection('ListBooking')
+        .doc(idhotel)
+        .get()
+        .then(documentSnapshot => {
+            if(documentSnapshot.exists){
+              setcheckdata1(true);
+            }
+        })
+    },[])
+
     const addbooking = () => {
         let x=start.getDate()+'/'+(start.getMonth())+'/'+start.getFullYear()
         let y=end.getDate()+'/'+(end.getMonth())+'/'+end.getFullYear()
-        const a = [
-            {
-                name: namehotel,
-                roomname: item.name,
-                price: item.price,
-                checkin: x,
-                checkout: y,
-                dayamount: amount,
-                status:'ongoing',
-                guess: Number,
-                image: item.image[1],
-                total: sum,
-            },
-        ];
-        dispatch(BookingHotel.actions.addBookingHotel(a));
+        if(checkdata){
         firestore()
-            .collection(user.uid)
-            .add({
-                name: namehotel,
-                roomname: item.name,
-                price: item.price,
-                checkin: x,
-                checkout: y,
-                dayamount: amount,
-                status:'ongoing',
-                guess: Number,
-                image: item.image[1],
-                total: sum,
+            .collection('Booking')
+            .doc(user.uid)
+            .update({
+                data: firestore.FieldValue.arrayUnion({
+                    userinfo:{
+                        name: userbooking.name,
+                        phone: userbooking.phone,
+                        birthday: userbooking.birthday,
+                        email: userbooking.email,
+                    },
+                    hotelinfo: {
+                    name: namehotel,
+                    roomname: item.name,
+                    price: item.price,
+                    checkin: x,
+                    checkout: y,
+                    dayamount: amount,
+                    status:'ongoing',
+                    guess: Number,
+                    image: item.image[1],
+                    total: sum,
+                    userid:user.uid,
+                    }
+                })
             })
             .then(() => {
-                console.log('Booking added!');
+                console.log('Booking true!');
             });
+        }
+        else{
+            firestore()
+            .collection('Booking')
+            .doc(user.uid)
+            .set({
+                data: firestore.FieldValue.arrayUnion({
+                    userinfo:{
+                        name: userbooking.name,
+                        phone: userbooking.phone,
+                        birthday: userbooking.birthday,
+                        email: userbooking.email,
+                    },
+                    hotelinfo: {
+                    name: namehotel,
+                    roomname: item.name,
+                    price: item.price,
+                    checkin: x,
+                    checkout: y,
+                    dayamount: amount,
+                    status:'ongoing',
+                    guess: Number,
+                    image: item.image[1],
+                    total: sum,
+                    userid:user.uid,
+                    }
+                })
+            })
+            .then(() => {
+                console.log('Booking false!');
+            });
+        }
+        if(checkdata1){
+        firestore()
+        .collection('ListBooking')
+        .doc(idhotel)
+        .update({
+            data: firestore.FieldValue.arrayUnion({
+                userinfo:{
+                    name: userbooking.name,
+                    phone: userbooking.phone,
+                    birthday: userbooking.birthday,
+                    email: userbooking.email,
+                },
+                hotelinfo: {
+                name: namehotel,
+                roomname: item.name,
+                price: item.price,
+                checkin: x,
+                checkout: y,
+                dayamount: amount,
+                status:'ongoing',
+                guess: Number,
+                image: item.image[1],
+                total: sum,
+                userid:user.uid,
+                }
+            })
+        })
+        .then(() => {
+            console.log('Booking true!');
+        });
+    }
+    else{
+        firestore()
+        .collection('ListBooking')
+        .doc(idhotel)
+        .set({
+            data: firestore.FieldValue.arrayUnion({
+                userinfo:{
+                    name: userbooking.name,
+                    phone: userbooking.phone,
+                    birthday: userbooking.birthday,
+                    email: userbooking.email,
+                },
+                hotelinfo: {
+                name: namehotel,
+                roomname: item.name,
+                price: item.price,
+                checkin: x,
+                checkout: y,
+                dayamount: amount,
+                status:'ongoing',
+                guess: Number,
+                image: item.image[1],
+                total: sum,
+                userid:user.uid,
+                }
+            })
+        })
+        .then(() => {
+            console.log('Booking false!');
+        });
+    }
+    
     };
 
     const day = new Date();
     const amount = dayamount > 0 ? dayamount : 1;
     const day1 = day.setDate(day.getDate() + 1);
-    console.log(userbooking.email);
+
     const start = new Date(startday !== '' ? startday : Date.now());
     const end = new Date(endday !== '' ? endday : day1);
     const sum = Math.floor(
