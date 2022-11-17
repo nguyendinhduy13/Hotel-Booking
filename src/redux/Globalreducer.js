@@ -11,6 +11,9 @@ const initialState = {
     namehotel:'',
     idhotel:'',
     data:[],
+    id_ks:'',
+    datatemp:[],
+    adminuid:'',
 };
 
 export default createSlice({
@@ -39,8 +42,16 @@ export default createSlice({
       },
       setdatabooking(state, action) {
         state.data.push(action.payload)
+      },
+      setidks(state, action) {
+        state.id_ks = action.payload
+      },
+      setdatatemp(state, action) {
+        state.datatemp=action.payload
+      },
+      setadminuid(state, action) {
+        state.adminuid=action.payload
       }
-      
     },
   },
 );

@@ -1,13 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Image, Modal } from 'react-native';
 import COLORS from '../../consts/colors';
+import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Fontisto';
 import { ScrollView } from 'react-native';
-import { useSelector } from 'react-redux';
+import firestore from '@react-native-firebase/firestore';
+import Auth from "@react-native-firebase/auth"
 export default function Booking() {
     const [button, setbutton] = useState(1);
-    const { data } = useSelector(state => state.Globalreducer);
     const [modalVisible, setModalVisible] = useState(false);
+    const [data, setdata] = useState([]);
+    const user=Auth().currentUser;
+    const navigation = useNavigation();
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+        firestore()
+        .collection('Booking')
+        .doc(user.uid)
+        .get()
+        .then(documentSnapshot => {
+            const data = documentSnapshot.data();
+            setdata(data.data);
+        });
+    });
+    return () => {
+        unsubscribe;
+    };
+    },[navigation])
 
     const CardBooking = ({ item, index }) => {
         return (
@@ -289,17 +308,17 @@ export default function Booking() {
             </View>
 
             {data.map((item, index) =>
-                item.status === 'ongoing' && button === 1 ? (
+                item.hotelinfo.status === 'ongoing' && button === 1 ? (
                     <View key={index}>
-                        <CardBooking item={item} index={index} />
+                        <CardBooking item={item.hotelinfo} index={index} />
                     </View>
-                ) : item.status === 'completed' && button === 2 ? (
+                ) : item.hotelinfo.status === 'completed' && button === 2 ? (
                     <View key={index}>
-                        <CardBooking item={item} index={index} />
+                        <CardBooking item={item.hotelinfo} index={index} />
                     </View>
-                ) : item.status === 'canceled' && button === 3 ? (
+                ) : item.hotelinfo.status === 'cancelled' && button === 3 ? (
                     <View key={index}>
-                        <CardBooking item={item} index={index} />
+                        <CardBooking item={item.hotelinfo} index={index} />
                     </View>
                 ) : null,
             )}
