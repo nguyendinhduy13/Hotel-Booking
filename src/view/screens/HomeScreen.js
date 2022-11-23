@@ -89,14 +89,17 @@ export default function HomeScreen({ navigation }) {
         })
         setListHotelData(sorted)
     }
+    //Realtime database
     useEffect(() => {
-        firestore()
+        const subscriber = firestore()
             .collection('ListHotel')
             .doc('ListHotel')
-            .get()
-            .then(documentSnapshot => {
+            .onSnapshot(documentSnapshot => {
                 handleSort(documentSnapshot.data().ListHotel)
             })
+
+        // Stop listening for updates when no longer required
+        return () => subscriber()
     }, [])
     const [isShow, setIsShow] = useState(false)
     const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0)

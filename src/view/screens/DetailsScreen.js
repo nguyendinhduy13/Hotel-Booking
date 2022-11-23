@@ -19,7 +19,8 @@ import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/FontAwesome';
 import ListItemSwipeable from 'react-native-elements/dist/list/ListItemSwipeable';
 import { useSelector } from 'react-redux';
-
+import Icons from '../../assets/icons/icons';
+import slugify from '@sindresorhus/slugify';
 export default function DetailsScreen({ navigation, route }) {
   const item = route.params;
   const {
@@ -92,7 +93,7 @@ export default function DetailsScreen({ navigation, route }) {
             color='black'
             onPress={navigation.goBack}
           />
-          <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'black', textAlign: 'center' }}>{item.name}</Text>
+          <Text style={{ fontSize: 20,width:'90%', fontWeight: 'bold', color: 'black', textAlign: 'center' }}>{item.name}</Text>
         </View>
       </Animated.View>
       <ScrollView
@@ -182,16 +183,16 @@ export default function DetailsScreen({ navigation, route }) {
               </Text>
               <View style={{ marginTop: 10 }}>
                 {DataDetail.map((item, index) => ((
-                  <View key={index} style={{ flexDirection: 'row', paddingVertical: 5 }}>
+                  <TouchableOpacity onPress={()=>{console.log(slugify(item))}} key={index} style={{ flexDirection: 'row', paddingVertical: 5 }}>
                     <Image
-                      source={{ uri: DataIcon[index] }}
+                      source={Icons(slugify(item))}
                       style={{
                         width: 22,
                         height: 22,
                       }}
                     />
                     <Text style={{ paddingHorizontal: 15, fontSize: 15, }}>{item}</Text>
-                  </View>
+                  </TouchableOpacity>
                 )))}
               </View>
             </View>

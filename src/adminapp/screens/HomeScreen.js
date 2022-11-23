@@ -1,60 +1,54 @@
-import {
-    StyleSheet,
-    Text,
-    View,
-    ScrollView,
-    Image,
-    TouchableOpacity,
-} from 'react-native';
-import React, { useEffect, useState } from 'react';
-import firestore from '@react-native-firebase/firestore';
-
+import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import firestore from '@react-native-firebase/firestore'
 
 export default function HomeScreen({ navigation }) {
-    const [ListHotelData, setListHotelData] = useState([]);
-    let dataAccountFireBase = [];
+    const [ListHotelData, setListHotelData] = useState([])
+    let dataAccountFireBase = []
     const handleSort = data => {
         const sorted = [].concat(data).sort((a, b) => {
-            return a.name.localeCompare(b.name);
-        });
-        setListHotelData(sorted);
-    };
+            return a.name.localeCompare(b.name)
+        })
+        setListHotelData(sorted)
+    }
     useEffect(() => {
-        firestore()
+        const subscriber = firestore()
             .collection('ListHotel')
             .doc('ListHotel')
-            .get()
-            .then(documentSnapshot => {
-                handleSort(documentSnapshot.data().ListHotel);
-            });
-    }, []);
+            .onSnapshot(documentSnapshot => {
+                handleSort(documentSnapshot.data().ListHotel)
+            })
+
+        // Stop listening for updates when no longer required
+        return () => subscriber()
+    }, [])
     const loadAccount = async () => {
         await firestore()
             .collection('AdminAccounts')
             .get()
             .then(querySnapshot => {
                 querySnapshot.forEach(documentSnapshot => {
-                    dataAccountFireBase.push(documentSnapshot.data());
-                });
-            });
-            navigation.navigate('AddHotel', {
-                data: dataAccountFireBase,
-            });
-    };
-    const loadAccount1 = async (item) => {
+                    dataAccountFireBase.push(documentSnapshot.data())
+                })
+            })
+        navigation.navigate('AddHotel', {
+            data: dataAccountFireBase,
+        })
+    }
+    const loadAccount1 = async item => {
         await firestore()
             .collection('AdminAccounts')
             .get()
             .then(querySnapshot => {
                 querySnapshot.forEach(documentSnapshot => {
-                    dataAccountFireBase.push(documentSnapshot.data());
-                });
+                    dataAccountFireBase.push(documentSnapshot.data())
+                })
             })
-            navigation.navigate('InfoHotel', {
-                data: item,
-                account: dataAccountFireBase,
-            })
-    };
+        navigation.navigate('InfoHotel', {
+            data: item,
+            account: dataAccountFireBase,
+        })
+    }
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -78,16 +72,14 @@ export default function HomeScreen({ navigation }) {
                     }}>
                     Danh sách khách sạn
                 </Text>
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    style={{ marginTop: 10 }}>
+                <ScrollView showsVerticalScrollIndicator={false} style={{ marginTop: 10 }}>
                     {ListHotelData.map((item, index) => {
                         return (
                             <TouchableOpacity
                                 style={styles.item}
                                 key={index}
                                 onPress={() => {
-                                    loadAccount1(item);
+                                    loadAccount1(item)
                                 }}>
                                 <Image
                                     source={{
@@ -116,20 +108,19 @@ export default function HomeScreen({ navigation }) {
                                     </Text>
                                 </View>
                             </TouchableOpacity>
-                        );
+                        )
                     })}
                 </ScrollView>
                 <TouchableOpacity
                     style={styles.fab}
                     onPress={() => {
                         loadAccount()
-                            
                     }}>
                     <Text>+</Text>
                 </TouchableOpacity>
             </View>
         </View>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
@@ -174,4 +165,4 @@ const styles = StyleSheet.create({
         right: 20,
         bottom: 20,
     },
-});
+})
