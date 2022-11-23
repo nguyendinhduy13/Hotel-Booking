@@ -27,7 +27,7 @@ import firestore, { firebase } from '@react-native-firebase/firestore'
 import Geolocation from '@react-native-community/geolocation'
 import { useDispatch } from 'react-redux'
 import CurrentPosition from '../../redux/CurrentPosition'
-import auth from '@react-native-firebase/auth'
+import Auth from '@react-native-firebase/auth'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Globalreducer from '../../redux/Globalreducer'
 const { width } = Dimensions.get('screen')
@@ -103,7 +103,7 @@ export default function HomeScreen({ navigation }) {
     const [activeCardIndex, setActiveCardIndex] = useState(0)
     const scrollX = useRef(new Animated.Value(0)).current
     const [countShow, setCountShow] = useState(0)
-    const user = auth().currentUser
+    const user = Auth().currentUser
     const [modalVisible, setModalVisible] = useState(false)
 
     const AnimatedView = Animated.createAnimatedComponent(View)
@@ -537,7 +537,7 @@ export default function HomeScreen({ navigation }) {
                                 fontSize: 28,
                                 color: 'black',
                             }}>
-                            Hello, {auth().currentUser.displayName + ' '}
+                            Hello, {Auth().currentUser.displayName + ' '}
                             <Icon1
                                 name="hand-wave-outline"
                                 size={26}

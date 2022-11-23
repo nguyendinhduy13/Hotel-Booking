@@ -3,8 +3,7 @@ import { View, Text,Image,TouchableOpacity,ScrollView } from 'react-native';
 import COLORS from '../../consts/colors';
 import firestore from '@react-native-firebase/firestore';
 import { useSelector } from 'react-redux';
-import Icon from "react-native-vector-icons/AntDesign"
-export default function AddItem() {
+export default function AddItem({navigation}) {
     const [data,setdata]=useState([]);
     const {id_ks}=useSelector(state=>state.Globalreducer);
     useEffect(()=>{
@@ -17,17 +16,9 @@ export default function AddItem() {
             setdata(data.Room);
         });  
     },[data])
-    const addroom=()=>{
-        firestore()
-        .collection('HotelList')
-        .doc(id_ks)
-        .update({
-            data:firestore.FieldValue.arrayUnion()
-        })
-        console.log('Room Deleted');
-    }
     return (
-        <ScrollView>
+        <View>
+            <ScrollView>
             <Text
                 style={{
                     fontSize: 17,
@@ -62,7 +53,8 @@ export default function AddItem() {
                  </View>
              </View>
             ))}
-            <TouchableOpacity style={{
+        </ScrollView>
+        <TouchableOpacity style={{
                 borderWidth: 1,
                 borderColor: "#03A9F4",
                 position: "absolute",
@@ -71,15 +63,15 @@ export default function AddItem() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 right: 20,
-                bottom: 50,
+                bottom: 30,
                 backgroundColor: 'white',
                 borderRadius: 30,
                 elevation: 8,
             }}
-            
+            onPress={()=>{navigation.navigate('ItemInfo')}}
             >
-                <Text style={{fontSize:40}}>+</Text>
+                <Text style={{fontSize:40,bottom:2}}>+</Text>
             </TouchableOpacity>
-        </ScrollView>
+        </View>
     );
 }
