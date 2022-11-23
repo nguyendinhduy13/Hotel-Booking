@@ -396,8 +396,7 @@ const ListRoom = ({ navigation, route }) => {
                                 key={index}
                                 style={styles.RecentlyBox}
                                 onPress={() => {
-                                    // navigation.navigate('DetailsScreen', items)
-                                    console.log(items.isAvailable)
+                                    navigation.navigate('DetailsScreen', items)
                                 }}>
                                 <View
                                     style={{
