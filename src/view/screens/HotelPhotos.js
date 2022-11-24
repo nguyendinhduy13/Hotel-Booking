@@ -46,11 +46,13 @@ export default function HotelPhotos({ route, navigation }) {
                                         setModalVisible(!modalVisible);
                                 }}
                         >
-                                <TouchableOpacity style={{ alignItems: "center", marginTop: "50%" }} onPress={() => { setModalVisible(!modalVisible) }}>
+                                <TouchableOpacity style={{width:'100%',height:"100%"}} onPress={() => { setModalVisible(!modalVisible) }}>
+                                <View style={{ alignItems: "center", marginTop: "50%" }}>
                                         <Image
                                                 source={{ uri: modalVisible ? itemzoom.image[index] : item.image[0] }}
                                                 style={{ width: 300, height: 290, borderRadius: 20 }}
                                         />
+                                </View>
                                 </TouchableOpacity>
                         </Modal>
                 </ScrollView>

@@ -23,6 +23,7 @@ import COLORS from '../../consts/colors'
 import { useSelector } from 'react-redux'
 import { getDistance } from 'geolib'
 import Globalreducer from '../../redux/Globalreducer'
+import storage from "@react-native-firebase/storage"
 const width = Dimensions.get('screen').width
 const WINDOW_HEIGHT = Dimensions.get('screen').height
 const SHEET_MAX_HEIGHT = WINDOW_HEIGHT * 0.8
@@ -59,15 +60,25 @@ const ListRoom = ({ navigation, route }) => {
         setDistance(km)
     }, [])
     const handleFilter = async data => {
-        const temp = await data.filter(item => item.isAvailable === true)
-        if (temp.length > 0) {
-            setDataRoom(temp)
-        } else {
-            const show = {
-                name: 'Không có phòng trống',
+        const temp = data.filter(item => item.isAvailable === true)
+        temp.map((item1) => {
+            item1.image.map(async(item2,index)=>{
+                const url = await storage()
+                .ref(item.id + '/' + item1.id + '/' + item2)
+                .getDownloadURL()
+                item1.image[index] = url
+            })
+        })
+        setTimeout(() => {
+            if (temp.length > 0) {
+                setDataRoom(temp)
+            } else {
+                const show = {
+                    name: 'Không có phòng trống',
+                }
+                setDataRoom([show])
             }
-            setDataRoom([show])
-        }
+        },100);
     }
     useEffect(() => {
         const subscriber = firestore()
@@ -88,6 +99,7 @@ const ListRoom = ({ navigation, route }) => {
             .get()
             .then(documentSnapshot => {
                 const data = documentSnapshot.data().Room
+                console.log(data)
                 handleFilter(data)
             })
         //dispatch(Globalreducer.actions.setnullvariable(""));
@@ -226,6 +238,10 @@ const ListRoom = ({ navigation, route }) => {
             return day.split('-')[2] + ' tháng ' + day.split('-')[1]
         }
         return ''
+    }
+    const checkImage = image => {
+        const temp = image.split('.')
+        return temp[temp.length - 1] === 'jpg' ? null : image   
     }
     return (
         <SafeAreaView style={{ backgroundColor: 'white' }}>
@@ -406,7 +422,7 @@ const ListRoom = ({ navigation, route }) => {
                                     }}>
                                     <Image
                                         style={styles.IMGRecent}
-                                        source={{ uri: items.image[0] }}
+                                        source={{ uri: checkImage(items.image[0]) }}
                                     />
                                 </View>
                                 <View>
@@ -420,7 +436,7 @@ const ListRoom = ({ navigation, route }) => {
                                             {items.name}
                                         </Text>
                                         <View style={{ flexDirection: 'row', paddingVertical: 5 }}>
-                                            {items.icon.map((item, index) =>
+                                            {items.tienich.map((item, index) =>
                                                 index < 2 ? (
                                                     <View
                                                         key={index}
@@ -431,7 +447,7 @@ const ListRoom = ({ navigation, route }) => {
                                                         }}>
                                                         <Text
                                                             style={{ color: 'gray', fontSize: 14 }}>
-                                                            {items.tienich[index]}{' '}
+                                                            {item}{' '}
                                                             <Text style={{ color: 'black' }}>
                                                                 {index == 0 ? ' |' : ''}
                                                             </Text>

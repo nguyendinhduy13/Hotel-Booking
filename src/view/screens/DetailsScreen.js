@@ -1,23 +1,16 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import {
     ImageBackground,
     ScrollView,
     Text,
     StyleSheet,
-    FlatList,
-    StatusBar,
     View,
     TouchableOpacity,
     Image,
     Animated,
 } from 'react-native';
 import COLORS from '../../consts/colors';
-import firestore, { firebase } from '@react-native-firebase/firestore';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import Icon1 from 'react-native-vector-icons/FontAwesome5';
-import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
-import Icon3 from 'react-native-vector-icons/FontAwesome';
-import ListItemSwipeable from 'react-native-elements/dist/list/ListItemSwipeable';
 import { useSelector } from 'react-redux';
 import Icons from '../../assets/icons/icons';
 import slugify from '@sindresorhus/slugify';
@@ -28,13 +21,12 @@ export default function DetailsScreen({ navigation, route }) {
     startday,
     endday,
   } = useSelector((state) => state.Globalreducer);
-  const DataIcon = [...item.icon];
   const DataDetail = [...item.tienich];
   const Format = (number) => {
     var prices = dayamount * number;
     return prices.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
   };
-  const AnimatedView = Animated.createAnimatedComponent(View)
+
   const animatedValue = useRef(new Animated.Value(0)).current;
   const HeaderAnimated = {
     opacity: animatedValue.interpolate({

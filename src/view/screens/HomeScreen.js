@@ -77,7 +77,7 @@ export default function HomeScreen({ navigation }) {
     }, [])
 
     const [ListHotelData, setListHotelData] = useState([])
-    const handleSort = async data => {
+    const handleSort = data => {
         const temp = data.filter(item => item.isActive === true)
         temp.map(async item => {
             const url = await storage()
