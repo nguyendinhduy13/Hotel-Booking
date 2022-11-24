@@ -2,7 +2,7 @@ module.exports = {
   semi: false,
   singleQuote: true,
   trailingComma: 'all',
-  printWidth: 100,
+  printWidth: 120,
   tabWidth: 4,
   bracketSpacing: true,
   jsxBracketSameLine: true,

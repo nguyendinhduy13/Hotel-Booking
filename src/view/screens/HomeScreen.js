@@ -5,7 +5,6 @@ import {
     StyleSheet,
     View,
     ScrollView,
-    Alert,
     TextInput,
     PermissionsAndroid,
     TouchableOpacity,
@@ -13,7 +12,6 @@ import {
     Dimensions,
     Image,
     Animated,
-    LogBox,
     Modal,
 } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
@@ -30,6 +28,8 @@ import CurrentPosition from '../../redux/CurrentPosition'
 import Auth from '@react-native-firebase/auth'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Globalreducer from '../../redux/Globalreducer'
+import storage from '@react-native-firebase/storage'
+
 const { width } = Dimensions.get('screen')
 const cardWidth = width / 1.8
 export default function HomeScreen({ navigation }) {
@@ -37,18 +37,13 @@ export default function HomeScreen({ navigation }) {
     const dispatch = useDispatch()
     const requestLocation = async () => {
         try {
-            const granted = await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-                {
-                    title: 'Location Permission',
-                    message:
-                        'Hotel Booking App needs access to your location ' +
-                        'so you can see your current location.',
-                    buttonNeutral: 'Ask Me Later',
-                    buttonNegative: 'Cancel',
-                    buttonPositive: 'OK',
-                },
-            )
+            const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, {
+                title: 'Location Permission',
+                message: 'Hotel Booking App needs access to your location ' + 'so you can see your current location.',
+                buttonNeutral: 'Ask Me Later',
+                buttonNegative: 'Cancel',
+                buttonPositive: 'OK',
+            })
         } catch (err) {
             console.warn(err)
         }
@@ -82,8 +77,14 @@ export default function HomeScreen({ navigation }) {
     }, [])
 
     const [ListHotelData, setListHotelData] = useState([])
-    const handleSort = data => {
+    const handleSort = async data => {
         const temp = data.filter(item => item.isActive === true)
+        temp.map(async item => {
+            const url = await storage()
+                .ref(item.id + '/' + item.image)
+                .getDownloadURL()
+            item.image = url
+        })
         const sorted = [].concat(temp).sort((a, b) => {
             return a.name.localeCompare(b.name)
         })
@@ -97,19 +98,14 @@ export default function HomeScreen({ navigation }) {
             .onSnapshot(documentSnapshot => {
                 handleSort(documentSnapshot.data().ListHotel)
             })
-
         // Stop listening for updates when no longer required
         return () => subscriber()
     }, [])
-    const [isShow, setIsShow] = useState(false)
-    const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0)
     const [activeCardIndex, setActiveCardIndex] = useState(0)
     const scrollX = useRef(new Animated.Value(0)).current
-    const [countShow, setCountShow] = useState(0)
     const user = Auth().currentUser
     const [modalVisible, setModalVisible] = useState(false)
 
-    const AnimatedView = Animated.createAnimatedComponent(View)
     const animatedValue = useRef(new Animated.Value(0)).current
     const SearchShow = {
         opacity: animatedValue.interpolate({
@@ -117,7 +113,10 @@ export default function HomeScreen({ navigation }) {
             outputRange: [0, 1],
         }),
     }
-
+    const checkImage = image => {
+        const temp = image.split('.')
+        return temp[temp.length - 1] === 'jpg' ? null : image   
+    }
     const Card = ({ hotel, index }) => {
         const inputRange = [(index - 1) * cardWidth, index * cardWidth, (index + 1) * cardWidth]
         const opacity = scrollX.interpolate({
@@ -161,7 +160,7 @@ export default function HomeScreen({ navigation }) {
                         </View>
                         <Image
                             source={{
-                                uri: hotel.image,
+                                uri: checkImage(hotel.image),
                             }}
                             style={styles.cardImage}
                         />
@@ -209,9 +208,7 @@ export default function HomeScreen({ navigation }) {
     const TopHotelCard = ({ hotel, index }) => {
         if (index < 3) {
             return (
-                <TouchableOpacity
-                    style={styles.topHotelCard}
-                    onPress={() => navigation.navigate('ListRoom', hotel)}>
+                <TouchableOpacity style={styles.topHotelCard} onPress={() => navigation.navigate('ListRoom', hotel)}>
                     <View
                         style={{
                             position: 'absolute',
@@ -235,7 +232,7 @@ export default function HomeScreen({ navigation }) {
                     <Image
                         style={styles.topHotelCardImage}
                         source={{
-                            uri: hotel.image,
+                            uri: checkImage(hotel.image),
                         }}
                     />
                     <View
@@ -287,9 +284,7 @@ export default function HomeScreen({ navigation }) {
     const RecentlyBookedCard = ({ hotel }) => {
         return (
             <View>
-                <TouchableOpacity
-                    style={styles.RecentlyBox}
-                    onPress={() => navigation.navigate('ListRoom', hotel)}>
+                <TouchableOpacity style={styles.RecentlyBox} onPress={() => navigation.navigate('ListRoom', hotel)}>
                     <View
                         style={{
                             width: 120,
@@ -298,7 +293,7 @@ export default function HomeScreen({ navigation }) {
                         <Image
                             style={styles.IMGRecent}
                             source={{
-                                uri: hotel.image,
+                                uri: checkImage(hotel.image),
                             }}
                         />
                     </View>
@@ -585,9 +580,7 @@ export default function HomeScreen({ navigation }) {
                     <View>
                         <Animated.FlatList
                             onMomentumScrollEnd={e => {
-                                setActiveCardIndex(
-                                    Math.round(e.nativeEvent.contentOffset.x / cardWidth),
-                                )
+                                setActiveCardIndex(Math.round(e.nativeEvent.contentOffset.x / cardWidth))
                             }}
                             onScroll={Animated.event(
                                 [
@@ -651,9 +644,7 @@ export default function HomeScreen({ navigation }) {
                             marginTop: 20,
                             paddingBottom: 30,
                         }}
-                        renderItem={({ item, index }) => (
-                            <TopHotelCard hotel={item} index={index} />
-                        )}
+                        renderItem={({ item, index }) => <TopHotelCard hotel={item} index={index} />}
                     />
                     <View
                         style={{
