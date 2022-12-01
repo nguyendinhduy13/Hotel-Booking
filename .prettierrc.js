@@ -1,17 +1,13 @@
 module.exports = {
-  semi: false,
-  singleQuote: true,
-  trailingComma: 'all',
-  printWidth: 120,
-  tabWidth: 4,
-  bracketSpacing: true,
-  jsxBracketSameLine: true,
-  arrowParens: 'avoid',
-  endOfLine: 'auto',
-  parser: 'flow',
-  usePrettierrc: false,
-  width: 120,
-  fileInfoOptions: {
-    withNodeModules: true,
-  },
+  "bracketSpacing": true,
+  "singleQuote": true,
+  "printWidth": 80,
+  "trailingComma": "all",
+  "tabWidth": 2,
+  "semi": true,
+  "importOrder": [
+    "react",
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
 }
