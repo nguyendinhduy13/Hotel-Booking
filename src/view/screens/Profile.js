@@ -116,13 +116,13 @@ export default function Profile({ navigation }) {
       </View>
       <ScrollView style={{ backgroundColor: 'white', marginVertical: 10 }}>
         <View style={styles.bodyProfile}>
-          <Text style={styles.tittle}>Trang của tôi</Text>
+          <Text style={styles.tittle}>{t('my-booking')}</Text>
           <TouchableOpacity style={styles.view}>
             <Icon3 name="back-in-time" size={25} />
             <Text
               style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}
             >
-              Đặt phòng của tôi
+              {t('my-booking-history')}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.view}>
@@ -130,16 +130,16 @@ export default function Profile({ navigation }) {
             <Text
               style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}
             >
-              Khách sạn yêu thích
+              {t('my-favorite')}
             </Text>
           </TouchableOpacity>
-          <Text style={styles.tittle}>Cài đặt</Text>
+          <Text style={styles.tittle}>{t('setting')}</Text>
           <TouchableOpacity style={styles.view}>
             <Icon4 name="bell" size={25} />
             <Text
               style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}
             >
-              Thông báo
+              {t('notification')}
             </Text>
           </TouchableOpacity>
           <View style={[styles.view, { justifyContent: 'space-between' }]}>
@@ -148,7 +148,7 @@ export default function Profile({ navigation }) {
               <Text
                 style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}
               >
-                {t('setting')}
+                {t('language')}
               </Text>
             </View>
             <TouchableOpacity
@@ -184,13 +184,13 @@ export default function Profile({ navigation }) {
               </Text>
             </TouchableOpacity>
           </View>
-          <Text style={styles.tittle}>Thông tin</Text>
+          <Text style={styles.tittle}>{t('information')}</Text>
           <TouchableOpacity style={styles.view}>
             <Icon name="shield-checkmark-outline" size={25} />
             <Text
               style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}
             >
-              Điều khoản & Chính sách bảo mật
+              {t('terms-and-policy')}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -201,7 +201,7 @@ export default function Profile({ navigation }) {
               <Text
                 style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}
               >
-                Phiên bản
+                {t('version')}
               </Text>
             </View>
             <Text
@@ -220,7 +220,7 @@ export default function Profile({ navigation }) {
             <Text
               style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}
             >
-              Liên hệ
+              {t('contact-us')}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -233,7 +233,7 @@ export default function Profile({ navigation }) {
             <Text
               style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}
             >
-              Đăng suất
+              {t('logout')}
             </Text>
           </TouchableOpacity>
         </View>
