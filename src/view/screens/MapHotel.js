@@ -2,11 +2,13 @@ import { View, Text, Dimensions, StyleSheet } from 'react-native'
 import React from 'react'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MapView, { Marker } from 'react-native-maps'
+import { useTranslation } from 'react-i18next';
 const { width, height } = Dimensions.get('window')
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.01;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 export default function MapHotel({ navigation, route }) {
+    const { t } = useTranslation();
     const hotel = route.params
     return (
         <View>
@@ -18,7 +20,7 @@ export default function MapHotel({ navigation, route }) {
                     onPress={navigation.goBack}
                     style={{ paddingLeft: 10 }}
                 />
-                <Text style={{ color: 'black', fontSize: 18, fontWeight: 'bold', marginRight: 10 }}>Bản đồ</Text>
+                <Text style={{ color: 'black', fontSize: 18, fontWeight: 'bold', marginRight: 10 }}>{t('map')}</Text>
                 <Icon
                     name="arrow-back-ios"
                     size={0}
