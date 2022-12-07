@@ -22,9 +22,7 @@ import Icon4 from 'react-native-vector-icons/Ionicons';
 import Icon5 from 'react-native-vector-icons/EvilIcons';
 import COLORS from '../../consts/colors';
 import firestore, { firebase } from '@react-native-firebase/firestore';
-import Geolocation from '@react-native-community/geolocation';
 import { useDispatch } from 'react-redux';
-import CurrentPosition from '../../redux/CurrentPosition';
 import Auth from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Globalreducer from '../../redux/Globalreducer';
@@ -36,25 +34,9 @@ export default function HomeScreen({ navigation }) {
   //get current position
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const componentDidMount = () => {
-    Geolocation.getCurrentPosition(
-      (position) => {
-        var lat = parseFloat(position.coords.latitude);
-        var long = parseFloat(position.coords.longitude);
-        console.log(lat, long);
-        dispatch(
-          CurrentPosition.actions.addCurrentPosition({
-            latitude: lat,
-            longitude: long,
-          }),
-        );
-      },
-      (error) => alert(JSON.stringify(error)),
-      { enableHighAccuracy: true },
-    );
-  };
+
   useEffect(() => {
-    componentDidMount();
+
     firestore()
       .collection(user.uid)
       .get()

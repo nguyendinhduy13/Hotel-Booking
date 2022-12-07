@@ -23,10 +23,12 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import '../../i18n/18n';
 import { useTranslation } from 'react-i18next';
 import { setAsyncStorage } from '../../functions/asyncStorageFunctions';
-
+import { useDispatch } from 'react-redux';
+import Globalreducer from '../../redux/Globalreducer';
 export default function Profile({ navigation }) {
   const { t, i18n } = useTranslation();
   const { dispatchSignedIn } = useContext(SignInContext);
+  const dispatch = useDispatch();
   async function signOut() {
     try {
       auth()
@@ -34,11 +36,13 @@ export default function Profile({ navigation }) {
         .then(() => {
           GoogleSignin.revokeAccess();
           GoogleSignin.signOut();
+          dispatch(Globalreducer.actions.setEmailHasSignIn('none'));
           dispatchSignedIn({
             type: 'UPDATE_SIGN_IN',
             payload: { userToken: null, _id: '' },
           });
         });
+      setAsyncStorage('userToken', '');
     } catch (error) {
       Alert.alert('Error', error.message);
     }

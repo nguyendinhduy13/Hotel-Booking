@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { SocialIcon } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -7,15 +7,18 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { SignInContext } from '../../../contexts/authContext';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getAsyncStorage } from '../../../functions/asyncStorageFunctions';
 import { useTranslation } from 'react-i18next';
 GoogleSignin.configure({
   webClientId:
     '769620033857-f8q7uohvdpb5hcan4tlir04iusgc27jd.apps.googleusercontent.com',
 });
+import Globalreducer from '../../../redux/Globalreducer';
+import { useDispatch, useSelector } from 'react-redux';
+import CurrentPosition from '../../../redux/CurrentPosition';
+import Geolocation from '@react-native-community/geolocation';
+import { useMemo } from 'react';
 export default function SignInScreen({ navigation }) {
-  const { dispatchSignedIn } = useContext(SignInContext);
-  const { t } = useTranslation();
   async function onGoogleButtonPress() {
     try {
       // Get the users ID token
@@ -40,7 +43,6 @@ export default function SignInScreen({ navigation }) {
             email: user.user.email,
             name: user.user.displayName,
             phone: user.user.phoneNumber,
-            language: 'vi',
             theme: 'light',
           })
           .then(() => {
@@ -51,14 +53,78 @@ export default function SignInScreen({ navigation }) {
       Alert.alert('Error', error.message);
     }
   }
+  const componentDidMount = () => {
+    Geolocation.getCurrentPosition(
+      (position) => {
+        var lat = parseFloat(position.coords.latitude);
+        var long = parseFloat(position.coords.longitude);
+        console.log(lat, long);
+        dispatch(
+          CurrentPosition.actions.addCurrentPosition({
+            latitude: lat,
+            longitude: long,
+          }),
+        );
+      },
+      (error) => alert(JSON.stringify(error)),
+      { enableHighAccuracy: true },
+    );
+  };
+
+  const dispatch = useDispatch();
+  const { dispatchSignedIn } = useContext(SignInContext);
+  const { t } = useTranslation();
+  const { emailHasSignIn } = useSelector((state) => state.Globalreducer);
+  const getAdminAccount = async () => {
+    let count = 0;
+    await firestore()
+      .collection('AdminAccounts')
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((documentSnapshot) => {
+          if (documentSnapshot.data().email == emailHasSignIn) {
+            count = 1;
+            dispatch(
+              Globalreducer.actions.setidks(documentSnapshot.data()._id),
+            );
+            dispatch(
+              Globalreducer.actions.setadminuid(
+                documentSnapshot.data().adminuid,
+              ),
+            );
+            dispatchSignedIn({
+              type: 'UPDATE_SIGN_IN',
+              payload: {
+                userToken: documentSnapshot.data().roll,
+                _id: documentSnapshot.data()._id,
+              },
+            });
+          }
+        });
+      });
+    if (count == 0) {
+      dispatchSignedIn({
+        type: 'UPDATE_SIGN_IN',
+        payload: { userToken: 'signed-In', _id: '' },
+      });
+    }
+  };
+  useEffect(() => {
+    componentDidMount();
+  }, []);
+
+  useEffect(() => {
+    if (emailHasSignIn != 'none') {
+      getAdminAccount();
+    } else {
+      dispatchSignedIn({
+        type: 'UPDATE_SIGN_IN',
+        payload: { userToken: null, _id: '' },
+      });
+    }
+  }, []);
   return (
     <View>
-      <Icon
-        onPress={() => navigation.goBack()}
-        name="arrowleft"
-        size={30}
-        style={{ color: COLORS.dark, marginLeft: 15, marginTop: 15 }}
-      />
       <View
         style={{
           alignContent: 'center',

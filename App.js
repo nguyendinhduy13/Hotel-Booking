@@ -1,22 +1,24 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'react-native-gesture-handler';
 import { View, PermissionsAndroid } from 'react-native';
 import { StatusBar } from 'react-native';
 import COLORS from './src/consts/colors';
 import RootNavigation from './src/view/navigation/RootNavigation';
 import { SignInContextProvider } from './src/contexts/authContext';
-
 import {
   getAsyncStorage,
   setAsyncStorage,
 } from './src/functions/asyncStorageFunctions';
 import i18n from './src/i18n/18n';
-
 import { LogBox } from 'react-native';
+import Globalreducer from './src/redux/Globalreducer';
+import { useDispatch } from 'react-redux';
+import auth from '@react-native-firebase/auth';
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
 console.disableYellowBox = true;
 export default function App() {
+  const dispatch = useDispatch();
   const requestLocation = async () => {
     try {
       const granted = await PermissionsAndroid.request(
@@ -36,8 +38,27 @@ export default function App() {
     }
   };
   useEffect(() => {
+    auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log('User account already exists:', user.email);
+        dispatch(Globalreducer.actions.setEmailHasSignIn(user.email));
+      } else {
+        console.log('User account does not exist');
+        dispatch(Globalreducer.actions.setEmailHasSignIn('none'));
+      }
+    });
+  }, []);
+  const [wait, setWait] = useState(true);
+  getAsyncStorage('isShow').then((value) => {
+    if (value) {
+      dispatch(Globalreducer.actions.setisShowStartScreen(value));
+      console.log('isShowStartScreen: ' + value);
+    }
+    setWait(false);
+  });
+  useEffect(() => {
     getAsyncStorage('language').then((lang) => {
-      console.log(lang);
+      console.log('languauge: ' + lang);
       if (lang) {
         i18n.changeLanguage(lang);
       } else {
@@ -52,10 +73,16 @@ export default function App() {
   }, []);
   return (
     <SignInContextProvider>
-      <View style={{ flex: 1 }}>
-        <StatusBar backgroundColor={COLORS.white} barStyle="dark-content" />
-        <RootNavigation />
-      </View>
+      {wait === false ? (
+        <>
+          <View style={{ flex: 1 }}>
+            <StatusBar backgroundColor={COLORS.white} barStyle="dark-content" />
+            <RootNavigation />
+          </View>
+        </>
+      ) : (
+        <></>
+      )}
     </SignInContextProvider>
   );
 }

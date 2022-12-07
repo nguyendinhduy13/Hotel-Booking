@@ -9,8 +9,17 @@ import {
 } from 'react-native';
 import COLORS from '../../../consts/colors';
 import { useTranslation } from 'react-i18next';
+import { setAsyncStorage } from '../../../functions/asyncStorageFunctions';
+import { useDispatch } from 'react-redux';
+import Globalreducer from '../../../redux/Globalreducer';
 const SignInWelcomeScreen = ({ navigation }) => {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const handleStart = () => {
+    setAsyncStorage('isShow', 'false');
+    dispatch(Globalreducer.actions.setisShowStartScreen('false'));
+    navigation.navigate('SignInScreenTT');
+  };
   return (
     <View style={{ flex: 1 }}>
       <StatusBar translucent backgroundColor="rgba(0,0,0,0)" />
@@ -39,7 +48,7 @@ const SignInWelcomeScreen = ({ navigation }) => {
           >
             {t('first-description')}
           </Text>
-          <TouchableOpacity onPress={() => navigation.navigate('SignInScreen')}>
+          <TouchableOpacity onPress={() => handleStart()}>
             <View style={styles.button}>
               <Text
                 style={{ fontWeight: 'bold', fontSize: 15, color: COLORS.dark }}
