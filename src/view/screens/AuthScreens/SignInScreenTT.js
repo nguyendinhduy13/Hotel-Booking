@@ -2,267 +2,322 @@ import React, { useState, useEffect, useContext } from 'react';
 import {
   View,
   Text,
+  Image,
   StyleSheet,
   TextInput,
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import Icon2 from 'react-native-vector-icons/AntDesign';
 import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/FontAwesome';
 import { SocialIcon, Icon } from 'react-native-elements';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import COLORS from '../../../consts/colors';
-import { Formik } from 'formik';
-import { useDispatch } from 'react-redux';
 import auth from '@react-native-firebase/auth';
 import { SignInContext } from '../../../contexts/authContext';
 import firestore from '@react-native-firebase/firestore';
-import storage from "@react-native-firebase/storage"
+import storage from '@react-native-firebase/storage';
 import Globalreducer from '../../../redux/Globalreducer';
 import BookingHotel from '../../../redux/BookingHotel';
-
+import { useDispatch, useSelector } from 'react-redux';
+import CurrentPosition from '../../../redux/CurrentPosition';
+import Geolocation from '@react-native-community/geolocation';
 import { useTranslation } from 'react-i18next';
+import { setAsyncStorage } from '../../../functions/asyncStorageFunctions';
+
+GoogleSignin.configure({
+  webClientId:
+    '769620033857-f8q7uohvdpb5hcan4tlir04iusgc27jd.apps.googleusercontent.com',
+});
 export default function SignInScreenTT({ navigation }) {
   const { dispatchSignedIn } = useContext(SignInContext);
   const [getVisible, setVisible] = useState(false);
   let dataAccount = [];
   const dispatch = useDispatch();
+  const { emailHasSignIn } = useSelector((state) => state.Globalreducer);
+  async function onGoogleButtonPress() {
+    try {
+      // Get the users ID token
+      const { idToken } = await GoogleSignin.signIn();
+
+      // Create a Google credential with the token
+      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+
+      // Sign-in the user with the credential
+      const user = await auth().signInWithCredential(googleCredential);
+      if (user) {
+        dispatchSignedIn({
+          type: 'UPDATE_SIGN_IN',
+          payload: { userToken: 'user' },
+        });
+      }
+      if (user.additionalUserInfo.isNewUser) {
+        firestore()
+          .collection('Users')
+          .doc(auth().currentUser.uid)
+          .set({
+            email: user.user.email,
+            name: user.user.displayName,
+            phone: user.user.phoneNumber,
+            language: 'vi',
+            theme: 'light',
+          })
+          .then(() => {
+            console.log('User added!');
+          });
+      }
+    } catch (error) {
+      Alert.alert('Error', error.message);
+    }
+  }
+  const componentDidMount = () => {
+    Geolocation.getCurrentPosition(
+      (position) => {
+        var lat = parseFloat(position.coords.latitude);
+        var long = parseFloat(position.coords.longitude);
+        console.log(lat, long);
+        dispatch(
+          CurrentPosition.actions.addCurrentPosition({
+            latitude: lat,
+            longitude: long,
+          }),
+        );
+      },
+      (error) => alert(JSON.stringify(error)),
+      { enableHighAccuracy: true },
+    );
+  };
   useEffect(() => {
-    firestore()
+    componentDidMount();
+  }, []);
+  const getAdminAccount = async () => {
+    let count = 0;
+    await firestore()
       .collection('AdminAccounts')
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((documentSnapshot) => {
           dataAccount.push(documentSnapshot.data());
+          if (documentSnapshot.data().email == emailHasSignIn) {
+            count = 1;
+            dispatch(
+              Globalreducer.actions.setidks(documentSnapshot.data()._id),
+            );
+            dispatch(
+              Globalreducer.actions.setadminuid(
+                documentSnapshot.data().adminuid,
+              ),
+            );
+            dispatchSignedIn({
+              type: 'UPDATE_SIGN_IN',
+              payload: {
+                userToken: documentSnapshot.data().roll,
+                _id: documentSnapshot.data()._id,
+              },
+            });
+          }
         });
       });
+    if (count == 0) {
+      dispatchSignedIn({
+        type: 'UPDATE_SIGN_IN',
+        payload: { userToken: 'signed-In', _id: '' },
+      });
+    }
+  };
+  useEffect(() => {
+    if (emailHasSignIn != 'none') {
+      getAdminAccount();
+    } else {
+      dispatchSignedIn({
+        type: 'UPDATE_SIGN_IN',
+        payload: { userToken: null, _id: '' },
+      });
+    }
   }, []);
-
-async function signIn(data) {
-        try {
-            const { password, email } = data;
-            const user = await auth().signInWithEmailAndPassword(
-                email,
-                password,
-            );
-            let roll = 'signed-In';
-            let _id = '';
-            let adminuid = '';
-            dataAccount.filter(item => {
-                if (item.email === email) {
-                    roll = item.roll;
-                    _id = item._id;
-                    adminuid = item.adminuid;
-                }
-            });
-            if(roll==='adminks'){
-                firestore()
-        .collection('HotelList')
-        .doc(_id)
+  async function signIn({ email, password }) {
+    try {
+      const user = await auth().signInWithEmailAndPassword(email, password);
+      let roll = 'signed-In';
+      let _id = '';
+      let adminuid = '';
+      await firestore()
+        .collection('AdminAccounts')
         .get()
-        .then(documentSnapshot => {
+        .then((querySnapshot) => {
+          querySnapshot.forEach((documentSnapshot) => {
+            dataAccount.push(documentSnapshot.data());
+          });
+        });
+      await dataAccount.filter((item) => {
+        if (item.email === email) {
+          roll = item.roll;
+          _id = item._id;
+          adminuid = item.adminuid;
+        }
+      });
+      if (roll === 'adminks') {
+        firestore()
+          .collection('HotelList')
+          .doc(_id)
+          .get()
+          .then((documentSnapshot) => {
             const data = documentSnapshot.data().Room;
             data.map((item1) => {
-                item1.image.map(async(item2,index)=>{
-                    const url = await storage()
-                    .ref(_id + '/' + item1.id + '/' + item2)
-                    .getDownloadURL()
-                    item1.image[index] = url
-                })
-            })
+              item1.image.map(async (item2, index) => {
+                const url = await storage()
+                  .ref(_id + '/' + item1.id + '/' + item2)
+                  .getDownloadURL();
+                item1.image[index] = url;
+              });
+            });
             setTimeout(() => {
-                console.log(data)
-                dispatch(BookingHotel.actions.addRoom(data));
+              dispatch(BookingHotel.actions.addRoom(data));
             }, 3000);
-        });  
-            }
-            setTimeout(() => {
-                dispatch(Globalreducer.actions.setidks(_id))
-                dispatch(Globalreducer.actions.setadminuid(adminuid))
-                if (user) {
-                    dispatchSignedIn({
-                        type: 'UPDATE_SIGN_IN',
-                        payload: { userToken: roll, _id: _id },
-                    });
-                }
-            }, 3000);
-        } catch (error) {
-            Alert.alert('Error', error.message);
+          });
+      }
+      setTimeout(() => {
+        dispatch(Globalreducer.actions.setidks(_id));
+        dispatch(Globalreducer.actions.setadminuid(adminuid));
+        setAsyncStorage('userToken', roll + '-' + _id);
+        if (user) {
+          dispatchSignedIn({
+            type: 'UPDATE_SIGN_IN',
+            payload: { userToken: roll, _id: _id },
+          });
         }
-      dispatch(Globalreducer.actions.setidks(_id));
-      dispatch(Globalreducer.actions.setadminuid(adminuid));
-      if (user) {
-        dispatchSignedIn({
-          type: 'UPDATE_SIGN_IN',
-          payload: { userToken: roll, _id: _id },
-        });
+      }, 3000);
+    } catch (error) {
+      Alert.alert('Error', error.message);
     }
   }
   const { t } = useTranslation();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   return (
-    <View>
-      <Icon2
-        onPress={() => navigation.goBack()}
-        name="arrowleft"
-        size={30}
-        style={{ color: COLORS.dark, marginLeft: 15, marginTop: 15 }}
-      />
-      <View style={{ alignItems: 'center', paddingTop: '13%' }}>
+    <View style={{ flex: 1, backgroundColor: 'white' }}>
+      <View>
+        <Image
+          source={require('../../../assets/Logo1.png')}
+          style={{
+            width: 230,
+            height: 230,
+            alignSelf: 'center',
+            marginTop: 50,
+          }}
+        />
+      </View>
+      <View style={{ padding: 20 }}>
         <Text
           style={{
             fontSize: 30,
             fontWeight: 'bold',
-            color: COLORS.dark,
+            color: 'black',
           }}
         >
-            {t('sign-in')}
+          {t('log-in')}
         </Text>
-      </View>
-      <Formik
-        initialValues={{
-          email: '',
-          password: '',
-        }}
-        onSubmit={(values) => {
-          signIn(values);
-        }}
-      >
-        {(props) => (
-          <View>
-            <View>
-              <View style={{ paddingTop: '15%' }}>
-                <View style={styles.textinput2}>
-                  <Icon1 name="email" color={COLORS.grey} size={20} />
-                  <TextInput
-                    placeholder={t('email')}
-                    style={{ width: '90%' }}
-                    onChangeText={props.handleChange('email')}
-                    value={props.values.email}
-                  />
-                </View>
-                <View style={[styles.textinput2, { marginTop: 10 }]}>
-                  <Icon3 name="lock" size={20} color={COLORS.grey} />
-                  <TextInput
-                    placeholder={t('password')}
-                    style={{ width: '76%' }}
-                    secureTextEntry={getVisible ? false : true}
-                    onChangeText={props.handleChange('password')}
-                    value={props.values.password}
-                  />
-                  <Icon
-                    name={getVisible ? 'visibility' : 'visibility-off'}
-                    iconStyle={{
-                      color: COLORS.grey,
-                      marginRight: 10,
-                    }}
-                    type="material"
-                    onPress={() => setVisible(!getVisible)}
-                  />
-                </View>
-              </View>
-            </View>
-            <TouchableOpacity
-              style={{ alignItems: 'center', paddingTop: 10 }}
-              onPress={props.handleSubmit}
-            >
-              <View style={styles.button}>
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontWeight: 'bold',
-                    color: COLORS.white,
-                  }}
-                >
-                    {t('sign-in')}
-                </Text>
-              </View>
-            </TouchableOpacity>
+        <View style={{ marginTop: 20 }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              width: '100%',
+              alignItems: 'center',
+            }}
+          >
+            <Icon1 name="email" color={COLORS.grey} size={28} />
+            <TextInput
+              style={{
+                height: 45,
+                borderBottomWidth: 1,
+                borderBottomColor: '#69b9f5',
+                width: '90%',
+                marginLeft: 10,
+                fontSize: 16,
+              }}
+              placeholder={t('email')}
+              onChangeText={(text) => setEmail(text)}
+              value={email}
+            />
           </View>
-        )}
-      </Formik>
-      <TouchableOpacity style={{ paddingTop: '7%' }}>
-        <View style={{ alignItems: 'center' }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              width: '100%',
+              alignItems: 'center',
+              marginTop: 15,
+            }}
+          >
+            <Icon1 name="lock" size={28} color={COLORS.grey} />
+            <View
+              style={{
+                flexDirection: 'row',
+                marginLeft: 10,
+                alignItems: 'center',
+                width: '90%',
+                borderBottomWidth: 1,
+                borderBottomColor: '#69b9f5',
+              }}
+            >
+              <TextInput
+                placeholder={t('password')}
+                style={{ width: '90%' }}
+                secureTextEntry={getVisible ? false : true}
+                onChangeText={(text) => setPassword(text)}
+                value={password}
+              />
+              <Icon
+                name={getVisible ? 'visibility' : 'visibility-off'}
+                iconStyle={{
+                  color: COLORS.grey,
+                }}
+                type="material"
+                onPress={() => setVisible(!getVisible)}
+              />
+            </View>
+          </View>
           <Text
             style={{
-              fontSize: 14,
-              color: COLORS.primary,
+              color: '#37a2f2',
+              fontSize: 16,
+              marginTop: 10,
+              alignSelf: 'flex-end',
               fontWeight: 'bold',
             }}
           >
-                {t('forgot-password')}
+            {t('forgot-password')}{' '}
           </Text>
-        </View>
-      </TouchableOpacity>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingTop: '10%',
-        }}
-      >
-        <View
-          style={{
-            flex: 1,
-            height: 0.5,
-            backgroundColor: COLORS.grey,
-          }}
-        />
-        <View>
-          <Text
-            style={{
-              width: 130,
-              fontSize: 17,
-              color: COLORS.dark,
-              textAlign: 'center',
-            }}
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => signIn({ email, password })}
           >
-                {t('or-continue-with')}
-          </Text>
-        </View>
-        <View
-          style={{
-            flex: 1,
-            height: 0.5,
-            backgroundColor: COLORS.grey,
-          }}
-        />
-      </View>
-
-      <View>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            paddingTop: '7%',
-          }}
-        >
-          <SocialIcon button type="google" style={{ width: 100 }} />
-          <SocialIcon button type="facebook" style={{ width: 100 }} />
-        </View>
-      </View>
-      <View>
-        <View
-          style={{
-            paddingTop: '10%',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Text style={{ fontSize: 14, color: COLORS.grey }}>
-                {t('dont-have-an-account')} {' '}
-          </Text>
-          <TouchableOpacity onPress={() => navigation.navigate('SignUpScreen')}>
             <Text
               style={{
-                color: COLORS.primary,
-                fontSize: 14,
+                color: 'white',
+                fontSize: 16,
                 fontWeight: 'bold',
               }}
             >
-                {t('sign-up')}
+              {t('log-in')}
             </Text>
           </TouchableOpacity>
+          <View>
+            <View
+              style={{
+                height: 1,
+                backgroundColor: '#86939e',
+                width: '100%',
+              }}
+            />
+          </View>
+          <SocialIcon
+            button
+            type="google"
+            style={{ width: 100 }}
+            onPress={() => {
+              onGoogleButtonPress();
+            }}
+          />
         </View>
       </View>
     </View>
@@ -284,10 +339,11 @@ const styles = StyleSheet.create({
   },
   button: {
     height: 50,
-    width: '90%',
-    marginTop: 10,
+    width: '100%',
+    marginTop: 30,
     borderRadius: 12,
     alignItems: 'center',
+    alignSelf: 'center',
     alignContent: 'center',
     justifyContent: 'center',
     backgroundColor: COLORS.primary,

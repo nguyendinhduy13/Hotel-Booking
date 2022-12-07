@@ -5,17 +5,10 @@ import SignInScreen from '../screens/AuthScreens/SignInScreen';
 import SignUpScreen from '../screens/AuthScreens/SignUpScreen';
 import SignInScreenTT from '../screens/AuthScreens/SignInScreenTT';
 import { getAsyncStorage } from '../../functions/asyncStorageFunctions';
-export default function AuthStack() {
+export default function AuthStackB() {
   const Stack = createNativeStackNavigator();
   return (
     <Stack.Navigator>
-      <Stack.Screen
-        name="SignInWelcomeScreen"
-        component={SignInWelcomeScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
       {/* <Stack.Screen
         name="SignInScreen"
         component={SignInScreen}
