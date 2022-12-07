@@ -4,6 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
         userbooking:[],
         hotel:[],
+        room:[],
 }
 
 export default createSlice({
@@ -18,6 +19,9 @@ export default createSlice({
                 },
                 addBookingHotelUser(state, action) {
                         state.userbooking=action.payload
+                },
+                addRoom(state, action) {
+                        state.room=action.payload
                 }
         },
 })

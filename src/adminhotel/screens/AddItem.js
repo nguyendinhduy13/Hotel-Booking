@@ -1,21 +1,10 @@
 import React,{useEffect,useState} from 'react';
 import { View, Text,Image,TouchableOpacity,ScrollView } from 'react-native';
 import COLORS from '../../consts/colors';
-import firestore from '@react-native-firebase/firestore';
 import { useSelector } from 'react-redux';
 export default function AddItem({navigation}) {
-    const [data,setdata]=useState([]);
+    const {room}=useSelector(state=>state.BookingHotel)
     const {id_ks}=useSelector(state=>state.Globalreducer);
-    useEffect(()=>{
-        firestore()
-        .collection('HotelList')
-        .doc(id_ks)
-        .get()
-        .then(documentSnapshot => {
-            const data = documentSnapshot.data();
-            setdata(data.Room);
-        });  
-    },[data])
     return (
         <View>
             <ScrollView>
@@ -30,7 +19,7 @@ export default function AddItem({navigation}) {
                 }}>
                 DANH SÁCH PHÒNG CỦA KHÁCH SẠN
             </Text>
-            {data.map((item,index)=>(
+            {room.map((item,index)=>(
                  <View key={index} style={{height:150,width:'95%',flexDirection:"row",backgroundColor:'white',marginTop:15,alignSelf:"center",borderRadius:20}}>
                  <Image
                  source={{uri:item.image[0]}}
@@ -41,7 +30,7 @@ export default function AddItem({navigation}) {
                     {item.name}
                  </Text>
                  <Text style={{marginVertical:10,fontWeight:'400',fontSize:16,color:"black"}}>{item.price} VNĐ</Text>
-                 {item.icon.map((items,index)=>(
+                 {/* {item.icon.map((items,index)=>(
                     <View key={index} style={{flexDirection:"row",marginTop:5}}>
                     <Image
                     source={{uri:index<3?items:null}}
@@ -49,7 +38,7 @@ export default function AddItem({navigation}) {
                     />
                     <Text style={{left:15,fontWeight:"600"}}>{index<3?item.tienich[index]:null}</Text>
                  </View>
-                 ))}
+                 ))} */}
                  </View>
              </View>
             ))}

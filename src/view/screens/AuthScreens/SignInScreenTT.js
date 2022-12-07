@@ -17,7 +17,9 @@ import {useDispatch} from 'react-redux';
 import auth from '@react-native-firebase/auth';
 import { SignInContext } from '../../../contexts/authContext';
 import firestore from '@react-native-firebase/firestore';
+import storage from "@react-native-firebase/storage"
 import Globalreducer from '../../../redux/Globalreducer';
+import BookingHotel from '../../../redux/BookingHotel';
 
 export default function SignInScreenTT({ navigation }) {
     const { dispatchSignedIn } = useContext(SignInContext);
@@ -52,14 +54,37 @@ export default function SignInScreenTT({ navigation }) {
                     adminuid = item.adminuid;
                 }
             });
-            dispatch(Globalreducer.actions.setidks(_id))
-            dispatch(Globalreducer.actions.setadminuid(adminuid))
-            if (user) {
-                dispatchSignedIn({
-                    type: 'UPDATE_SIGN_IN',
-                    payload: { userToken: roll, _id: _id },
-                });
+            if(roll==='adminks'){
+                firestore()
+        .collection('HotelList')
+        .doc(_id)
+        .get()
+        .then(documentSnapshot => {
+            const data = documentSnapshot.data().Room;
+            data.map((item1) => {
+                item1.image.map(async(item2,index)=>{
+                    const url = await storage()
+                    .ref(_id + '/' + item1.id + '/' + item2)
+                    .getDownloadURL()
+                    item1.image[index] = url
+                })
+            })
+            setTimeout(() => {
+                console.log(data)
+                dispatch(BookingHotel.actions.addRoom(data));
+            }, 3000);
+        });  
             }
+            setTimeout(() => {
+                dispatch(Globalreducer.actions.setidks(_id))
+                dispatch(Globalreducer.actions.setadminuid(adminuid))
+                if (user) {
+                    dispatchSignedIn({
+                        type: 'UPDATE_SIGN_IN',
+                        payload: { userToken: roll, _id: _id },
+                    });
+                }
+            }, 3000);
         } catch (error) {
             Alert.alert('Error', error.message);
         }

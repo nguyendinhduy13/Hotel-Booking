@@ -34,6 +34,7 @@ const { width } = Dimensions.get('screen')
 const cardWidth = width / 1.8
 export default function HomeScreen({ navigation }) {
     //get current position
+    const [room, setRoom] = useState([])
     const dispatch = useDispatch()
     const requestLocation = async () => {
         try {
@@ -90,6 +91,43 @@ export default function HomeScreen({ navigation }) {
         })
         setListHotelData(sorted)
     }
+    // useEffect(() => {
+    //     var add=[];
+    //     firestore()
+    //     .collection('ListHotel')
+    //     .doc('ListHotel')
+    //     .get()
+    //     .then(documentSnapshot => {
+    //         const data=documentSnapshot.data().ListHotel
+    //         data.map((item)=>{
+    //             add.push(item.id)
+    //         })
+    //     })
+
+    //     add.map((item)=>{
+    //         firestore()
+    //         .collection('HotelList')
+    //         .doc(item)
+    //         .get()
+    //         .then(documentSnapshot => {
+    //             if (documentSnapshot.exists) {
+    //                 const temp = (documentSnapshot.data().Room).filter(item => item.isAvailable === true)
+    //                 temp.map((item1) => {
+    //                     item1.image.map(async(item2,index)=>{
+    //                         const url = await storage()
+    //                         .ref(hotel.id + '/' + item1.id + '/' + item2)
+    //                         .getDownloadURL()
+    //                         item1.image[index] = url
+    //                     })
+    //                 })
+    //                 setTimeout(() => {
+    //                     room.push(temp)
+    //                 }, 3000);
+    //             }
+    //         })
+    //     })
+       
+    // },[])
     //Realtime database
     useEffect(() => {
         const subscriber = firestore()
@@ -115,7 +153,7 @@ export default function HomeScreen({ navigation }) {
     }
     const checkImage = image => {
         const temp = image.split('.')
-        return temp[temp.length - 1] === 'jpg' ? null : image   
+        return temp[temp.length - 1] === 'jpg' ? '' : image   
     }
     const Card = ({ hotel, index }) => {
         const inputRange = [(index - 1) * cardWidth, index * cardWidth, (index + 1) * cardWidth]
@@ -127,6 +165,7 @@ export default function HomeScreen({ navigation }) {
             inputRange,
             outputRange: [0.8, 1, 0.8],
         })
+        
         return (
             <View>
                 <TouchableOpacity

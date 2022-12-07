@@ -61,13 +61,11 @@ const ListRoom = ({ navigation, route }) => {
     }, [])
     const handleFilter = async data => {
         const temp = data.filter(item => item.isAvailable === true)
-        temp.map((item1) => {
-            item1.image.map(async(item2,index)=>{
+        temp.map(async(item1) => {
                 const url = await storage()
-                .ref(item.id + '/' + item1.id + '/' + item2)
+                .ref(item.id + '/' + item1.id + '/' + item1.image[0])
                 .getDownloadURL()
-                item1.image[index] = url
-            })
+                item1.image[0] = url
         })
         setTimeout(() => {
             if (temp.length > 0) {
@@ -78,7 +76,29 @@ const ListRoom = ({ navigation, route }) => {
                 }
                 setDataRoom([show])
             }
-        },100);
+        }, 1000);
+        setTimeout(() => {
+            temp.map((item1)=>{
+                item1.image.map(async(item2,index)=>{
+                    if(index!==0){
+                    const url = await storage()
+                    .ref(item.id + '/' + item1.id + '/' + item2)
+                    .getDownloadURL()
+                    item1.image[index] = url
+                    }
+                })
+            })
+        }, 2000);
+        setTimeout(() => {
+            if (temp.length > 0) {
+                setDataRoom(temp)
+            } else {
+                const show = {
+                    name: 'Không có phòng trống',
+                }
+                setDataRoom([show])
+            }
+        }, 4000);
     }
     useEffect(() => {
         const subscriber = firestore()
@@ -99,7 +119,6 @@ const ListRoom = ({ navigation, route }) => {
             .get()
             .then(documentSnapshot => {
                 const data = documentSnapshot.data().Room
-                console.log(data)
                 handleFilter(data)
             })
         //dispatch(Globalreducer.actions.setnullvariable(""));

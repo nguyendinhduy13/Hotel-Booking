@@ -19,7 +19,7 @@ export default function AdminHotelStack(){
                         }}
                         />
                         <Stack.Screen
-                        name="ListRoom"
+                        name="AddItem"
                         component={AddItem}
                         options={{
                                 headerShown:false
