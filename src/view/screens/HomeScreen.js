@@ -36,7 +36,6 @@ export default function HomeScreen({ navigation }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-
     firestore()
       .collection(user.uid)
       .get()
@@ -758,7 +757,7 @@ export default function HomeScreen({ navigation }) {
                       fontSize: 17,
                       paddingLeft: 10,
                     }}
-                    placeholder="Tìm địa điểm, khách sạn"
+                    placeholder={t('find-place-and-hotel')}
                     autoFocus={true}
                     ref={textInput}
                     value={search}
@@ -783,7 +782,7 @@ export default function HomeScreen({ navigation }) {
                         fontWeight: 'bold',
                       }}
                     >
-                      Ghé thăm gần đây
+                      {t('recently-viewed')}
                     </Text>
                   ) : (
                     <></>
@@ -876,7 +875,7 @@ export default function HomeScreen({ navigation }) {
                       fontWeight: 'bold',
                     }}
                   >
-                    Khách sạn
+                    {t('hotel')}
                   </Text>
                   {data.map((item, index) => (
                     <TouchableOpacity

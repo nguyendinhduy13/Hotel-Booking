@@ -67,47 +67,47 @@ const ListRoom = ({ navigation, route }) => {
     var km = (dis / 1000).toFixed(1);
     setDistance(km);
   }, []);
-  const handleFilter = async data => {
-    const temp = data.filter(item => item.isAvailable === true)
-    temp.map(async(item1) => {
-            const url = await storage()
-            .ref(item.id + '/' + item1.id + '/' + item1.image[0])
-            .getDownloadURL()
-            item1.image[0] = url
-    })
+  const handleFilter = async (data) => {
+    const temp = data.filter((item) => item.isAvailable === true);
+    temp.map(async (item1) => {
+      const url = await storage()
+        .ref(item.id + '/' + item1.id + '/' + item1.image[0])
+        .getDownloadURL();
+      item1.image[0] = url;
+    });
     setTimeout(() => {
-        if (temp.length > 0) {
-            setDataRoom(temp)
-        } else {
-            const show = {
-                name: 'Không có phòng trống',
-            }
-            setDataRoom([show])
-        }
+      if (temp.length > 0) {
+        setDataRoom(temp);
+      } else {
+        const show = {
+          name: 'Không có phòng trống',
+        };
+        setDataRoom([show]);
+      }
     }, 1000);
     setTimeout(() => {
-        temp.map((item1)=>{
-            item1.image.map(async(item2,index)=>{
-                if(index!==0){
-                const url = await storage()
-                .ref(item.id + '/' + item1.id + '/' + item2)
-                .getDownloadURL()
-                item1.image[index] = url
-                }
-            })
-        })
+      temp.map((item1) => {
+        item1.image.map(async (item2, index) => {
+          if (index !== 0) {
+            const url = await storage()
+              .ref(item.id + '/' + item1.id + '/' + item2)
+              .getDownloadURL();
+            item1.image[index] = url;
+          }
+        });
+      });
     }, 2000);
     setTimeout(() => {
-        if (temp.length > 0) {
-            setDataRoom(temp)
-        } else {
-            const show = {
-                name: 'Không có phòng trống',
-            }
-            setDataRoom([show])
-        }
+      if (temp.length > 0) {
+        setDataRoom(temp);
+      } else {
+        const show = {
+          name: 'Không có phòng trống',
+        };
+        setDataRoom([show]);
+      }
     }, 4000);
-}
+  };
   useEffect(() => {
     const subscriber = firestore()
       .collection('HotelList')
@@ -120,17 +120,17 @@ const ListRoom = ({ navigation, route }) => {
     return () => subscriber();
   }, [item.id]);
 
-    useEffect(() => {
-        firestore()
-            .collection('HotelList')
-            .doc(item.id)
-            .get()
-            .then(documentSnapshot => {
-                const data = documentSnapshot.data().Room
-                handleFilter(data)
-            })
-        //dispatch(Globalreducer.actions.setnullvariable(""));
-    }, [])
+  useEffect(() => {
+    firestore()
+      .collection('HotelList')
+      .doc(item.id)
+      .get()
+      .then((documentSnapshot) => {
+        const data = documentSnapshot.data().Room;
+        handleFilter(data);
+      });
+    //dispatch(Globalreducer.actions.setnullvariable(""));
+  }, []);
 
   const handleShow = () => {
     setShow(!show);
@@ -262,7 +262,7 @@ const ListRoom = ({ navigation, route }) => {
   };
   const formatDayShow = (day) => {
     if (day != '') {
-      return day.split('-')[2] + ' tháng ' + day.split('-')[1];
+      return day.split('-')[2] + t('month') + day.split('-')[1];
     }
     return '';
   };
@@ -790,7 +790,7 @@ const ListRoom = ({ navigation, route }) => {
       >
         <View style={{ padding: 15 }}>
           <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'black' }}>
-            Ngày đặt phòng
+            {t('time-booking')}
           </Text>
           <View style={{ flexDirection: 'row', marginTop: 10 }}>
             <Text
