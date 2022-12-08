@@ -16,6 +16,7 @@ const initialState = {
   adminuid: '',
   isShowStartScreen: true,
   emailHasSignIn: '',
+  nameUser: '',
 };
 
 export default createSlice({
@@ -59,6 +60,9 @@ export default createSlice({
     },
     setEmailHasSignIn(state, action) {
       state.emailHasSignIn = action.payload;
+    },
+    setNameUser(state, action) {
+      state.nameUser = action.payload;
     },
   },
 });

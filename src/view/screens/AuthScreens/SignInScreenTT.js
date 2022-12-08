@@ -6,6 +6,8 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  Pressable,
+  Keyboard,
   Alert,
 } from 'react-native';
 import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -59,8 +61,6 @@ export default function SignInScreenTT({ navigation }) {
             email: user.user.email,
             name: user.user.displayName,
             phone: user.user.phoneNumber,
-            language: 'vi',
-            theme: 'light',
           })
           .then(() => {
             console.log('User added!');
@@ -195,19 +195,24 @@ export default function SignInScreenTT({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   return (
-    <View style={{ flex: 1, backgroundColor: 'white' }}>
+    <Pressable
+      onPress={() => {
+        Keyboard.dismiss();
+      }}
+      style={{ flex: 1, backgroundColor: 'white' }}
+    >
       <View>
         <Image
           source={require('../../../assets/Logo1.png')}
           style={{
-            width: 230,
-            height: 230,
+            width: 200,
+            height: 200,
             alignSelf: 'center',
             marginTop: 50,
           }}
         />
       </View>
-      <View style={{ padding: 20 }}>
+      <View style={{ paddingHorizontal: 25, paddingTop: 20 }}>
         <Text
           style={{
             fontSize: 30,
@@ -215,7 +220,7 @@ export default function SignInScreenTT({ navigation }) {
             color: 'black',
           }}
         >
-          {t('log-in')}
+          {t('sign-in')}
         </Text>
         <View style={{ marginTop: 20 }}>
           <View
@@ -276,17 +281,19 @@ export default function SignInScreenTT({ navigation }) {
               />
             </View>
           </View>
-          <Text
-            style={{
-              color: '#37a2f2',
-              fontSize: 16,
-              marginTop: 10,
-              alignSelf: 'flex-end',
-              fontWeight: 'bold',
-            }}
-          >
-            {t('forgot-password')}{' '}
-          </Text>
+          <TouchableOpacity>
+            <Text
+              style={{
+                color: '#37a2f2',
+                fontSize: 16,
+                marginTop: 10,
+                alignSelf: 'flex-end',
+                fontWeight: 'bold',
+              }}
+            >
+              {t('forgot-password')}{' '}
+            </Text>
+          </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
             onPress={() => signIn({ email, password })}
@@ -301,26 +308,108 @@ export default function SignInScreenTT({ navigation }) {
               {t('log-in')}
             </Text>
           </TouchableOpacity>
-          <View>
+          <View
+            style={{
+              width: '100%',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginTop: 20,
+            }}
+          >
             <View
               style={{
                 height: 1,
                 backgroundColor: '#86939e',
-                width: '100%',
+                width: '44%',
+              }}
+            />
+            <Text
+              style={{
+                color: '#86939e',
+                fontSize: 16,
+                marginHorizontal: '3%',
+              }}
+            >
+              {t('or')}
+            </Text>
+            <View
+              style={{
+                height: 1,
+                backgroundColor: '#86939e',
+                width: '44%',
               }}
             />
           </View>
-          <SocialIcon
-            button
-            type="google"
-            style={{ width: 100 }}
-            onPress={() => {
-              onGoogleButtonPress();
+          <TouchableOpacity
+            style={{
+              height: 50,
+              width: '100%',
+              marginTop: 20,
+              borderRadius: 12,
+              alignItems: 'center',
+              alignSelf: 'center',
+              alignContent: 'center',
+              justifyContent: 'center',
+              backgroundColor: '#f4f2f2',
             }}
-          />
+            onPress={() => onGoogleButtonPress()}
+          >
+            <Image
+              source={require('../../../assets/logo_gg.png')}
+              style={{
+                width: 35,
+                height: 35,
+                alignSelf: 'center',
+                position: 'absolute',
+                left: 20,
+              }}
+            />
+            <Text
+              style={{
+                color: 'black',
+                fontSize: 16,
+                fontWeight: 'bold',
+              }}
+            >
+              {t('sign-in-with-google')}
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
-    </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          marginTop: 30,
+        }}
+      >
+        <Text
+          style={{
+            color: '#86939e',
+            fontSize: 16,
+          }}
+        >
+          {t('dont-have-an-account')}
+        </Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('SignUpScreen')}
+          style={{ marginLeft: 5 }}
+        >
+          <Text
+            style={{
+              color: '#37a2f2',
+              fontSize: 16,
+              fontWeight: 'bold',
+            }}
+          >
+            {t('sign-up')}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </Pressable>
   );
 }
 

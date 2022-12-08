@@ -14,6 +14,7 @@ import { LogBox } from 'react-native';
 import Globalreducer from './src/redux/Globalreducer';
 import { useDispatch } from 'react-redux';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
 console.disableYellowBox = true;
@@ -42,6 +43,17 @@ export default function App() {
       if (user) {
         console.log('User account already exists:', user.email);
         dispatch(Globalreducer.actions.setEmailHasSignIn(user.email));
+        firestore()
+          .collection('Users')
+          .doc(user.uid)
+          .get()
+          .then((documentSnapshot) => {
+            if (documentSnapshot.exists) {
+              dispatch(
+                Globalreducer.actions.setNameUser(documentSnapshot.data().name),
+              );
+            }
+          });
       } else {
         console.log('User account does not exist');
         dispatch(Globalreducer.actions.setEmailHasSignIn('none'));

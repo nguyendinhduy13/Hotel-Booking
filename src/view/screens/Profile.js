@@ -55,7 +55,7 @@ export default function Profile({ navigation }) {
   const handleChangeLang = (id) => {
     setAsyncStorage('language', id);
     i18n.changeLanguage(id);
-    console.log(id);
+    console.log('languauge: ' + id);
   };
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>

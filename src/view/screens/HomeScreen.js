@@ -22,7 +22,7 @@ import Icon4 from 'react-native-vector-icons/Ionicons';
 import Icon5 from 'react-native-vector-icons/EvilIcons';
 import COLORS from '../../consts/colors';
 import firestore, { firebase } from '@react-native-firebase/firestore';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Auth from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Globalreducer from '../../redux/Globalreducer';
@@ -34,7 +34,7 @@ export default function HomeScreen({ navigation }) {
   //get current position
   const { t } = useTranslation();
   const dispatch = useDispatch();
-
+  const UserName = useSelector((state) => state.Globalreducer.nameUser);
   useEffect(() => {
     firestore()
       .collection(user.uid)
@@ -552,7 +552,7 @@ export default function HomeScreen({ navigation }) {
               color: 'black',
             }}
           >
-            {t('hello')}, {Auth().currentUser.displayName + ' '}
+            {t('hello')}, {UserName + ' '}
             <Icon1
               name="hand-wave-outline"
               size={26}
