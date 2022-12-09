@@ -1,22 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-  ScrollView,
-  Image,
-} from 'react-native';
-import Icon1 from 'react-native-vector-icons/MaterialIcons';
-import Icon from 'react-native-vector-icons/EvilIcons';
-import COLORS from '../../consts/colors';
-import BookingHotel from '../../redux/BookingHotel';
-import firestore from '@react-native-firebase/firestore';
 import Auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import slugify from '@sindresorhus/slugify';
+import {
+  Image,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import Icon from 'react-native-vector-icons/EvilIcons';
+import Icon1 from 'react-native-vector-icons/MaterialIcons';
+import { useDispatch, useSelector } from 'react-redux';
+import COLORS from '../../consts/colors';
 export default function Booked({ navigation, route }) {
   const { t } = useTranslation();
   const item = route.params;
@@ -30,6 +28,7 @@ export default function Booked({ navigation, route }) {
 
   const [checkdata, setcheckdata] = useState(false);
   const [checkdata1, setcheckdata1] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     firestore()
@@ -187,7 +186,7 @@ export default function Booked({ navigation, route }) {
   const start = new Date(startday !== '' ? startday : Date.now());
   const end = new Date(endday !== '' ? endday : day1);
   const sum = Math.floor(
-    item.price * amount + (item.price * amount * (Number * 2)) / 1000,
+    item.price * (amount === 1 ? amount : amount * (amount / (amount + 1))),
   );
   return (
     <ScrollView style={{ flex: 1 }}>
@@ -393,7 +392,7 @@ export default function Booked({ navigation, route }) {
               color: COLORS.dark,
             }}
           >
-            {item.price * amount} VNĐ
+            {sum} VNĐ
           </Text>
         </View>
         <View
@@ -404,18 +403,7 @@ export default function Booked({ navigation, route }) {
             alignSelf: 'center',
             marginTop: 20,
           }}
-        >
-          <Text style={{ fontWeight: '500', fontSize: 17 }}>Phụ thu</Text>
-          <Text
-            style={{
-              fontWeight: 'bold',
-              fontSize: 17,
-              color: COLORS.dark,
-            }}
-          >
-            {Math.floor((item.price * amount * (Number * 2)) / 1000)} VNĐ
-          </Text>
-        </View>
+        ></View>
         <View
           style={{
             borderWidth: 0.2,
@@ -432,7 +420,9 @@ export default function Booked({ navigation, route }) {
             marginTop: 20,
           }}
         >
-          <Text style={{ fontWeight: '500', fontSize: 17 }}>{t('total-money')}</Text>
+          <Text style={{ fontWeight: '500', fontSize: 17 }}>
+            {t('total-money')}
+          </Text>
           <Text
             style={{
               fontWeight: 'bold',
@@ -518,6 +508,7 @@ export default function Booked({ navigation, route }) {
           }}
           onPress={() => {
             addbooking();
+            setModalVisible(true);
           }}
         >
           <Text
@@ -531,6 +522,95 @@ export default function Booked({ navigation, route }) {
           </Text>
         </TouchableOpacity>
       </View>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <TouchableOpacity
+          style={{
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            height: '100%',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          onPress={() => setModalVisible(false)}
+        >
+          <View
+            style={{
+              backgroundColor: 'white',
+              alignItems: 'center',
+              borderRadius: 20,
+              height: 200,
+              width: 300,
+              bottom: 30,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 18,
+                fontWeight: '700',
+                color: COLORS.primary,
+                marginTop: 20,
+              }}
+            >
+              Đặt phòng thành công
+            </Text>
+            <TouchableOpacity
+              style={{
+                width: '80%',
+                height: 45,
+                backgroundColor: COLORS.primary,
+                borderRadius: 10,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginVertical: 15,
+              }}
+              onPress={() => {
+                navigation.navigate('Booking');
+              }}
+            >
+              <Text
+                style={{
+                  color: 'white',
+                  fontSize: 15,
+                  fontWeight: '400',
+                  marginVertical: 10,
+                }}
+              >
+                Xem phòng
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                width: '80%',
+                height: 45,
+                backgroundColor: COLORS.blurprimary,
+                borderRadius: 10,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              onPress={() => {
+                setModalVisible(false);
+              }}
+            >
+              <Text
+                style={{
+                  color: COLORS.primary,
+                  fontSize: 15,
+                  fontWeight: 'bold',
+                  marginVertical: 10,
+                }}
+              >
+                Hủy
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </ScrollView>
   );
 }
