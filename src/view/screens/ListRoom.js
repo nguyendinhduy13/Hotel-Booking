@@ -1,31 +1,38 @@
-import React, { useState, useRef, useEffect } from 'react';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import Icon1 from 'react-native-vector-icons/FontAwesome';
-import Icon2 from 'react-native-vector-icons/Ionicons';
-import Icon4 from 'react-native-vector-icons/FontAwesome5';
+import Auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { Calendar } from 'react-native-calendars';
-import { useDispatch } from 'react-redux';
+import storage from '@react-native-firebase/storage';
+import slugify from '@sindresorhus/slugify';
+import { getDistance } from 'geolib';
+import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
-  TouchableOpacity,
-  View,
+  Alert,
+  Animated,
+  Dimensions,
+  Image,
+  KeyboardAvoidingView,
+  Modal,
+  PanResponder,
+  Platform,
   SafeAreaView,
   ScrollView,
-  Text,
-  Animated,
-  Image,
   StyleSheet,
-  Dimensions,
-  PanResponder,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
+import { Calendar } from 'react-native-calendars';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import Icon5 from 'react-native-vector-icons/AntDesign';
+import Icon1 from 'react-native-vector-icons/FontAwesome';
+import Icon4 from 'react-native-vector-icons/FontAwesome5';
+import Icon3 from 'react-native-vector-icons/Fontisto';
+import Icon2 from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useDispatch, useSelector } from 'react-redux';
 import COLORS from '../../consts/colors';
-import { useSelector } from 'react-redux';
-import { getDistance } from 'geolib';
 import Globalreducer from '../../redux/Globalreducer';
-import storage from '@react-native-firebase/storage';
-import { useTranslation } from 'react-i18next';
-import slugify from '@sindresorhus/slugify';
 const width = Dimensions.get('screen').width;
 const WINDOW_HEIGHT = Dimensions.get('screen').height;
 const SHEET_MAX_HEIGHT = WINDOW_HEIGHT * 0.8;
@@ -35,6 +42,7 @@ const MAX_DOWNWARD_TRANSLATE_Y = 0;
 const DRAG_THRESHOLD = 50;
 const ListRoom = ({ navigation, route }) => {
   const { t } = useTranslation();
+  const star = [1, 2, 3, 4, 5];
   const dispatch = useDispatch();
   const item = route.params;
   const mapRef = useRef(null);
@@ -44,7 +52,13 @@ const ListRoom = ({ navigation, route }) => {
   const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
   const currentPosition = useSelector((state) => state.currentPosition);
   const [DataRoom, setDataRoom] = useState([]);
+  const [DataHotel, setDataHotel] = useState([]);
   const [show, setShow] = useState(false);
+  const [starhotel, setStarhotel] = useState(0);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [ratecontent, setRatecontent] = useState('');
+  const [checkbook, setCheckbook] = useState(false);
+  const [userinfo, setUserinfo] = useState({});
   const { dayamount, startday, endday } = useSelector(
     (state) => state.Globalreducer,
   );
@@ -52,6 +66,7 @@ const ListRoom = ({ navigation, route }) => {
     var price = number * dayamount;
     return price.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
   };
+  const user = Auth().currentUser;
   const [distance, setDistance] = useState(0);
   useEffect(() => {
     dispatch(Globalreducer.actions.setnamehotel(item.name));
@@ -132,9 +147,81 @@ const ListRoom = ({ navigation, route }) => {
     //dispatch(Globalreducer.actions.setnullvariable(""));
   }, []);
 
+  useEffect(() => {
+    firestore()
+      .collection('ListHotel')
+      .doc('ListHotel')
+      .get()
+      .then((documentSnapshot) => {
+        const data = documentSnapshot.data().ListHotel;
+        setDataHotel(data);
+      });
+  }, [DataHotel]);
+
+  useEffect(() => {
+    firestore()
+      .collection('Booking')
+      .doc(user.uid)
+      .get()
+      .then((documentSnapshot) => {
+        const data = documentSnapshot.data().data;
+        data.map((item1) => {
+          if (documentSnapshot.exists) {
+            if (item1.hotelinfo.name === item.name) {
+              setCheckbook(true);
+            }
+          }
+        });
+      });
+  }, []);
+
+  useEffect(() => {
+    firestore()
+      .collection('UserBooking')
+      .doc(user.uid)
+      .get()
+      .then((documentSnapshot) => {
+        if (documentSnapshot.exists) {
+          setUserinfo(documentSnapshot.data());
+        }
+      });
+  }, []);
+
   const handleShow = () => {
     setShow(!show);
   };
+
+  const ratehotel = async () => {
+    if (!checkbook) {
+      Alert.alert('Vui lòng đặt phòng trước khi đánh giá');
+    } else {
+      DataHotel.map((item1) => {
+        if (item1.id === item.id) {
+          const timeElapsed = Date.now();
+          const today = new Date(timeElapsed);
+          const data = {
+            content: ratecontent,
+            date:
+              today.getDate() +
+              '/' +
+              (today.getMonth() + 1) +
+              '/' +
+              today.getFullYear(),
+            user: userinfo.name,
+          };
+          item1.comments.push(data);
+          item1.star.push(starhotel);
+        }
+      });
+      await firestore().collection('ListHotel').doc('ListHotel').set({
+        ListHotel: DataHotel,
+      });
+      setStarhotel(0);
+      setRatecontent('');
+      setModalVisible(!modalVisible);
+    }
+  };
+
   const AnimatedView = Animated.createAnimatedComponent(View);
   const animatedValue = useRef(new Animated.Value(0)).current;
   const HeaderAnimated = {
@@ -255,7 +342,6 @@ const ListRoom = ({ navigation, route }) => {
     springAnimation('down');
     setStartTrue(start);
     setEndTrue(end);
-    console.log(middle.length + 1);
     dispatch(Globalreducer.actions.changedayamount(middle.length + 1));
     dispatch(Globalreducer.actions.changestartday(start));
     dispatch(Globalreducer.actions.changeendday(end));
@@ -338,10 +424,10 @@ const ListRoom = ({ navigation, route }) => {
                 alignItems: 'center',
               }}
             >
-              <Icon1
+              <Icon5
                 name="star"
                 size={20}
-                color="orange"
+                color={COLORS.orange}
                 style={{ marginLeft: 2 }}
               />
               <Text
@@ -640,43 +726,92 @@ const ListRoom = ({ navigation, route }) => {
                 color: 'black',
               }}
             >
-              Đánh giá
+              {t('review')}
             </Text>
-            <View style={{ marginTop: 10 }}>
-              <View style={styles.ViewDG}>
-                <View style={{ padding: 10 }}>
-                  <Text
+            {DataHotel.map(
+              (items) =>
+                items.id === item.id &&
+                items.comments.map((item1, index) => (
+                  <View
+                    key={index}
                     style={{
-                      color: 'black',
-                      fontWeight: 'bold',
-                      fontSize: 17,
+                      marginTop: 10,
+                      width: '100%',
+                      backgroundColor: 'white',
+                      borderRadius: 10,
+                      elevation: 5,
+                      shadowColor: COLORS.black,
+                      alignSelf: 'center',
+                      borderWidth: 1,
+                      borderColor: '#eeeeee',
+                      paddingVertical: 20,
                     }}
                   >
-                    Name
+                    <View
+                      style={[
+                        styles.ViewDG,
+                        {
+                          justifyContent: 'space-between',
+                          paddingHorizontal: 20,
+                        },
+                      ]}
+                    >
+                      <View style={{ flexDirection: 'row' }}>
+                        <Image
+                          source={require('../../assets/avatars.jpg')}
+                          style={{
+                            width: 50,
+                            height: 50,
+                            borderRadius: 25,
+                          }}
+                        />
+                        <View style={{ left: 10, top: 5 }}>
+                          <Text
+                            style={{
+                              fontWeight: '700',
+                              fontSize: 16,
+                              color: 'black',
+                            }}
+                          >
+                            {item1.user}
+                          </Text>
+                          <Text style={{ fontSize: 13, fontWeight: '400' }}>
+                            {item1.date}
+                          </Text>
+                        </View>
+                      </View>
+                      <View
+                        style={{
+                          backgroundColor: COLORS.primary,
+                          height: 30,
+                          width: 55,
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          borderRadius: 15,
+                          flexDirection: 'row',
+                          paddingHorizontal: 10,
+                          top: 10,
+                        }}
+                      >
+                        <Icon5 name="star" size={15} color={COLORS.orange} />
+                        <Text style={{ color: 'white' }}>
+                          {items.star[index]}
+                        </Text>
+                      </View>
+                    </View>
                     <Text
                       style={{
-                        color: 'gray',
-                        fontSize: 15,
+                        marginHorizontal: 30,
+                        fontWeight: '400',
+                        fontSize: 14,
+                        top: 5,
                       }}
                     >
-                      {' '}
-                      | Time
+                      {item1.content}
                     </Text>
-                  </Text>
-                  <Text
-                    style={{
-                      color: 'black',
-                      fontWeight: 'bold',
-                      fontSize: 16,
-                      marginTop: 5,
-                    }}
-                  >
-                    Name Room
-                  </Text>
-                  <Text style={{ marginTop: 5 }}>Comment </Text>
-                </View>
-              </View>
-            </View>
+                  </View>
+                )),
+            )}
           </View>
         </View>
       </ScrollView>
@@ -807,6 +942,322 @@ const ListRoom = ({ navigation, route }) => {
           </View>
         </View>
       </TouchableOpacity>
+      <TouchableOpacity
+        style={{
+          position: 'absolute',
+          alignSelf: 'flex-end',
+          borderWidth: 1,
+          width: 40,
+          height: 40,
+          borderRadius: 20,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: 'white',
+          zIndex: 2,
+          right: 5,
+          bottom: '20%',
+          borderColor: COLORS.white,
+          shadowColor: COLORS.black,
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+          elevation: 5,
+        }}
+        onPress={() => {
+          setModalVisible(true);
+        }}
+      >
+        <Icon3 name="commenting" size={30} color={COLORS.primary} />
+      </TouchableOpacity>
+      <Modal
+        animationType="fade"
+        transparent
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
+          <TouchableOpacity
+            style={{
+              justifyContent: 'flex-end',
+              flex: 1,
+              backgroundColor: 'rgba(0,0,0,0.5)',
+            }}
+            onPress={() => {
+              setModalVisible(false);
+            }}
+          >
+            <View
+              style={{
+                height: '75%',
+                backgroundColor: 'white',
+                borderTopLeftRadius: 30,
+                borderTopRightRadius: 30,
+                alignItems: 'center',
+                paddingTop: 5,
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  width: '15%',
+                  borderRadius: 20,
+                  backgroundColor: '#bcbcbc',
+                  height: 5,
+                }}
+                onPress={() => {
+                  setModalVisible(false);
+                }}
+              />
+              <Text
+                style={{
+                  marginVertical: 25,
+                  fontSize: 21,
+                  fontWeight: 'bold',
+                  color: 'black',
+                }}
+              >
+                Rate the hotel
+              </Text>
+              <View
+                style={{
+                  width: '90%',
+                  borderRadius: 20,
+                  backgroundColor: '#eeeeee',
+                  height: 1,
+                }}
+              />
+              <View>
+                <View
+                  style={{
+                    width: '90%',
+                    height: 120,
+                    color: 'black',
+                    backgroundColor: COLORS.white,
+                    marginBottom: 10,
+                    marginTop: 20,
+                    alignSelf: 'center',
+                    borderRadius: 20,
+                    elevation: 5,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <View
+                    style={{
+                      width: 120,
+                      height: 110,
+                      right: 5,
+                    }}
+                  >
+                    <Image
+                      style={styles.IMGRecent}
+                      source={{
+                        uri: item.image,
+                      }}
+                    />
+                  </View>
+                  <View style={{ left: 10 }}>
+                    <View
+                      style={{
+                        marginTop: 10,
+                        flexDirection: 'row',
+                      }}
+                    >
+                      <View
+                        style={{
+                          width: 200,
+                        }}
+                      >
+                        <View
+                          style={{
+                            width: 120,
+                            height: 29,
+                          }}
+                        >
+                          <Text
+                            style={{
+                              fontSize: 17,
+                              fontWeight: 'bold',
+                              color: 'black',
+                            }}
+                          >
+                            {item.name}
+                          </Text>
+                        </View>
+                        <View
+                          style={{
+                            height: 40,
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <Text
+                            style={{
+                              fontSize: 15,
+                            }}
+                          >
+                            {item.location}
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        width: 180,
+                        paddingVertical: 10,
+                      }}
+                    >
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          width: 160,
+                        }}
+                      >
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <Icon5 name="star" size={15} color={COLORS.orange} />
+                          <Text
+                            style={{
+                              color: COLORS.primary,
+                              fontWeight: 'bold',
+                              fontSize: 15,
+                              marginLeft: 5,
+                            }}
+                          >
+                            5.0
+                          </Text>
+                        </View>
+                        <Text
+                          style={{
+                            marginLeft: 15,
+                          }}
+                        >
+                          (5 reviews)
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                </View>
+              </View>
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontWeight: 'bold',
+                  color: 'black',
+                }}
+              >
+                Please give your rating & review
+              </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginTop: 10,
+                  justifyContent: 'space-between',
+                  width: '55%',
+                  marginVertical: 5,
+                }}
+              >
+                {star.map((item, index) => (
+                  <TouchableOpacity
+                    onPress={() => {
+                      setStarhotel(item);
+                    }}
+                    style={{
+                      elevation: 15,
+                    }}
+                  >
+                    <Icon5
+                      name="star"
+                      size={30}
+                      color={
+                        index + 1 <= starhotel ? COLORS.orange : COLORS.grey
+                      }
+                    />
+                  </TouchableOpacity>
+                ))}
+              </View>
+              <TextInput
+                style={{
+                  width: '90%',
+                  borderWidth: 1,
+                  borderColor: '#f3f6f4',
+                  height: 80,
+                  textAlignVertical: 'top',
+                  backgroundColor: '#eeeeee',
+                  borderRadius: 20,
+                  marginVertical: 10,
+                }}
+                multiline={true}
+                onChangeText={(text) => setRatecontent(text)}
+                value={ratecontent}
+              />
+              <TouchableOpacity
+                style={{
+                  width: '90%',
+                  height: 50,
+                  backgroundColor: COLORS.primary,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 25,
+                  marginTop: 10,
+                }}
+                onPress={() => {
+                  ratehotel();
+                }}
+              >
+                <Text
+                  style={{
+                    color: COLORS.white,
+                    fontSize: 16,
+                    fontWeight: '700',
+                  }}
+                >
+                  Rate Now
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  width: '90%',
+                  height: 50,
+                  backgroundColor: COLORS.blurprimary,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 25,
+                  marginTop: 10,
+                }}
+                onPress={() => {
+                  setModalVisible(false);
+                  setRatecontent('');
+                  setStarhotel(0);
+                }}
+              >
+                <Text
+                  style={{
+                    color: COLORS.primary,
+                    fontSize: 16,
+                    fontWeight: '700',
+                  }}
+                >
+                  Later
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -827,8 +1278,7 @@ const styles = StyleSheet.create({
   IMGRecent: {
     height: '100%',
     width: '100%',
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+    borderRadius: 10,
     alignItems: 'center',
   },
   HeaderBack: {
@@ -871,15 +1321,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   ViewDG: {
-    width: '100%',
-    height: 170,
-    backgroundColor: 'white',
-    borderRadius: 10,
-    elevation: 5,
-    shadowColor: COLORS.black,
-    alignSelf: 'center',
-    borderWidth: 1,
-    borderColor: '#eeeeee',
+    flexDirection: 'row',
   },
   map: {
     ...StyleSheet.absoluteFillObject,

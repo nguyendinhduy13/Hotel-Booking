@@ -1,8 +1,10 @@
 import Auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  Alert,
   Image,
   Modal,
   ScrollView,
@@ -19,163 +21,191 @@ export default function Booked({ navigation, route }) {
   const { t } = useTranslation();
   const item = route.params;
   const dispatch = useDispatch();
+  const navigate = useNavigation();
   const [Number, setNumber] = useState(1);
   const { dayamount, startday, endday, namehotel, idhotel } = useSelector(
     (state) => state.Globalreducer,
   );
-  const { userbooking } = useSelector((state) => state.BookingHotel);
   const user = Auth().currentUser;
 
   const [checkdata, setcheckdata] = useState(false);
   const [checkdata1, setcheckdata1] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [userbooking, setuserbooking] = useState({});
 
   useEffect(() => {
-    firestore()
-      .collection('Booking')
-      .doc(user.uid)
-      .get()
-      .then((documentSnapshot) => {
-        if (documentSnapshot.exists) {
-          setcheckdata(true);
-        }
-      });
-    firestore()
-      .collection('ListBooking')
-      .doc(idhotel)
-      .get()
-      .then((documentSnapshot) => {
-        if (documentSnapshot.exists) {
-          setcheckdata1(true);
-        }
-      });
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      firestore()
+        .collection('Booking')
+        .doc(user.uid)
+        .get()
+        .then((documentSnapshot) => {
+          if (documentSnapshot.exists) {
+            setcheckdata(true);
+          }
+        });
+
+      firestore()
+        .collection('UserBooking')
+        .doc(user.uid)
+        .get()
+        .then((documentSnapshot) => {
+          if (documentSnapshot.exists) {
+            setuserbooking(documentSnapshot.data());
+          }
+        });
+
+      firestore()
+        .collection('ListBooking')
+        .doc(idhotel)
+        .get()
+        .then((documentSnapshot) => {
+          if (documentSnapshot.exists) {
+            setcheckdata1(true);
+          }
+        });
+    });
+    return () => {
+      unsubscribe;
+    };
+  }, [navigate]);
 
   const addbooking = () => {
-    let x =
-      start.getDate() + '/' + start.getMonth() + '/' + start.getFullYear();
-    let y = end.getDate() + '/' + end.getMonth() + '/' + end.getFullYear();
-    if (checkdata) {
-      firestore()
-        .collection('Booking')
-        .doc(user.uid)
-        .update({
-          data: firestore.FieldValue.arrayUnion({
-            userinfo: {
-              name: userbooking.name,
-              phone: userbooking.phone,
-              birthday: userbooking.birthday,
-              email: userbooking.email,
-            },
-            hotelinfo: {
-              name: namehotel,
-              roomname: item.name,
-              price: item.price,
-              checkin: x,
-              checkout: y,
-              dayamount: amount,
-              status: 'ongoing',
-              guess: Number,
-              image: item.image[1],
-              total: sum,
-              userid: user.uid,
-            },
-          }),
-        })
-        .then(() => {
-          console.log('Booking true!');
-        });
+    if (
+      !userbooking.name ||
+      !userbooking.phone ||
+      !userbooking.birthday ||
+      !userbooking.email
+    ) {
+      Alert.alert(
+        'Bạn chưa nhập thông tin cá nhân, vui lòng nhập đầy đủ thông tin',
+      );
     } else {
-      firestore()
-        .collection('Booking')
-        .doc(user.uid)
-        .set({
-          data: firestore.FieldValue.arrayUnion({
-            userinfo: {
-              name: userbooking.name,
-              phone: userbooking.phone,
-              birthday: userbooking.birthday,
-              email: userbooking.email,
-            },
-            hotelinfo: {
-              name: namehotel,
-              roomname: item.name,
-              price: item.price,
-              checkin: x,
-              checkout: y,
-              dayamount: amount,
-              status: 'ongoing',
-              guess: Number,
-              image: item.image[1],
-              total: sum,
-              userid: user.uid,
-            },
-          }),
-        })
-        .then(() => {
-          console.log('Booking false!');
-        });
-    }
-    if (checkdata1) {
-      firestore()
-        .collection('ListBooking')
-        .doc(idhotel)
-        .update({
-          data: firestore.FieldValue.arrayUnion({
-            userinfo: {
-              name: userbooking.name,
-              phone: userbooking.phone,
-              birthday: userbooking.birthday,
-              email: userbooking.email,
-            },
-            hotelinfo: {
-              name: namehotel,
-              roomname: item.name,
-              price: item.price,
-              checkin: x,
-              checkout: y,
-              dayamount: amount,
-              status: 'ongoing',
-              guess: Number,
-              image: item.image[1],
-              total: sum,
-              userid: user.uid,
-            },
-          }),
-        })
-        .then(() => {
-          console.log('Booking true!');
-        });
-    } else {
-      firestore()
-        .collection('ListBooking')
-        .doc(idhotel)
-        .set({
-          data: firestore.FieldValue.arrayUnion({
-            userinfo: {
-              name: userbooking.name,
-              phone: userbooking.phone,
-              birthday: userbooking.birthday,
-              email: userbooking.email,
-            },
-            hotelinfo: {
-              name: namehotel,
-              roomname: item.name,
-              price: item.price,
-              checkin: x,
-              checkout: y,
-              dayamount: amount,
-              status: 'ongoing',
-              guess: Number,
-              image: item.image[1],
-              total: sum,
-              userid: user.uid,
-            },
-          }),
-        })
-        .then(() => {
-          console.log('Booking false!');
-        });
+      let x =
+        start.getDate() + '/' + start.getMonth() + '/' + start.getFullYear();
+      let y = end.getDate() + '/' + end.getMonth() + '/' + end.getFullYear();
+      if (checkdata) {
+        firestore()
+          .collection('Booking')
+          .doc(user.uid)
+          .update({
+            data: firestore.FieldValue.arrayUnion({
+              userinfo: {
+                name: userbooking.name,
+                phone: userbooking.phone,
+                birthday: userbooking.birthday,
+                email: userbooking.email,
+              },
+              hotelinfo: {
+                name: namehotel,
+                roomname: item.name,
+                price: item.price,
+                checkin: x,
+                checkout: y,
+                dayamount: amount,
+                status: 'ongoing',
+                guess: Number,
+                image: item.image[1],
+                total: sum,
+                userid: user.uid,
+              },
+            }),
+          })
+          .then(() => {
+            console.log('Booking true!');
+          });
+      } else {
+        firestore()
+          .collection('Booking')
+          .doc(user.uid)
+          .set({
+            data: firestore.FieldValue.arrayUnion({
+              userinfo: {
+                name: userbooking.name,
+                phone: userbooking.phone,
+                birthday: userbooking.birthday,
+                email: userbooking.email,
+              },
+              hotelinfo: {
+                name: namehotel,
+                roomname: item.name,
+                price: item.price,
+                checkin: x,
+                checkout: y,
+                dayamount: amount,
+                status: 'ongoing',
+                guess: Number,
+                image: item.image[1],
+                total: sum,
+                userid: user.uid,
+              },
+            }),
+          })
+          .then(() => {
+            console.log('Booking false!');
+          });
+      }
+      if (checkdata1) {
+        firestore()
+          .collection('ListBooking')
+          .doc(idhotel)
+          .update({
+            data: firestore.FieldValue.arrayUnion({
+              userinfo: {
+                name: userbooking.name,
+                phone: userbooking.phone,
+                birthday: userbooking.birthday,
+                email: userbooking.email,
+              },
+              hotelinfo: {
+                name: namehotel,
+                roomname: item.name,
+                price: item.price,
+                checkin: x,
+                checkout: y,
+                dayamount: amount,
+                status: 'ongoing',
+                guess: Number,
+                image: item.image[1],
+                total: sum,
+                userid: user.uid,
+              },
+            }),
+          })
+          .then(() => {
+            console.log('Booking true!');
+          });
+      } else {
+        firestore()
+          .collection('ListBooking')
+          .doc(idhotel)
+          .set({
+            data: firestore.FieldValue.arrayUnion({
+              userinfo: {
+                name: userbooking.name,
+                phone: userbooking.phone,
+                birthday: userbooking.birthday,
+                email: userbooking.email,
+              },
+              hotelinfo: {
+                name: namehotel,
+                roomname: item.name,
+                price: item.price,
+                checkin: x,
+                checkout: y,
+                dayamount: amount,
+                status: 'ongoing',
+                guess: Number,
+                image: item.image[1],
+                total: sum,
+                userid: user.uid,
+              },
+            }),
+          })
+          .then(() => {
+            console.log('Booking false!');
+          });
+      }
     }
   };
 

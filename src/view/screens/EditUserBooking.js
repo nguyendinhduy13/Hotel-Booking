@@ -1,14 +1,11 @@
-import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity, Text } from 'react-native';
-import COLORS from '../../consts/colors';
-import { useDispatch, useSelector } from 'react-redux';
-import BookingHotel from '../../redux/BookingHotel';
 import Auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import COLORS from '../../consts/colors';
 const EditUserBooking = ({ navigation }) => {
   const { t } = useTranslation();
-  const dispatch = useDispatch();
-  const { userbooking } = useSelector((state) => state.BookingHotel);
   const userinfo = Auth().currentUser;
   const adduserbooking = () => {
     const a = {
@@ -17,20 +14,27 @@ const EditUserBooking = ({ navigation }) => {
       birthday: birthday,
       email: email,
     };
-    dispatch(BookingHotel.actions.addBookingHotelUser(a));
+    firestore().collection('UserBooking').doc(userinfo.uid).set(a);
     navigation.goBack();
   };
-
-  const [name, setName] = useState(
-    userinfo.displayName ? userinfo.displayName : '',
-  );
-  const [phone, setPhone] = useState(
-    userbooking.phone ? userbooking.phone : '',
-  );
-  const [birthday, setBirthday] = useState(
-    userbooking.birthday ? userbooking.birthday : '',
-  );
-  const [email, setEmail] = useState(userinfo.email);
+  useEffect(() => {
+    firestore()
+      .collection('UserBooking')
+      .doc(userinfo.uid)
+      .get()
+      .then((documentSnapshot) => {
+        if (documentSnapshot.exists) {
+          setName(documentSnapshot.data().name);
+          setPhone(documentSnapshot.data().phone);
+          setBirthday(documentSnapshot.data().birthday);
+          setEmail(documentSnapshot.data().email);
+        }
+      });
+  }, []);
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [birthday, setBirthday] = useState('');
+  const [email, setEmail] = useState('');
   return (
     <View>
       <TextInput
@@ -122,7 +126,7 @@ const EditUserBooking = ({ navigation }) => {
             color: COLORS.white,
           }}
         >
-            {t('save')}
+          {t('save')}
         </Text>
       </TouchableOpacity>
     </View>
