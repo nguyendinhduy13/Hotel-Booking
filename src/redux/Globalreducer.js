@@ -17,6 +17,7 @@ const initialState = {
   isShowStartScreen: true,
   emailHasSignIn: '',
   nameUser: '',
+  nameCurrentCity: '',
 };
 
 export default createSlice({
@@ -45,6 +46,7 @@ export default createSlice({
     },
     setdatabooking(state, action) {
       state.data.push(action.payload);
+      console.log('data: ' + state.data);
     },
     setidks(state, action) {
       state.id_ks = action.payload;
@@ -63,6 +65,10 @@ export default createSlice({
     },
     setNameUser(state, action) {
       state.nameUser = action.payload;
+    },
+    setNameCurrentCity(state, action) {
+      state.nameCurrentCity = action.payload;
+      console.log('nameCurrentCity: ' + state.nameCurrentCity);
     },
   },
 });

@@ -1,20 +1,18 @@
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import React, { useEffect, useState } from 'react';
+import { LogBox, PermissionsAndroid, StatusBar, View } from 'react-native';
 import 'react-native-gesture-handler';
-import { View, PermissionsAndroid } from 'react-native';
-import { StatusBar } from 'react-native';
+import { useDispatch } from 'react-redux';
 import COLORS from './src/consts/colors';
-import RootNavigation from './src/view/navigation/RootNavigation';
 import { SignInContextProvider } from './src/contexts/authContext';
 import {
   getAsyncStorage,
   setAsyncStorage,
 } from './src/functions/asyncStorageFunctions';
 import i18n from './src/i18n/18n';
-import { LogBox } from 'react-native';
 import Globalreducer from './src/redux/Globalreducer';
-import { useDispatch } from 'react-redux';
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
+import RootNavigation from './src/view/navigation/RootNavigation';
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
 console.disableYellowBox = true;
@@ -60,6 +58,7 @@ export default function App() {
       }
     });
   }, []);
+
   const [wait, setWait] = useState(true);
   getAsyncStorage('isShow').then((value) => {
     if (value) {
@@ -68,6 +67,7 @@ export default function App() {
     }
     setWait(false);
   });
+
   useEffect(() => {
     getAsyncStorage('language').then((lang) => {
       console.log('languauge: ' + lang);
@@ -83,6 +83,7 @@ export default function App() {
   useEffect(() => {
     requestLocation();
   }, []);
+
   return (
     <SignInContextProvider>
       {wait === false ? (

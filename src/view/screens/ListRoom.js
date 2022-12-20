@@ -2,7 +2,6 @@ import Auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import slugify from '@sindresorhus/slugify';
-import { getDistance } from 'geolib';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -25,7 +24,6 @@ import {
 import { Calendar } from 'react-native-calendars';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import Icon5 from 'react-native-vector-icons/AntDesign';
-import Icon1 from 'react-native-vector-icons/FontAwesome';
 import Icon4 from 'react-native-vector-icons/FontAwesome5';
 import Icon3 from 'react-native-vector-icons/Fontisto';
 import Icon2 from 'react-native-vector-icons/Ionicons';
@@ -58,7 +56,6 @@ const ListRoom = ({ navigation, route }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [ratecontent, setRatecontent] = useState('');
   const [checkbook, setCheckbook] = useState(false);
-  const [userinfo, setUserinfo] = useState({});
   const { dayamount, startday, endday } = useSelector(
     (state) => state.Globalreducer,
   );
@@ -71,16 +68,16 @@ const ListRoom = ({ navigation, route }) => {
   useEffect(() => {
     dispatch(Globalreducer.actions.setnamehotel(item.name));
     dispatch(Globalreducer.actions.setidhotel(item.id));
-    var dis = getDistance(
-      {
-        latitude: currentPosition.latitude,
-        longitude: currentPosition.longitude,
-      },
-      { latitude: item.position[0], longitude: item.position[1] },
-    );
-    //format the distance to km with 2 decimal places
-    var km = (dis / 1000).toFixed(1);
-    setDistance(km);
+    // var dis = getDistance(
+    //   {
+    //     latitude: currentPosition.latitude,
+    //     longitude: currentPosition.longitude,
+    //   },
+    //   { latitude: item.position[0], longitude: item.position[1] },
+    // );
+    // //format the distance to km with 2 decimal places
+    // var km = (dis / 1000).toFixed(1);
+    // setDistance(km);
   }, []);
   const handleFilter = async (data) => {
     const temp = data.filter((item) => item.isAvailable === true);
@@ -90,16 +87,6 @@ const ListRoom = ({ navigation, route }) => {
         .getDownloadURL();
       item1.image[0] = url;
     });
-    setTimeout(() => {
-      if (temp.length > 0) {
-        setDataRoom(temp);
-      } else {
-        const show = {
-          name: 'Không có phòng trống',
-        };
-        setDataRoom([show]);
-      }
-    }, 1000);
     setTimeout(() => {
       temp.map((item1) => {
         item1.image.map(async (item2, index) => {
@@ -111,40 +98,16 @@ const ListRoom = ({ navigation, route }) => {
           }
         });
       });
+      setDataRoom(temp);
     }, 2000);
-    setTimeout(() => {
-      if (temp.length > 0) {
-        setDataRoom(temp);
-      } else {
-        const show = {
-          name: 'Không có phòng trống',
-        };
-        setDataRoom([show]);
-      }
-    }, 4000);
   };
   useEffect(() => {
-    const subscriber = firestore()
+    firestore()
       .collection('HotelList')
       .doc(item.id)
       .onSnapshot((documentSnapshot) => {
         handleFilter(documentSnapshot.data().Room);
       });
-
-    // Stop listening for updates when no longer required
-    return () => subscriber();
-  }, [item.id]);
-
-  useEffect(() => {
-    firestore()
-      .collection('HotelList')
-      .doc(item.id)
-      .get()
-      .then((documentSnapshot) => {
-        const data = documentSnapshot.data().Room;
-        handleFilter(data);
-      });
-    //dispatch(Globalreducer.actions.setnullvariable(""));
   }, []);
 
   useEffect(() => {
@@ -156,7 +119,7 @@ const ListRoom = ({ navigation, route }) => {
         const data = documentSnapshot.data().ListHotel;
         setDataHotel(data);
       });
-  }, [DataHotel]);
+  }, []);
 
   useEffect(() => {
     firestore()
@@ -164,29 +127,16 @@ const ListRoom = ({ navigation, route }) => {
       .doc(user.uid)
       .get()
       .then((documentSnapshot) => {
-        const data = documentSnapshot.data().data;
-        data.map((item1) => {
-          if (documentSnapshot.exists) {
+        if (documentSnapshot.exists) {
+          const data = documentSnapshot.data().data;
+          data.map((item1) => {
             if (item1.hotelinfo.name === item.name) {
               setCheckbook(true);
             }
-          }
-        });
-      });
-  }, []);
-
-  useEffect(() => {
-    firestore()
-      .collection('UserBooking')
-      .doc(user.uid)
-      .get()
-      .then((documentSnapshot) => {
-        if (documentSnapshot.exists) {
-          setUserinfo(documentSnapshot.data());
+          });
         }
       });
   }, []);
-
   const handleShow = () => {
     setShow(!show);
   };
@@ -207,7 +157,7 @@ const ListRoom = ({ navigation, route }) => {
               (today.getMonth() + 1) +
               '/' +
               today.getFullYear(),
-            user: userinfo.name,
+            user: user.displayName,
           };
           item1.comments.push(data);
           item1.star.push(starhotel);
@@ -356,6 +306,7 @@ const ListRoom = ({ navigation, route }) => {
     const temp = image.split('.');
     return temp[temp.length - 1] === 'jpg' ? null : image;
   };
+  console.log('die');
   return (
     <SafeAreaView style={{ backgroundColor: 'white' }}>
       <AnimatedView style={[styles.HeaderBack, HeaderAnimated]}>
@@ -383,10 +334,9 @@ const ListRoom = ({ navigation, route }) => {
         <Icon
           name="arrow-back-ios"
           size={28}
-          color={COLORS.white}
+          color="white"
           onPress={navigation.goBack}
         />
-        <Icon1 name={'bookmark-o'} size={25} color="white" style={{}} />
       </AnimatedView>
       <ScrollView
         onScroll={(e) => {
@@ -1172,6 +1122,7 @@ const ListRoom = ({ navigation, route }) => {
               >
                 {star.map((item, index) => (
                   <TouchableOpacity
+                    key={index}
                     onPress={() => {
                       setStarhotel(item);
                     }}
@@ -1305,8 +1256,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 1,
     top: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
   },
   ViewInfo: {
     position: 'absolute',

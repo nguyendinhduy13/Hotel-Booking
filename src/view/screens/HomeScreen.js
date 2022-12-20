@@ -1,40 +1,38 @@
-import React, { useRef, useState, useEffect } from 'react';
-import {
-  SafeAreaView,
-  Text,
-  StyleSheet,
-  View,
-  ScrollView,
-  TextInput,
-  PermissionsAndroid,
-  TouchableOpacity,
-  FlatList,
-  Dimensions,
-  Image,
-  Animated,
-  Modal,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons';
-import Icon2 from 'react-native-vector-icons/Entypo';
-import Icon3 from 'react-native-vector-icons/Feather';
-import Icon4 from 'react-native-vector-icons/Ionicons';
-import Icon5 from 'react-native-vector-icons/EvilIcons';
-import COLORS from '../../consts/colors';
-import firestore, { firebase } from '@react-native-firebase/firestore';
-import { useDispatch, useSelector } from 'react-redux';
-import Auth from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Globalreducer from '../../redux/Globalreducer';
+import Auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import {
+  Animated,
+  Dimensions,
+  FlatList,
+  Image,
+  Modal,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import Icon5 from 'react-native-vector-icons/EvilIcons';
+import Icon4 from 'react-native-vector-icons/Ionicons';
+import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useDispatch, useSelector } from 'react-redux';
+import COLORS from '../../consts/colors';
+import Globalreducer from '../../redux/Globalreducer';
 const { width } = Dimensions.get('screen');
 const cardWidth = width / 1.8;
 export default function HomeScreen({ navigation }) {
-  //get current position
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const UserName = useSelector((state) => state.Globalreducer.nameUser);
+  const { position } = useSelector((state) => state.currentPosition);
+
   useEffect(() => {
     firestore()
       .collection(user.uid)
@@ -62,17 +60,16 @@ export default function HomeScreen({ navigation }) {
     });
     setListHotelData(sorted);
   };
-  //Realtime database
+
   useEffect(() => {
-    const subscriber = firestore()
+    firestore()
       .collection('ListHotel')
       .doc('ListHotel')
       .onSnapshot((documentSnapshot) => {
         handleSort(documentSnapshot.data().ListHotel);
       });
-    // Stop listening for updates when no longer required
-    return () => subscriber();
   }, []);
+
   const [activeCardIndex, setActiveCardIndex] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
   const user = Auth().currentUser;
@@ -85,10 +82,104 @@ export default function HomeScreen({ navigation }) {
       outputRange: [0, 1],
     }),
   };
+
   const checkImage = (image) => {
     const temp = image.split('.');
     return temp[temp.length - 1] === 'jpg' ? null : image;
   };
+
+  const textInput = useRef(0);
+  const [data, setData] = useState([]);
+  const [search, setSearch] = useState('');
+  const handleSearch = (text) => {
+    if (text) {
+      const newData = ListHotelData.filter((item) => {
+        const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setData(newData);
+      setSearch(text);
+    } else {
+      setData([]);
+      setSearch('');
+    }
+  };
+
+  const [historySearch, setHistorySearch] = useState([]);
+  const readItemFromStorage = async (newValue) => {
+    const value = await AsyncStorage.getItem('hotel');
+    if (value == null) {
+      await AsyncStorage.setItem('hotel', JSON.stringify([]));
+      setHistorySearch([]);
+    } else {
+      setHistorySearch(JSON.parse(value));
+    }
+  };
+
+  const addItemToSearchHistory = async (item) => {
+    const value = await AsyncStorage.getItem('hotel');
+    const arr = JSON.parse(value);
+    if (arr) {
+      const index = arr.findIndex((e) => e.id === item.id);
+      if (index === -1) {
+        arr.push(item);
+      } else {
+        arr.splice(index, 1);
+        arr.push(item);
+      }
+    }
+    await AsyncStorage.setItem('hotel', JSON.stringify(arr));
+    readItemFromStorage();
+  };
+
+  const removeItemFromSearchHistory = async (item) => {
+    const value = await AsyncStorage.getItem('hotel');
+    const arr = JSON.parse(value);
+    if (arr) {
+      const index = arr.findIndex((e) => e.id === item.id);
+      if (index !== -1) {
+        arr.splice(index, 1);
+      }
+    }
+    await AsyncStorage.setItem('hotel', JSON.stringify(arr));
+    readItemFromStorage();
+  };
+
+  const navigateTo = (item) => {
+    navigation.navigate('ListRoom', item);
+    setModalVisible(false);
+    addItemToSearchHistory(item);
+  };
+
+  const ShowModal = async () => {
+    setModalVisible(true);
+    readItemFromStorage();
+  };
+  const Google_API = 'AIzaSyAiLGAchgXzosp_vnXKQ4KprLFkObeXOE0';
+  const [localName, setLocalName] = useState('');
+  async function fetchData() {
+    //fetch to google api and get location name by lat and long
+    const { latitude, longitude } = position;
+    const response = await fetch(
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${Google_API}`,
+    ).then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('Something went wrong');
+      }
+    });
+    const address = response.results[2].formatted_address;
+    setLocalName(address);
+  }
+
+  // useEffect(() => {
+  //   if (position) {
+  //     fetchData();
+  //   }
+  // }, []);
+
   const Card = ({ hotel, index }) => {
     const inputRange = [
       (index - 1) * cardWidth,
@@ -397,74 +488,6 @@ export default function HomeScreen({ navigation }) {
       </View>
     );
   };
-  const textInput = useRef(0);
-  const [data, setData] = useState([]);
-  const [search, setSearch] = useState('');
-  const handleSearch = (text) => {
-    if (text) {
-      const newData = ListHotelData.filter((item) => {
-        const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase();
-        const textData = text.toUpperCase();
-        return itemData.indexOf(textData) > -1;
-      });
-      setData(newData);
-      setSearch(text);
-    } else {
-      setData([]);
-      setSearch('');
-    }
-  };
-
-  const [historySearch, setHistorySearch] = useState([]);
-  const readItemFromStorage = async (newValue) => {
-    const value = await AsyncStorage.getItem('hotel');
-    if (value == null) {
-      await AsyncStorage.setItem('hotel', JSON.stringify([]));
-      setHistorySearch([]);
-    } else {
-      setHistorySearch(JSON.parse(value));
-    }
-  };
-  useEffect(() => {
-    readItemFromStorage();
-  }, []);
-  const addItemToSearchHistory = async (item) => {
-    const value = await AsyncStorage.getItem('hotel');
-    const arr = JSON.parse(value);
-    if (arr) {
-      const index = arr.findIndex((e) => e.id === item.id);
-      if (index === -1) {
-        arr.push(item);
-      } else {
-        arr.splice(index, 1);
-        arr.push(item);
-      }
-    }
-    await AsyncStorage.setItem('hotel', JSON.stringify(arr));
-    readItemFromStorage();
-  };
-  const removeItemFromSearchHistory = async (item) => {
-    const value = await AsyncStorage.getItem('hotel');
-    const arr = JSON.parse(value);
-    if (arr) {
-      const index = arr.findIndex((e) => e.id === item.id);
-      if (index !== -1) {
-        arr.splice(index, 1);
-      }
-    }
-    await AsyncStorage.setItem('hotel', JSON.stringify(arr));
-    readItemFromStorage();
-  };
-  const navigateTo = (item) => {
-    navigation.navigate('ListRoom', item);
-    setModalVisible(false);
-    // setData([])
-    // setSearch("")
-    addItemToSearchHistory(item);
-  };
-  const ShowModal = async () => {
-    setModalVisible(true);
-  };
   return (
     <SafeAreaView
       style={{
@@ -475,7 +498,6 @@ export default function HomeScreen({ navigation }) {
       <View
         style={{
           paddingHorizontal: 20,
-          height: 100,
         }}
       >
         <View
@@ -533,7 +555,8 @@ export default function HomeScreen({ navigation }) {
             </Animated.View>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('TestCalendar');
+                // navigation.navigate('TestCalendar');
+                fetchData();
               }}
             >
               <Icon1 name="bell-ring-outline" size={26} color={COLORS.grey} />
@@ -542,7 +565,7 @@ export default function HomeScreen({ navigation }) {
         </View>
         <View
           style={{
-            marginTop: 15,
+            marginTop: 10,
           }}
         >
           <Text
@@ -566,7 +589,7 @@ export default function HomeScreen({ navigation }) {
       </View>
       <ScrollView
         showsHorizontalScrollIndicator={false}
-        style={{ height: '100%' }}
+        style={{ height: '100%', marginTop: 20 }}
         onScroll={(e) => {
           const currentOffset = e.nativeEvent.contentOffset.y;
           animatedValue.setValue(currentOffset);
@@ -598,6 +621,9 @@ export default function HomeScreen({ navigation }) {
           </View>
         </TouchableOpacity>
         <View>
+          <View style={{ marginTop: 20, paddingHorizontal: 20 }}>
+            <Text style={{ fontSize: 24, fontWeight: '700' }}>{localName}</Text>
+          </View>
           <Animated.FlatList
             onMomentumScrollEnd={(e) => {
               setActiveCardIndex(
