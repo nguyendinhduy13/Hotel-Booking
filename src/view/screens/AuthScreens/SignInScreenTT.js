@@ -1,31 +1,30 @@
-import React, { useState, useEffect, useContext } from 'react';
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  Pressable,
-  Keyboard,
-  Alert,
-} from 'react-native';
-import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons';
-import Icon3 from 'react-native-vector-icons/FontAwesome';
-import { SocialIcon, Icon } from 'react-native-elements';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import COLORS from '../../../consts/colors';
+import Geolocation from '@react-native-community/geolocation';
 import auth from '@react-native-firebase/auth';
-import { SignInContext } from '../../../contexts/authContext';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
-import Globalreducer from '../../../redux/Globalreducer';
-import BookingHotel from '../../../redux/BookingHotel';
-import { useDispatch, useSelector } from 'react-redux';
-import CurrentPosition from '../../../redux/CurrentPosition';
-import Geolocation from '@react-native-community/geolocation';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import React, { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import {
+  Alert,
+  Image,
+  Keyboard,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { Icon } from 'react-native-elements';
+import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useDispatch, useSelector } from 'react-redux';
+import COLORS from '../../../consts/colors';
+import { SignInContext } from '../../../contexts/authContext';
 import { setAsyncStorage } from '../../../functions/asyncStorageFunctions';
+import BookingHotel from '../../../redux/BookingHotel';
+import CurrentPosition from '../../../redux/CurrentPosition';
+import Globalreducer from '../../../redux/Globalreducer';
 
 GoogleSignin.configure({
   webClientId:
@@ -75,7 +74,6 @@ export default function SignInScreenTT({ navigation }) {
       (position) => {
         var lat = parseFloat(position.coords.latitude);
         var long = parseFloat(position.coords.longitude);
-        console.log(lat, long);
         dispatch(
           CurrentPosition.actions.addCurrentPosition({
             latitude: lat,
