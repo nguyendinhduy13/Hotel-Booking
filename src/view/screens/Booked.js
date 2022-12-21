@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import uuid from 'react-native-uuid';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import Icon1 from 'react-native-vector-icons/MaterialIcons';
 import { useDispatch, useSelector } from 'react-redux';
@@ -71,6 +72,7 @@ export default function Booked({ navigation, route }) {
   }, [navigate]);
 
   const addbooking = () => {
+    let id = uuid.v4();
     if (
       !userbooking.name ||
       !userbooking.phone ||
@@ -97,7 +99,9 @@ export default function Booked({ navigation, route }) {
                 email: userbooking.email,
               },
               hotelinfo: {
+                id: id,
                 name: namehotel,
+                idhotel: idhotel,
                 roomname: item.name,
                 price: item.price,
                 checkin: x,
@@ -127,7 +131,9 @@ export default function Booked({ navigation, route }) {
                 email: userbooking.email,
               },
               hotelinfo: {
+                id: id,
                 name: namehotel,
+                idhotel: idhotel,
                 roomname: item.name,
                 price: item.price,
                 checkin: x,
@@ -158,7 +164,9 @@ export default function Booked({ navigation, route }) {
                 email: userbooking.email,
               },
               hotelinfo: {
+                id: id,
                 name: namehotel,
+                idhotel: idhotel,
                 roomname: item.name,
                 price: item.price,
                 checkin: x,
@@ -188,7 +196,9 @@ export default function Booked({ navigation, route }) {
                 email: userbooking.email,
               },
               hotelinfo: {
+                id: id,
                 name: namehotel,
+                idhotel: idhotel,
                 roomname: item.name,
                 price: item.price,
                 checkin: x,
