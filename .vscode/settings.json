@@ -1,11 +1,11 @@
 {
-        "eslint.validate": ["javascript", "typescript"],
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "editor.formatOnSave": true,
-        "editor.codeActionsOnSave": {
-            "source.fixAll": true,
-            // "source.removeAllUnusedCode": true,
-            "source.organizeImports": true
-          },
-    }
-    
+  "eslint.validate": ["javascript", "typescript"],
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true,
+    // "source.removeAllUnusedCode": true,
+    "source.organizeImports": true
+  },
+  "java.compile.nullAnalysis.mode": "automatic"
+}

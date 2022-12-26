@@ -69,25 +69,6 @@ export default function SignInScreenTT({ navigation }) {
       Alert.alert('Error', error.message);
     }
   }
-  const Google_API = 'AIzaSyAiLGAchgXzosp_vnXKQ4KprLFkObeXOE0';
-  async function fetchData(latitude, longitude) {
-    //fetch to google api and get location name by lat and long
-    // const response = await fetch(
-    //   `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${Google_API}`,
-    // ).then((response) => {
-    //   if (response.ok) {
-    //     return response.json();
-    //   } else {
-    //     throw new Error('Something went wrong');
-    //   }
-    // });
-    // const data = response.results[2].formatted_address;
-    // dispatch(
-    //   Globalreducer.actions.setNameCurrentCity(
-    //     data.substring(0, data.indexOf(',')),
-    //   ),
-    // );
-  }
   const componentDidMount = () => {
     Geolocation.getCurrentPosition(
       (position) => {
@@ -101,7 +82,15 @@ export default function SignInScreenTT({ navigation }) {
           }),
         );
       },
-      (error) => alert(JSON.stringify(error)),
+      (error) => {
+        console.log(error.message);
+        dispatch(
+          CurrentPosition.actions.addCurrentPosition({
+            latitude: 10.8702,
+            longitude: 106.8028,
+          }),
+        );
+      },
       { enableHighAccuracy: true },
     );
   };

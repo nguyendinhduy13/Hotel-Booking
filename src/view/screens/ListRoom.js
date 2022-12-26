@@ -79,6 +79,34 @@ const ListRoom = ({ navigation, route }) => {
     // var km = (dis / 1000).toFixed(1);
     // setDistance(km);
   }, []);
+  const calculateDistance = (pos) => {
+    const { latitude: lat1, longitude: lon1 } = currentPosition.position;
+    const [lat2, lon2] = pos;
+    const R = 6371; // radius of the earth in km
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) *
+        Math.cos(lat2 * (Math.PI / 180)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const d = R * c; // distance in km
+    //fix distance to 2 decimal places
+    return d.toFixed(2);
+  };
+  const TotalStar = (star) => {
+    let total = 0;
+    star.forEach((item) => {
+      total += item;
+    });
+    return total === 0
+      ? 5
+      : (total / star.length) % 1 === 0
+      ? total / star.length
+      : (total / star.length).toFixed(0);
+  };
   const handleFilter = async (data) => {
     const temp = data.filter((item) => item.isAvailable === true);
     temp.map(async (item1) => {
@@ -388,8 +416,10 @@ const ListRoom = ({ navigation, route }) => {
                   color: 'black',
                 }}
               >
-                {item.review}{' '}
-                <Text style={{ color: 'gray' }}>(n {t('evaluate')})</Text>
+                {TotalStar(item.star)}
+                <Text style={{ color: 'gray' }}>
+                  {' (' + item.star.length + ` ${t('review')})`}
+                </Text>
               </Text>
             </View>
             <View
@@ -412,8 +442,10 @@ const ListRoom = ({ navigation, route }) => {
                 }}
               >
                 <Text style={{ color: 'black', fontSize: 15 }}>
-                  <Text style={{ color: 'orange' }}>~{distance} km</Text> |{' '}
-                  {item.location}
+                  <Text style={{ color: 'orange' }}>
+                    ~{calculateDistance(item.position)} km
+                  </Text>{' '}
+                  | {item.location}
                 </Text>
               </View>
             </View>
@@ -681,86 +713,97 @@ const ListRoom = ({ navigation, route }) => {
             {DataHotel.map(
               (items) =>
                 items.id === item.id &&
-                items.comments.map((item1, index) => (
-                  <View
-                    key={index}
-                    style={{
-                      marginTop: 10,
-                      width: '100%',
-                      backgroundColor: 'white',
-                      borderRadius: 10,
-                      elevation: 5,
-                      shadowColor: COLORS.black,
-                      alignSelf: 'center',
-                      borderWidth: 1,
-                      borderColor: '#eeeeee',
-                      paddingVertical: 20,
-                    }}
-                  >
-                    <View
-                      style={[
-                        styles.ViewDG,
-                        {
-                          justifyContent: 'space-between',
-                          paddingHorizontal: 20,
-                        },
-                      ]}
-                    >
-                      <View style={{ flexDirection: 'row' }}>
-                        <Image
-                          source={require('../../assets/avatars.jpg')}
+                items.comments
+                  .map(
+                    (item1, index) =>
+                      items.comments.length - index < 3 && (
+                        <View
+                          key={index}
                           style={{
-                            width: 50,
-                            height: 50,
-                            borderRadius: 25,
+                            marginTop: 10,
+                            width: '100%',
+                            backgroundColor: 'white',
+                            borderRadius: 10,
+                            elevation: 5,
+                            shadowColor: COLORS.black,
+                            alignSelf: 'center',
+                            borderWidth: 1,
+                            borderColor: '#eeeeee',
+                            paddingVertical: 20,
                           }}
-                        />
-                        <View style={{ left: 10, top: 5 }}>
+                        >
+                          <View
+                            style={[
+                              styles.ViewDG,
+                              {
+                                justifyContent: 'space-between',
+                                paddingHorizontal: 20,
+                              },
+                            ]}
+                          >
+                            <View style={{ flexDirection: 'row' }}>
+                              <Image
+                                source={require('../../assets/avatars.jpg')}
+                                style={{
+                                  width: 50,
+                                  height: 50,
+                                  borderRadius: 25,
+                                }}
+                              />
+                              <View style={{ left: 10, top: 5 }}>
+                                <Text
+                                  style={{
+                                    fontWeight: '700',
+                                    fontSize: 16,
+                                    color: 'black',
+                                  }}
+                                >
+                                  {item1.user}
+                                </Text>
+                                <Text
+                                  style={{ fontSize: 13, fontWeight: '400' }}
+                                >
+                                  {item1.date}
+                                </Text>
+                              </View>
+                            </View>
+                            <View
+                              style={{
+                                backgroundColor: COLORS.primary,
+                                height: 30,
+                                width: 55,
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                borderRadius: 15,
+                                flexDirection: 'row',
+                                paddingHorizontal: 10,
+                                top: 10,
+                              }}
+                            >
+                              <Icon5
+                                name="star"
+                                size={15}
+                                color={COLORS.orange}
+                              />
+                              <Text style={{ color: 'white' }}>
+                                {items.star[index]}
+                              </Text>
+                            </View>
+                          </View>
                           <Text
                             style={{
-                              fontWeight: '700',
-                              fontSize: 16,
-                              color: 'black',
+                              marginHorizontal: 30,
+                              fontWeight: '400',
+                              fontSize: 14,
+                              top: 5,
                             }}
                           >
-                            {item1.user}
-                          </Text>
-                          <Text style={{ fontSize: 13, fontWeight: '400' }}>
-                            {item1.date}
+                            {item1.content}
                           </Text>
                         </View>
-                      </View>
-                      <View
-                        style={{
-                          backgroundColor: COLORS.primary,
-                          height: 30,
-                          width: 55,
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                          borderRadius: 15,
-                          flexDirection: 'row',
-                          paddingHorizontal: 10,
-                          top: 10,
-                        }}
-                      >
-                        <Icon5 name="star" size={15} color={COLORS.orange} />
-                        <Text style={{ color: 'white' }}>
-                          {items.star[index]}
-                        </Text>
-                      </View>
-                    </View>
-                    <Text
-                      style={{
-                        marginHorizontal: 30,
-                        fontWeight: '400',
-                        fontSize: 14,
-                        top: 5,
-                      }}
-                    >
-                      {item1.content}
-                    </Text>
-                  </View>
-                )),
+                      ),
+                  )
+                  .reverse(),
             )}
           </View>
         </View>

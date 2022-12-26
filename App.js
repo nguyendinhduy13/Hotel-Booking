@@ -1,5 +1,6 @@
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
 import React, { useEffect, useState } from 'react';
 import { LogBox, PermissionsAndroid, StatusBar, View } from 'react-native';
 import 'react-native-gesture-handler';
@@ -65,8 +66,86 @@ export default function App() {
       dispatch(Globalreducer.actions.setisShowStartScreen(value));
       console.log('isShowStartScreen: ' + value);
     }
-    setWait(false);
   });
+
+  const API_Province = 'https://provinces.open-api.vn/api/?depth=2';
+  const formatName = async (json, dataHotel) => {
+    //clear 'Tỉnh' or 'Thành phố' in name
+    let data = [];
+    let index = 0;
+    await json.map((item) => {
+      if (item.name.includes('Tỉnh')) {
+        item.name = item.name.replace('Tỉnh ', '');
+      } else if (item.name.includes('Thành phố')) {
+        item.name = item.name.replace('Thành phố ', '');
+      }
+
+      let arr = [];
+      let arrtemp = [];
+      item.districts.map((item2) => {
+        const temp = {
+          name: item2.name,
+          data: [],
+        };
+        arrtemp = [];
+        for (let i = 0; i < dataHotel.length; i++) {
+          if (
+            item.name.includes(dataHotel[i].tag.split(',')[1]) &&
+            item2.name.includes(dataHotel[i].tag.split(',')[0])
+          ) {
+            arrtemp.push(dataHotel[i]);
+          }
+        }
+        temp.data = arrtemp;
+        arr.push(temp);
+      });
+      let temp = {
+        name: item.name,
+        districts: arr,
+        index: index,
+      };
+      data.push(temp);
+      index++;
+    });
+    dispatch(Globalreducer.actions.setDataProvince(data));
+    setWait(false);
+  };
+
+  const handleSort = (data) => {
+    const temp = data.filter((item) => item.isActive === true);
+    let c = 0;
+    const sorted = [].concat(temp).sort((a, b) => {
+      return a.name.localeCompare(b.name);
+    });
+    sorted.map(async (item, index) => {
+      const url = await storage()
+        .ref(item.id + '/' + item.image)
+        .getDownloadURL()
+        .then((url) => {
+          c++;
+          return url;
+        });
+      item.image = url;
+      if (c === sorted.length) {
+        dispatch(Globalreducer.actions.setDataHotel(sorted));
+        fetch(API_Province)
+          .then((response) => response.json())
+          .then((json) => {
+            formatName(json, sorted);
+          })
+          .catch((error) => console.error(error));
+      }
+    });
+  };
+
+  useEffect(() => {
+    firestore()
+      .collection('ListHotel')
+      .doc('ListHotel')
+      .onSnapshot((documentSnapshot) => {
+        handleSort(documentSnapshot.data().ListHotel);
+      });
+  }, []);
 
   useEffect(() => {
     getAsyncStorage('language').then((lang) => {

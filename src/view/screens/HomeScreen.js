@@ -1,7 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import storage from '@react-native-firebase/storage';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -10,6 +9,7 @@ import {
   FlatList,
   Image,
   Modal,
+  Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -18,6 +18,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import Icon3 from 'react-native-vector-icons/AntDesign';
 import Icon5 from 'react-native-vector-icons/EvilIcons';
 import Icon4 from 'react-native-vector-icons/Ionicons';
 import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -30,8 +31,30 @@ const cardWidth = width / 1.8;
 export default function HomeScreen({ navigation }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const UserName = useSelector((state) => state.Globalreducer.nameUser);
-  const { position } = useSelector((state) => state.currentPosition);
+  const { dataHotel, dataProvince } = useSelector(
+    (state) => state.Globalreducer,
+  );
+
+  const dataExplore = [
+    {
+      id: 1,
+      index: 43,
+      title: 'Đà Lạt',
+      img: 'https://q-xx.bstatic.com/xdata/images/city/250x250/688831.jpg?k=7b999c7babe3487598fc4dd89365db2c4778827eac8cb2a47d48505c97959a78&o=',
+    },
+    {
+      id: 2,
+      index: 49,
+      title: 'Hồ Chí Minh',
+      img: 'https://q-xx.bstatic.com/xdata/images/city/250x250/688893.jpg?k=d32ef7ff94e5d02b90908214fb2476185b62339549a1bd7544612bdac51fda31&o=',
+    },
+    {
+      id: 3,
+      index: 48,
+      title: 'Vũng Tàu',
+      img: 'https://q-xx.bstatic.com/xdata/images/city/250x250/688956.jpg?k=fc88c6ab5434042ebe73d94991e011866b18ee486476e475a9ac596c79dce818&o=',
+    },
+  ];
 
   useEffect(() => {
     firestore()
@@ -43,30 +66,6 @@ export default function HomeScreen({ navigation }) {
             Globalreducer.actions.setdatabooking(documentSnapshot.data()),
           );
         });
-      });
-  }, []);
-
-  const [ListHotelData, setListHotelData] = useState([]);
-  const handleSort = (data) => {
-    const temp = data.filter((item) => item.isActive === true);
-    temp.map(async (item) => {
-      const url = await storage()
-        .ref(item.id + '/' + item.image)
-        .getDownloadURL();
-      item.image = url;
-    });
-    const sorted = [].concat(temp).sort((a, b) => {
-      return a.name.localeCompare(b.name);
-    });
-    setListHotelData(sorted);
-  };
-
-  useEffect(() => {
-    firestore()
-      .collection('ListHotel')
-      .doc('ListHotel')
-      .onSnapshot((documentSnapshot) => {
-        handleSort(documentSnapshot.data().ListHotel);
       });
   }, []);
 
@@ -93,7 +92,7 @@ export default function HomeScreen({ navigation }) {
   const [search, setSearch] = useState('');
   const handleSearch = (text) => {
     if (text) {
-      const newData = ListHotelData.filter((item) => {
+      const newData = dataHotel.filter((item) => {
         const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase();
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
@@ -152,33 +151,43 @@ export default function HomeScreen({ navigation }) {
     addItemToSearchHistory(item);
   };
 
+  const countHotel = (place) => {
+    let count = 0;
+    dataProvince.forEach((item) => {
+      if (item.index === place) {
+        item.districts.forEach((item) => {
+          count += item.data.length;
+        });
+      }
+    });
+    return count;
+  };
+
+  const formatAddress = (name) => {
+    //regex the name if it has more than 12 words
+    const temp = name.split(' ');
+    if (temp.length > 9) {
+      return temp.slice(0, 8).join(' ') + '...';
+    }
+    return name;
+  };
+
   const ShowModal = async () => {
     setModalVisible(true);
     readItemFromStorage();
   };
-  const Google_API = 'AIzaSyAiLGAchgXzosp_vnXKQ4KprLFkObeXOE0';
-  const [localName, setLocalName] = useState('');
-  async function fetchData() {
-    //fetch to google api and get location name by lat and long
-    const { latitude, longitude } = position;
-    const response = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${Google_API}`,
-    ).then((response) => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error('Something went wrong');
-      }
-    });
-    const address = response.results[2].formatted_address;
-    setLocalName(address);
-  }
 
-  // useEffect(() => {
-  //   if (position) {
-  //     fetchData();
-  //   }
-  // }, []);
+  const TotalStar = (star) => {
+    let total = 0;
+    star.forEach((item) => {
+      total += item;
+    });
+    return total === 0
+      ? 5
+      : (total / star.length) % 1 === 0
+      ? total / star.length
+      : (total / star.length).toFixed(0);
+  };
 
   const Card = ({ hotel, index }) => {
     const inputRange = [
@@ -223,9 +232,10 @@ export default function HomeScreen({ navigation }) {
                 style={{
                   color: 'white',
                   fontWeight: 'bold',
+                  paddingLeft: 5,
                 }}
               >
-                4.8
+                {TotalStar(hotel.star)}
               </Text>
             </View>
             <Image
@@ -239,7 +249,7 @@ export default function HomeScreen({ navigation }) {
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
-                  marginTop: 10,
+                  marginTop: 20,
                 }}
               >
                 <View>
@@ -269,7 +279,7 @@ export default function HomeScreen({ navigation }) {
                         color: COLORS.white,
                       }}
                     >
-                      {hotel.location}
+                      {formatAddress(hotel.location)}
                     </Text>
                   </View>
                 </View>
@@ -280,91 +290,90 @@ export default function HomeScreen({ navigation }) {
       </View>
     );
   };
-  const TopHotelCard = ({ hotel, index }) => {
-    if (index < 3) {
-      return (
-        <TouchableOpacity
-          style={styles.topHotelCard}
-          onPress={() => navigation.navigate('ListRoom', hotel)}
-        >
-          <View
-            style={{
-              position: 'absolute',
-              top: 5,
-              right: 10,
-              zIndex: 1,
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}
-          >
-            <Icon name="star" size={15} color={COLORS.orange} />
-            <Text
-              style={{
-                color: COLORS.white,
-                fontWeight: 'bold',
-                fontSize: 15,
-                marginLeft: 3,
-              }}
-            >
-              5.0
-            </Text>
-          </View>
-          <Image
-            style={styles.topHotelCardImage}
-            source={{
-              uri: checkImage(hotel.image),
-            }}
-          />
-          <View
-            style={{
-              paddingHorizontal: 10,
-              paddingVertical: 5,
-            }}
-          >
-            <Text
-              style={{
-                fontsize: 17,
-                fontWeight: 'bold',
-                color: COLORS.dark,
-                height: 30,
-              }}
-            >
-              {hotel.name}
-            </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                height: 35,
-              }}
-            >
-              <Image
-                style={{
-                  width: 20,
-                  height: 20,
-                  resizeMode: 'cover',
-                  alignSelf: 'center',
-                }}
-                source={{
-                  uri: 'https://cdn2.iconfinder.com/data/icons/picons-basic-2/57/basic2-059_pin_location-256.png',
-                }}
-              />
-              <Text
-                style={{
-                  fontSize: 14,
-                  paddingHorizontal: 3,
-                  fontWeight: 'bold',
-                  color: COLORS.grey,
-                  alignSelf: 'center',
-                }}
-              >
-                {hotel.location}
-              </Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-      );
-    }
-  };
+  //   if (index < 3) {
+  //     return (
+  //       <TouchableOpacity
+  //         style={styles.topHotelCard}
+  //         onPress={() => navigation.navigate('ListRoom', hotel)}
+  //       >
+  //         <View
+  //           style={{
+  //             position: 'absolute',
+  //             top: 5,
+  //             right: 10,
+  //             zIndex: 1,
+  //             flexDirection: 'row',
+  //             alignItems: 'center',
+  //           }}
+  //         >
+  //           <Icon name="star" size={15} color={COLORS.orange} />
+  //           <Text
+  //             style={{
+  //               color: COLORS.white,
+  //               fontWeight: 'bold',
+  //               fontSize: 15,
+  //               marginLeft: 3,
+  //             }}
+  //           >
+  //             5.0
+  //           </Text>
+  //         </View>
+  //         <Image
+  //           style={styles.topHotelCardImage}
+  //           source={{
+  //             uri: checkImage(hotel.image),
+  //           }}
+  //         />
+  //         <View
+  //           style={{
+  //             paddingHorizontal: 10,
+  //             paddingVertical: 5,
+  //           }}
+  //         >
+  //           <Text
+  //             style={{
+  //               fontsize: 17,
+  //               fontWeight: 'bold',
+  //               color: COLORS.dark,
+  //               height: 30,
+  //             }}
+  //           >
+  //             {hotel.name}
+  //           </Text>
+  //           <View
+  //             style={{
+  //               flexDirection: 'row',
+  //               height: 35,
+  //             }}
+  //           >
+  //             <Image
+  //               style={{
+  //                 width: 20,
+  //                 height: 20,
+  //                 resizeMode: 'cover',
+  //                 alignSelf: 'center',
+  //               }}
+  //               source={{
+  //                 uri: 'https://cdn2.iconfinder.com/data/icons/picons-basic-2/57/basic2-059_pin_location-256.png',
+  //               }}
+  //             />
+  //             <Text
+  //               style={{
+  //                 fontSize: 14,
+  //                 paddingHorizontal: 3,
+  //                 fontWeight: 'bold',
+  //                 color: COLORS.grey,
+  //                 alignSelf: 'center',
+  //               }}
+  //             >
+  //               {hotel.location}
+  //             </Text>
+  //           </View>
+  //         </View>
+  //       </TouchableOpacity>
+  //     );
+  //   }
+  // };
   const RecentlyBookedCard = ({ hotel }) => {
     return (
       <View>
@@ -488,6 +497,41 @@ export default function HomeScreen({ navigation }) {
       </View>
     );
   };
+  const ExploreCard = ({ place }) => {
+    return (
+      <Pressable
+        onPress={() => {
+          console.log(place);
+        }}
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          padding: 20,
+        }}
+      >
+        <View style={{}}>
+          <Image
+            style={{ width: 150, height: 150, borderRadius: 10 }}
+            source={{
+              uri: place.img,
+            }}
+          />
+          <Text
+            style={{
+              fontSize: 15,
+              color: COLORS.dark,
+              marginTop: 5,
+            }}
+          >
+            {place.title}
+          </Text>
+          <Text>
+            {t('have')} {countHotel(place.index)} {t('ho-tel')}
+          </Text>
+        </View>
+      </Pressable>
+    );
+  };
   return (
     <SafeAreaView
       style={{
@@ -556,35 +600,12 @@ export default function HomeScreen({ navigation }) {
             <TouchableOpacity
               onPress={() => {
                 // navigation.navigate('TestCalendar');
-                fetchData();
+                console.log(dataHotel);
               }}
             >
               <Icon1 name="bell-ring-outline" size={26} color={COLORS.grey} />
             </TouchableOpacity>
           </View>
-        </View>
-        <View
-          style={{
-            marginTop: 10,
-          }}
-        >
-          <Text
-            style={{
-              fontWeight: 'bold',
-              fontSize: 28,
-              color: 'black',
-            }}
-          >
-            {t('hello')}, {UserName + ' '}
-            <Icon1
-              name="hand-wave-outline"
-              size={26}
-              color={'#FF6347'}
-              style={{
-                marginLeft: 10,
-              }}
-            />
-          </Text>
         </View>
       </View>
       <ScrollView
@@ -621,9 +642,53 @@ export default function HomeScreen({ navigation }) {
           </View>
         </TouchableOpacity>
         <View>
-          <View style={{ marginTop: 20, paddingHorizontal: 20 }}>
-            <Text style={{ fontSize: 24, fontWeight: '700' }}>{localName}</Text>
-          </View>
+          <Pressable
+            onPress={() => {
+              navigation.navigate('ListPlace');
+            }}
+            style={{
+              marginTop: 20,
+              paddingHorizontal: 20,
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+          >
+            <Icon4
+              name="md-location-sharp"
+              size={25}
+              color="orange"
+              style={{}}
+            />
+            <Text
+              style={{
+                fontSize: 24,
+                color: 'orange',
+                marginLeft: 5,
+                fontWeight: '700',
+              }}
+            >
+              Hồ Chí Minh
+            </Text>
+            <Icon3
+              name="caretdown"
+              size={15}
+              color="orange"
+              style={{
+                marginLeft: 10,
+              }}
+            />
+          </Pressable>
+          <Text
+            style={{
+              fontWeight: 'bold',
+              color: 'black',
+              fontSize: 18,
+              paddingHorizontal: 20,
+              marginTop: 10,
+            }}
+          >
+            {t('top-hotels')}
+          </Text>
           <Animated.FlatList
             onMomentumScrollEnd={(e) => {
               setActiveCardIndex(
@@ -644,10 +709,10 @@ export default function HomeScreen({ navigation }) {
                 useNativeDriver: true,
               },
             )}
-            data={ListHotelData}
+            data={dataHotel}
             horizontal
             contentContainerStyle={{
-              paddingVertical: 30,
+              paddingVertical: 20,
               paddingLeft: 20,
               paddingRight: cardWidth / 2 - 40,
             }}
@@ -669,14 +734,14 @@ export default function HomeScreen({ navigation }) {
             style={{
               fontWeight: 'bold',
               color: 'black',
-              fontSize: 16,
+              fontSize: 18,
             }}
           >
-            {t('top-hotels')}
+            {t('explore-VietNam')}
           </Text>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('Test');
+              navigation.navigate('ListPlace');
             }}
           >
             <Text
@@ -685,22 +750,18 @@ export default function HomeScreen({ navigation }) {
                 color: COLORS.primary,
               }}
             >
-              {t('show')}
+              {t('more')}
             </Text>
           </TouchableOpacity>
         </View>
         <FlatList
-          horizontal
-          data={ListHotelData}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingLeft: 10,
-            marginTop: 20,
-            paddingBottom: 30,
-          }}
-          renderItem={({ item, index }) => (
-            <TopHotelCard hotel={item} index={index} />
+          data={dataExplore}
+          renderItem={({ item }) => (
+            <ExploreCard place={item} navigation={navigation} />
           )}
+          keyExtractor={(item) => item.id}
+          horizontal
+          showsHorizontalScrollIndicator={false}
         />
         <View
           style={{
@@ -730,7 +791,7 @@ export default function HomeScreen({ navigation }) {
           </TouchableOpacity>
         </View>
         <View>
-          {ListHotelData.map((item, index) => (
+          {dataHotel.map((item, index) => (
             <View key={index}>
               <RecentlyBookedCard hotel={item} />
             </View>
@@ -1008,8 +1069,8 @@ const styles = StyleSheet.create({
     borderRadius: 35,
   },
   priceTag: {
-    height: 27,
-    width: 65,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
     borderRadius: 35,
     backgroundColor: COLORS.primary,
     position: 'absolute',
@@ -1025,8 +1086,9 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     position: 'absolute',
     bottom: 0,
-    paddingLeft: 20,
-    width: '100%',
+    zIndex: 100,
+    alignSelf: 'center',
+    width: '80%',
   },
   cardOverplay: {
     height: 280,

@@ -18,6 +18,10 @@ const initialState = {
   emailHasSignIn: '',
   nameUser: '',
   nameCurrentCity: '',
+  modalVisibleComment: false,
+  dataHotel: [],
+  dataDistrict: [],
+  dataProvince: [],
 };
 
 export default createSlice({
@@ -69,6 +73,18 @@ export default createSlice({
     setNameCurrentCity(state, action) {
       state.nameCurrentCity = action.payload;
       console.log('nameCurrentCity: ' + state.nameCurrentCity);
+    },
+    setModalVisibleComment(state, action) {
+      state.modalVisibleComment = action.payload;
+    },
+    setDataHotel(state, action) {
+      state.dataHotel = action.payload;
+    },
+    setDataDistrict(state, action) {
+      state.dataDistrict = action.payload;
+    },
+    setDataProvince(state, action) {
+      state.dataProvince = action.payload;
     },
   },
 });
