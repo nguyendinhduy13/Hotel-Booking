@@ -237,7 +237,7 @@ const PlaceHotel = ({ navigation, route }) => {
                     return (
                       <Pressable
                         onPress={() => {
-                          console.log(item);
+                          navigation.navigate('ListRoom', item);
                         }}
                         key={index}
                         style={{

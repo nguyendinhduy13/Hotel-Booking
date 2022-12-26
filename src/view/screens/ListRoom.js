@@ -50,13 +50,12 @@ const ListRoom = ({ navigation, route }) => {
   const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
   const currentPosition = useSelector((state) => state.currentPosition);
   const [DataRoom, setDataRoom] = useState([]);
-  const [DataHotel, setDataHotel] = useState([]);
   const [show, setShow] = useState(false);
   const [starhotel, setStarhotel] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [ratecontent, setRatecontent] = useState('');
   const [checkbook, setCheckbook] = useState(false);
-  const { dayamount, startday, endday } = useSelector(
+  const { dayamount, startday, endday, dataHotel } = useSelector(
     (state) => state.Globalreducer,
   );
   const Format = (number) => {
@@ -64,20 +63,9 @@ const ListRoom = ({ navigation, route }) => {
     return price.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
   };
   const user = Auth().currentUser;
-  const [distance, setDistance] = useState(0);
   useEffect(() => {
     dispatch(Globalreducer.actions.setnamehotel(item.name));
     dispatch(Globalreducer.actions.setidhotel(item.id));
-    // var dis = getDistance(
-    //   {
-    //     latitude: currentPosition.latitude,
-    //     longitude: currentPosition.longitude,
-    //   },
-    //   { latitude: item.position[0], longitude: item.position[1] },
-    // );
-    // //format the distance to km with 2 decimal places
-    // var km = (dis / 1000).toFixed(1);
-    // setDistance(km);
   }, []);
   const calculateDistance = (pos) => {
     const { latitude: lat1, longitude: lon1 } = currentPosition.position;
@@ -140,17 +128,6 @@ const ListRoom = ({ navigation, route }) => {
 
   useEffect(() => {
     firestore()
-      .collection('ListHotel')
-      .doc('ListHotel')
-      .get()
-      .then((documentSnapshot) => {
-        const data = documentSnapshot.data().ListHotel;
-        setDataHotel(data);
-      });
-  }, []);
-
-  useEffect(() => {
-    firestore()
       .collection('Booking')
       .doc(user.uid)
       .get()
@@ -173,7 +150,7 @@ const ListRoom = ({ navigation, route }) => {
     if (!checkbook) {
       Alert.alert('Vui lòng đặt phòng trước khi đánh giá');
     } else {
-      DataHotel.map((item1) => {
+      dataHotel.map((item1) => {
         if (item1.id === item.id) {
           const timeElapsed = Date.now();
           const today = new Date(timeElapsed);
@@ -192,7 +169,7 @@ const ListRoom = ({ navigation, route }) => {
         }
       });
       await firestore().collection('ListHotel').doc('ListHotel').set({
-        ListHotel: DataHotel,
+        ListHotel: dataHotel,
       });
       setStarhotel(0);
       setRatecontent('');
@@ -265,6 +242,7 @@ const ListRoom = ({ navigation, route }) => {
       },
     ],
   };
+
   //Calendar
   const minday = new Date();
   const [start, setStart] = useState(startday);
@@ -330,6 +308,7 @@ const ListRoom = ({ navigation, route }) => {
     }
     return '';
   };
+
   const checkImage = (image) => {
     const temp = image.split('.');
     return temp[temp.length - 1] === 'jpg' ? null : image;
@@ -710,7 +689,7 @@ const ListRoom = ({ navigation, route }) => {
             >
               {t('review')}
             </Text>
-            {DataHotel.map(
+            {dataHotel.map(
               (items) =>
                 items.id === item.id &&
                 items.comments
@@ -837,7 +816,7 @@ const ListRoom = ({ navigation, route }) => {
                 <Text
                   style={{ color: 'black', fontWeight: 'bold', fontSize: 16 }}
                 >
-                  {formatDayShow(start)}
+                  12:00, {formatDayShow(start)}
                 </Text>
               </View>
               <Icon4 name="long-arrow-alt-right" size={25} color="orange" />
@@ -846,7 +825,7 @@ const ListRoom = ({ navigation, route }) => {
                 <Text
                   style={{ color: 'black', fontWeight: 'bold', fontSize: 16 }}
                 >
-                  {formatDayShow(end)}
+                  12:00, {formatDayShow(end)}
                 </Text>
               </View>
             </View>
@@ -917,21 +896,52 @@ const ListRoom = ({ navigation, route }) => {
         }}
       >
         <View style={{ padding: 15 }}>
-          <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'black' }}>
-            {t('time-booking')}
-          </Text>
-          <View style={{ flexDirection: 'row', marginTop: 10 }}>
-            <Text
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <View>
+              <Text
+                style={{ fontSize: 15, fontWeight: 'bold', color: 'black' }}
+              >
+                {t('time-booking')}
+              </Text>
+              <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                <Text
+                  style={{
+                    color: 'black',
+                    textDecorationStyle: 'dashed',
+                    textDecorationLine: 'underline',
+                    fontSize: 15,
+                    fontWeight: 'bold',
+                  }}
+                >
+                  12:00,{' '}
+                  {formatDayShow(startTrue) +
+                    ' - 12:00, ' +
+                    formatDayShow(endTrue)}
+                </Text>
+              </View>
+            </View>
+            <View
               style={{
-                color: 'black',
-                textDecorationStyle: 'dashed',
-                textDecorationLine: 'underline',
-                fontSize: 15,
-                fontWeight: 'bold',
+                borderRadius: 20,
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'white',
+                borderWidth: 1,
+                borderColor: 'red',
+                paddingHorizontal: 20,
+                paddingVertical: 5,
               }}
             >
-              {formatDayShow(startTrue) + ' - ' + formatDayShow(endTrue)}
-            </Text>
+              <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'red' }}>
+                Đổi ngày
+              </Text>
+            </View>
           </View>
         </View>
       </TouchableOpacity>
