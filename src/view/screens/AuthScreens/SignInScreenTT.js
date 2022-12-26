@@ -74,7 +74,6 @@ export default function SignInScreenTT({ navigation }) {
       (position) => {
         var lat = parseFloat(position.coords.latitude);
         var long = parseFloat(position.coords.longitude);
-        fetchData(lat, long);
         dispatch(
           CurrentPosition.actions.addCurrentPosition({
             latitude: lat,
