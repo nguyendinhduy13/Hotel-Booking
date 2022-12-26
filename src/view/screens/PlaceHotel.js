@@ -3,6 +3,7 @@ import {
   Animated,
   Dimensions,
   Image,
+  ImageBackground,
   PanResponder,
   Pressable,
   StyleSheet,
@@ -27,7 +28,10 @@ const DRAG_THRESHOLD = 50;
 const PlaceHotel = ({ navigation, route }) => {
   const { data, name } = route.params;
   const currentPosition = useSelector((state) => state.currentPosition);
-  const position = data[0].position || [10.762622, 106.660172];
+  const position =
+    data.length > 0
+      ? data[0].position
+      : [currentPosition.position.latitude, currentPosition.position.longitude];
 
   const animatedValueBottom = useRef(new Animated.Value(0)).current;
   const lastGestureDy = useRef(0);
@@ -116,6 +120,13 @@ const PlaceHotel = ({ navigation, route }) => {
     //fix distance to 2 decimal places
     return d.toFixed(2);
   };
+  const regexName = (location) => {
+    //regex if name is too long
+    if (location.length > 42) {
+      return location.substring(0, 42) + '...';
+    }
+    return location;
+  };
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
       <View
@@ -175,6 +186,17 @@ const PlaceHotel = ({ navigation, route }) => {
           longitudeDelta: 0.0121,
         }}
       >
+        <Marker
+          coordinate={{
+            latitude: currentPosition.position.latitude,
+            longitude: currentPosition.position.longitude,
+          }}
+          title="Current Location"
+          pinColor="blue"
+          tracksViewChanges={false}
+          tappable={false}
+          anchor={{ x: 0.5, y: 0.5 }}
+        />
         {data.map((item, index) => {
           return (
             <Marker
@@ -221,95 +243,58 @@ const PlaceHotel = ({ navigation, route }) => {
               >
                 Có {data.length} khách sạn
               </Text>
-              <View
-                style={{
-                  marginTop: 15,
-                  width: '100%',
-                }}
-              >
-                <ScrollView
-                  showsVerticalScrollIndicator={false}
+              {data.length > 0 ? (
+                <View
                   style={{
-                    marginBottom: 40,
+                    marginTop: 15,
+                    width: '100%',
                   }}
                 >
-                  {data.map((item, index) => {
-                    return (
-                      <Pressable
-                        onPress={() => {
-                          navigation.navigate('ListRoom', item);
-                        }}
-                        key={index}
-                        style={{
-                          width: '100%',
-                          height: 250,
-                          color: 'black',
-                          backgroundColor: 'white',
-                          alignSelf: 'center',
-                          borderRadius: 10,
-                          elevation: 15,
-                          shadowColor: '#000',
-                          marginBottom: 20,
-                        }}
-                      >
-                        <Image
-                          source={{ uri: item.image }}
+                  <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    style={{
+                      marginBottom: 40,
+                    }}
+                  >
+                    {data.map((item, index) => {
+                      return (
+                        <Pressable
+                          onPress={() => {
+                            navigation.navigate('ListRoom', item);
+                          }}
+                          key={index}
                           style={{
                             width: '100%',
-                            height: 150,
-                            borderTopLeftRadius: 10,
-                            borderTopRightRadius: 10,
-                          }}
-                        />
-                        <View
-                          style={{
-                            padding: 10,
+                            height: 250,
+                            color: 'black',
+                            backgroundColor: 'white',
+                            alignSelf: 'center',
+                            borderRadius: 10,
+                            elevation: 5,
+                            shadowColor: '#000',
+                            marginBottom: 20,
                           }}
                         >
-                          <Text
+                          <ImageBackground
+                            source={{ uri: item.image }}
                             style={{
-                              fontSize: 20,
-                              color: 'black',
+                              width: '100%',
+                              height: 150,
+                              borderTopLeftRadius: 10,
+                              borderTopRightRadius: 10,
                             }}
                           >
-                            {formatName(item.name)}
-                          </Text>
-                          <View
-                            style={{
-                              flexDirection: 'row',
-                              alignItems: 'center',
-                              justifyContent: 'space-between',
-                              marginTop: 5,
-                            }}
-                          >
-                            <View
-                              style={{
-                                padding: 2,
-                                borderWidth: 1,
-                                borderColor: 'red',
-                                borderRadius: 5,
-                                width: 50,
-                                alignItems: 'center',
-                              }}
-                            >
-                              <Text
-                                style={{
-                                  fontSize: 12,
-                                  color: 'red',
-                                }}
-                              >
-                                Ưu đãi
-                              </Text>
-                            </View>
                             <View
                               style={{
                                 flexDirection: 'row',
                                 alignItems: 'center',
+                                padding: 5,
+                                bottom: 0,
+                                position: 'absolute',
+                                backgroundColor: 'rgba(0,0,0,0.3)',
+                                width: '100%',
                               }}
                             >
-                              <Text style={{ color: 'black' }}>
-                                {calculateDistance(item.position)} km
-                              </Text>
                               <Icon2
                                 name="map-marker-alt"
                                 size={20}
@@ -318,47 +303,135 @@ const PlaceHotel = ({ navigation, route }) => {
                                   marginLeft: 5,
                                 }}
                               />
+                              <Text style={{ color: 'white', marginLeft: 10 }}>
+                                {regexName(item.location)}
+                              </Text>
                             </View>
-                          </View>
+                          </ImageBackground>
                           <View
                             style={{
-                              flexDirection: 'row',
-                              marginTop: 5,
-                              alignItems: 'center',
-                              justifyContent: 'space-between',
+                              padding: 10,
                             }}
                           >
                             <Text
                               style={{
-                                fontSize: 15,
+                                fontSize: 20,
                                 color: 'black',
                               }}
                             >
-                              {item.advantage}
+                              {formatName(item.name)}
                             </Text>
                             <View
                               style={{
                                 flexDirection: 'row',
                                 alignItems: 'center',
+                                justifyContent: 'space-between',
+                                marginTop: 5,
                               }}
                             >
-                              <Text>{TotalStar(item.star)}</Text>
-                              <Icon1
-                                name="star"
-                                size={20}
-                                color="orange"
+                              <View
                                 style={{
-                                  marginLeft: 5,
+                                  padding: 2,
+                                  borderWidth: 1,
+                                  borderColor: 'red',
+                                  borderRadius: 5,
+                                  width: 50,
+                                  alignItems: 'center',
                                 }}
-                              />
+                              >
+                                <Text
+                                  style={{
+                                    fontSize: 12,
+                                    color: 'red',
+                                  }}
+                                >
+                                  Ưu đãi
+                                </Text>
+                              </View>
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  alignItems: 'center',
+                                }}
+                              >
+                                <Text style={{ color: 'black' }}>
+                                  {calculateDistance(item.position)} km
+                                </Text>
+                                <Icon2
+                                  name="map-marker-alt"
+                                  size={20}
+                                  color="red"
+                                  style={{
+                                    marginLeft: 5,
+                                  }}
+                                />
+                              </View>
+                            </View>
+                            <View
+                              style={{
+                                flexDirection: 'row',
+                                marginTop: 5,
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                              }}
+                            >
+                              <Text
+                                style={{
+                                  fontSize: 15,
+                                  color: 'black',
+                                }}
+                              >
+                                {item.advantage}
+                              </Text>
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  alignItems: 'center',
+                                }}
+                              >
+                                <Text>{TotalStar(item.star)}</Text>
+                                <Icon1
+                                  name="star"
+                                  size={20}
+                                  color="orange"
+                                  style={{
+                                    marginLeft: 5,
+                                  }}
+                                />
+                              </View>
                             </View>
                           </View>
-                        </View>
-                      </Pressable>
-                    );
-                  })}
-                </ScrollView>
-              </View>
+                        </Pressable>
+                      );
+                    })}
+                  </ScrollView>
+                </View>
+              ) : (
+                <>
+                  <View
+                    style={{
+                      marginTop: 150,
+                      alignItems: 'center',
+                      width: '100%',
+                    }}
+                  >
+                    <Image
+                      source={{
+                        uri: 'https://cdn0.iconfinder.com/data/icons/seo-web-4-1/128/Vigor_Bug-Programing-error-malware-virus-512.png',
+                      }}
+                      style={{
+                        width: 200,
+                        height: 200,
+                      }}
+                    />
+                    <Text
+                      style={{ fontSize: 20, marginTop: 30, color: 'black' }}
+                    >
+                      Không có khách sạn nào
+                    </Text>
+                  </View>
+                </>
+              )}
             </View>
           </View>
         </View>

@@ -13,6 +13,7 @@ import {
   Modal,
   PanResponder,
   Platform,
+  Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -520,7 +521,10 @@ const ListRoom = ({ navigation, route }) => {
                 key={index}
                 style={styles.RecentlyBox}
                 onPress={() => {
-                  navigation.navigate('DetailsScreen', items);
+                  navigation.navigate('DetailsScreen', {
+                    item: items,
+                    hotel: item,
+                  });
                 }}
               >
                 <View
@@ -973,7 +977,7 @@ const ListRoom = ({ navigation, route }) => {
           setModalVisible(true);
         }}
       >
-        <Icon3 name="commenting" size={30} color={COLORS.primary} />
+        <Icon3 name="commenting" size={25} color={COLORS.primary} />
       </TouchableOpacity>
       <Modal
         animationType="fade"
@@ -987,7 +991,7 @@ const ListRoom = ({ navigation, route }) => {
           style={{ flex: 1 }}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
-          <TouchableOpacity
+          <Pressable
             style={{
               justifyContent: 'flex-end',
               flex: 1,
@@ -1007,20 +1011,18 @@ const ListRoom = ({ navigation, route }) => {
                 paddingTop: 5,
               }}
             >
-              <TouchableOpacity
+              <View
                 style={{
                   width: '15%',
                   borderRadius: 20,
                   backgroundColor: '#bcbcbc',
                   height: 5,
-                }}
-                onPress={() => {
-                  setModalVisible(false);
+                  marginTop: 5,
                 }}
               />
               <Text
                 style={{
-                  marginVertical: 25,
+                  marginVertical: 10,
                   fontSize: 21,
                   fontWeight: 'bold',
                   color: 'black',
@@ -1036,119 +1038,86 @@ const ListRoom = ({ navigation, route }) => {
                   height: 1,
                 }}
               />
-              <View>
+              <View style={{ padding: 20, width: '100%' }}>
                 <View
                   style={{
-                    width: '90%',
                     height: 120,
-                    color: 'black',
-                    backgroundColor: COLORS.white,
-                    marginBottom: 10,
-                    marginTop: 20,
-                    alignSelf: 'center',
+                    backgroundColor: 'white',
                     borderRadius: 20,
                     elevation: 5,
                     flexDirection: 'row',
                     alignItems: 'center',
-                    justifyContent: 'center',
+                    justifyContent: 'space-between',
+                    padding: 10,
                   }}
                 >
                   <View
                     style={{
-                      width: 120,
-                      height: 110,
-                      right: 5,
+                      flexDirection: 'row',
+                      width: '100%',
+                      height: 100,
+                      alignItems: 'center',
                     }}
                   >
                     <Image
-                      style={styles.IMGRecent}
+                      style={{
+                        width: 100,
+                        height: 100,
+                        borderRadius: 10,
+                      }}
                       source={{
                         uri: item.image,
                       }}
                     />
-                  </View>
-                  <View style={{ left: 10 }}>
                     <View
                       style={{
-                        marginTop: 10,
-                        flexDirection: 'row',
+                        marginLeft: 15,
                       }}
                     >
-                      <View
+                      <Text
                         style={{
-                          width: 200,
+                          fontSize: 17,
+                          fontWeight: 'bold',
+                          color: 'black',
                         }}
                       >
-                        <View
-                          style={{
-                            width: 120,
-                            height: 29,
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontSize: 17,
-                              fontWeight: 'bold',
-                              color: 'black',
-                            }}
-                          >
-                            {item.name}
-                          </Text>
-                        </View>
-                        <View
-                          style={{
-                            height: 40,
-                            justifyContent: 'center',
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontSize: 15,
-                            }}
-                          >
-                            {item.location}
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        width: 180,
-                        paddingVertical: 10,
-                      }}
-                    >
+                        {item.name}
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 15,
+                          width: '70%',
+                        }}
+                      >
+                        {item.location}
+                      </Text>
                       <View
                         style={{
                           flexDirection: 'row',
                           alignItems: 'center',
-                          width: 160,
+                          marginTop: 5,
                         }}
                       >
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                          }}
-                        >
-                          <Icon5 name="star" size={15} color={COLORS.orange} />
-                          <Text
-                            style={{
-                              color: COLORS.primary,
-                              fontWeight: 'bold',
-                              fontSize: 15,
-                              marginLeft: 5,
-                            }}
-                          >
-                            5.0
-                          </Text>
-                        </View>
+                        <Icon5 name="star" size={15} color={COLORS.orange} />
                         <Text
                           style={{
-                            marginLeft: 15,
+                            fontSize: 15,
+                            color: COLORS.primary,
+                            marginLeft: 5,
+                            fontWeight: 'bold',
                           }}
                         >
-                          (5 reviews)
+                          {TotalStar(item.star)}
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            color: 'gray',
+                            marginLeft: 10,
+                          }}
+                        >
+                          {'('}
+                          {item.star.length} reviews{')'}
                         </Text>
                       </View>
                     </View>
@@ -1203,6 +1172,7 @@ const ListRoom = ({ navigation, route }) => {
                   backgroundColor: '#eeeeee',
                   borderRadius: 20,
                   marginVertical: 10,
+                  padding: 10,
                 }}
                 multiline={true}
                 onChangeText={(text) => setRatecontent(text)}
@@ -1240,7 +1210,7 @@ const ListRoom = ({ navigation, route }) => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   borderRadius: 25,
-                  marginTop: 10,
+                  marginTop: 20,
                 }}
                 onPress={() => {
                   setModalVisible(false);
@@ -1259,7 +1229,7 @@ const ListRoom = ({ navigation, route }) => {
                 </Text>
               </TouchableOpacity>
             </View>
-          </TouchableOpacity>
+          </Pressable>
         </KeyboardAvoidingView>
       </Modal>
     </SafeAreaView>

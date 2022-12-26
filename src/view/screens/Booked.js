@@ -7,20 +7,18 @@ import {
   Alert,
   Image,
   Modal,
+  Pressable,
   ScrollView,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import uuid from 'react-native-uuid';
-import Icon from 'react-native-vector-icons/EvilIcons';
-import Icon1 from 'react-native-vector-icons/MaterialIcons';
 import { useDispatch, useSelector } from 'react-redux';
 import COLORS from '../../consts/colors';
 export default function Booked({ navigation, route }) {
   const { t } = useTranslation();
-  const item = route.params;
+  const { item, hotel } = route.params;
   const dispatch = useDispatch();
   const navigate = useNavigation();
   const [Number, setNumber] = useState(1);
@@ -228,323 +226,593 @@ export default function Booked({ navigation, route }) {
   const sum = Math.floor(
     item.price * (amount === 1 ? amount : amount * (amount / (amount + 1))),
   );
+  const Format = (number, day) => {
+    var prices = day * number;
+    return prices.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+  };
+  const FormatName = (name) => {
+    //regex if name too long
+    if (name.length > 60) {
+      return name.substring(0, 60) + '...';
+    }
+    return name;
+  };
   return (
-    <ScrollView style={{ flex: 1 }}>
-      <View
-        style={{
-          width: '100%',
-          height: 100,
-          backgroundColor: COLORS.white,
-        }}
-      >
-        <View style={{ flexDirection: 'row', marginTop: 10 }}>
-          <Icon
-            name="location"
-            size={22}
-            color={COLORS.primary}
-            style={{ left: 10 }}
-          />
-          <Text
-            style={{
-              left: 20,
-              fontSize: 15,
-              bottom: 2,
-              color: COLORS.dark,
-            }}
-          >
-            {t('information-booking')}
-          </Text>
-        </View>
+    <View style={{ flex: 1 }}>
+      <ScrollView showsVerticalScrollIndicator={false} style={{}}>
         <View
           style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginTop: 5,
+            width: '100%',
+            backgroundColor: COLORS.white,
+            marginTop: 10,
           }}
         >
-          <Text style={{ left: 43, color: COLORS.dark }}>
-            {userbooking.name} {'\n'}
-            {userbooking.phone} {'\n'}
-            {userbooking.birthday} {'\n'}
-            {userbooking.email} {'\n'}
-          </Text>
-          <Icon1
-            name="arrow-forward-ios"
-            size={20}
-            style={{ right: 7 }}
-            onPress={() => {
-              navigation.navigate('Chỉnh sửa thông tin');
-            }}
-          />
+          <View style={{ padding: 15 }}>
+            <Text
+              style={{ fontSize: 20, fontWeight: 'bold', color: COLORS.dark }}
+            >
+              Thông tin đặt phòng
+            </Text>
+            <View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  width: '100%',
+                  paddingVertical: 10,
+                }}
+              >
+                <Image
+                  style={{
+                    width: 120,
+                    height: 100,
+                    borderRadius: 10,
+                  }}
+                  source={{ uri: item.image[1] }}
+                />
+                <View style={{ marginLeft: 10 }}>
+                  <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+                    {hotel.name}
+                  </Text>
+                  <Text
+                    style={{ fontSize: 20, fontWeight: 'bold', color: 'black' }}
+                  >
+                    {item.name}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      width: 240,
+                      fontWeight: 'bold',
+                      marginTop: 10,
+                    }}
+                  >
+                    {FormatName(hotel.location + hotel.location)}
+                  </Text>
+                </View>
+              </View>
+              <View
+                style={{
+                  width: '100%',
+                  height: 1,
+                  backgroundColor: '#E5E5E5',
+                  marginTop: 10,
+                }}
+              />
+            </View>
+          </View>
         </View>
-      </View>
-      <View style={styles.RecentlyBox}>
         <View
           style={{
-            width: '98%',
-            height: 200,
+            backgroundColor: COLORS.white,
+            height: 'auto',
+            width: '100%',
             alignSelf: 'center',
           }}
         >
-          <Image style={styles.IMGRecent} source={{ uri: item.image[1] }} />
-        </View>
-        <View style={{ marginTop: 25 }}>
-          <View style={{ paddingHorizontal: 20 }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              width: '100%',
+              alignItems: 'center',
+              paddingHorizontal: 15,
+            }}
+          >
+            <Text style={{ fontWeight: '500', fontSize: 17 }}>
+              {t('check-in')}
+            </Text>
             <Text
               style={{
-                fontSize: 20,
-                height: 25,
+                fontWeight: 'bold',
+                fontSize: 17,
                 color: COLORS.dark,
-                fontWeight: '600',
               }}
             >
-              {item.name}
+              12:00, {start.getDate()}/{start.getMonth()}/{start.getFullYear()}
             </Text>
-            <View style={{ flexDirection: 'row' }}>
-              <Text
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              width: '100%',
+              alignItems: 'center',
+              paddingHorizontal: 15,
+              marginTop: 10,
+            }}
+          >
+            <Text style={{ fontWeight: '500', fontSize: 17 }}>
+              {t('check-out')}
+            </Text>
+            <Text
+              style={{
+                fontWeight: 'bold',
+                fontSize: 17,
+                color: COLORS.dark,
+              }}
+            >
+              12:00, {end.getDate()}/{end.getMonth()}/{end.getFullYear()}
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              width: '100%',
+              alignItems: 'center',
+              paddingHorizontal: 15,
+              marginTop: 10,
+              marginBottom: 20,
+            }}
+          >
+            <Text style={{ fontWeight: '500', fontSize: 17 }}>
+              {t('number-people')}
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  setNumber(Number > 1 ? Number - 1 : Number);
+                }}
                 style={{
-                  fontSize: 20,
-                  paddingVertical: 10,
-                  fontWeight: '700',
-                  color: COLORS.primary,
+                  width: 30,
+                  height: 20,
+                  backgroundColor: '#E5E5E5',
+                  borderRadius: 5,
+                  justifyContent: 'center',
+                  alignItems: 'center',
                 }}
               >
-                {item.price}
+                <Text
+                  style={{
+                    fontWeight: 'bold',
+                    fontSize: 15,
+                    color: COLORS.dark,
+                  }}
+                >
+                  -
+                </Text>
+              </TouchableOpacity>
+              <Text
+                style={{
+                  fontWeight: 'bold',
+                  fontSize: 17,
+                  color: COLORS.dark,
+                  marginHorizontal: 10,
+                }}
+              >
+                {Number}
+              </Text>
+              <TouchableOpacity
+                onPress={() => setNumber(Number + 1)}
+                style={{
+                  width: 30,
+                  height: 20,
+                  backgroundColor: '#E5E5E5',
+                  borderRadius: 5,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <Text
+                  style={{
+                    fontWeight: 'bold',
+                    fontSize: 15,
+                    color: COLORS.dark,
+                  }}
+                >
+                  +
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+        <View
+          style={{
+            backgroundColor: COLORS.white,
+            height: 190,
+            width: '100%',
+            marginTop: 10,
+            padding: 15,
+          }}
+        >
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Text
+              style={{ fontSize: 20, fontWeight: 'bold', color: COLORS.dark }}
+            >
+              Thông tin người đặt
+            </Text>
+            <Pressable
+              onPress={() => {
+                navigation.navigate('Chỉnh sửa thông tin');
+              }}
+            >
+              <Text
+                style={{ fontSize: 17, color: 'orange', fontWeight: 'bold' }}
+              >
+                Sửa
+              </Text>
+            </Pressable>
+          </View>
+          <View style={{ marginTop: 5 }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginTop: 10,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 17,
+                  color: 'gray',
+                }}
+              >
+                {t('name')}
               </Text>
               <Text
                 style={{
-                  fontSize: 16,
+                  fontSize: 17,
                   color: COLORS.dark,
-                  paddingVertical: 13,
-                  fontWeight: '600',
+                  fontWeight: 'bold',
                 }}
               >
-                {' '}
-                VND/{t('night')}
+                {userbooking.name}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginTop: 10,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 17,
+                  color: 'gray',
+                }}
+              >
+                {t('phone')}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 17,
+                  color: COLORS.dark,
+                  fontWeight: 'bold',
+                }}
+              >
+                {userbooking.phone}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginTop: 10,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 17,
+                  color: 'gray',
+                }}
+              >
+                {t('email')}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 17,
+                  color: COLORS.dark,
+                  fontWeight: 'bold',
+                }}
+              >
+                {userbooking.email}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginTop: 10,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 17,
+                  color: 'gray',
+                }}
+              >
+                {t('age')}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 17,
+                  color: COLORS.dark,
+                  fontWeight: 'bold',
+                }}
+              >
+                {userbooking.birthday}
               </Text>
             </View>
           </View>
         </View>
-      </View>
-      <View
-        style={{
-          backgroundColor: COLORS.white,
-          height: 140,
-          borderRadius: 15,
-          width: '95%',
-          alignSelf: 'center',
-        }}
-      >
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            width: 330,
-            alignSelf: 'center',
-            marginTop: 20,
-          }}
-        >
-          <Text style={{ fontWeight: '500', fontSize: 17 }}>
-            {t('check-in')}
-          </Text>
-          <Text
+        <View style={{ marginTop: 10 }}>
+          <View
             style={{
-              fontWeight: 'bold',
-              fontSize: 17,
-              color: COLORS.dark,
+              backgroundColor: COLORS.white,
+              width: '100%',
+              padding: 15,
             }}
           >
-            {start.getDate()}/{start.getMonth()}/{start.getFullYear()}
-          </Text>
+            <Text
+              style={{ fontSize: 20, fontWeight: 'bold', color: COLORS.dark }}
+            >
+              Thanh toán
+            </Text>
+            <View
+              style={{
+                marginTop: 10,
+                alignItems: 'center',
+                flexDirection: 'row',
+              }}
+            >
+              <Image
+                source={{
+                  uri: 'https://cdn4.iconfinder.com/data/icons/business-1221/24/Inflation-256.png',
+                }}
+                style={{
+                  width: 30,
+                  height: 30,
+                }}
+              />
+              <Text
+                style={{
+                  fontSize: 17,
+                  color: 'black',
+                  marginLeft: 10,
+                }}
+              >
+                Thanh toán tại khách sạn
+              </Text>
+            </View>
+          </View>
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            width: 330,
-            alignSelf: 'center',
-            marginTop: 20,
-          }}
-        >
-          <Text style={{ fontWeight: '500', fontSize: 17 }}>
-            {t('check-out')}
-          </Text>
-          <Text
+        <View style={{ marginTop: 10 }}>
+          <View
             style={{
-              fontWeight: 'bold',
-              fontSize: 17,
-              color: COLORS.dark,
+              backgroundColor: COLORS.white,
+              width: '100%',
+              padding: 15,
+              marginBottom: 10,
             }}
           >
-            {end.getDate()}/{end.getMonth()}/{end.getFullYear()}
-          </Text>
+            <Text
+              style={{ fontSize: 20, fontWeight: 'bold', color: COLORS.dark }}
+            >
+              Chi tiết thanh toán
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginTop: 10,
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}
+              >
+                <Image
+                  source={{
+                    uri: 'https://cdn4.iconfinder.com/data/icons/office-business-1/512/money-256.png',
+                  }}
+                  style={{ width: 30, height: 30 }}
+                />
+                <Text
+                  style={{
+                    fontSize: 17,
+                    color: 'black',
+                    marginLeft: 10,
+                  }}
+                >
+                  Tiền phòng
+                </Text>
+              </View>
+              <Text
+                style={{
+                  fontSize: 17,
+                  color: 'black',
+                }}
+              >
+                {Format(item.price, dayamount)} đ
+              </Text>
+            </View>
+            <View
+              style={{
+                width: '100%',
+                height: 1,
+                backgroundColor: '#E5E5E5',
+                marginTop: 20,
+              }}
+            />
+            <View
+              style={{
+                marginTop: 10,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Text
+                style={{ fontSize: 20, color: 'black', fontWeight: 'bold' }}
+              >
+                Tổng tiền
+              </Text>
+              <Text
+                style={{ fontSize: 22, color: 'black', fontWeight: 'bold' }}
+              >
+                <Text
+                  style={{
+                    fontSize: 15,
+                    fontWeight: 'normal',
+                    textDecorationLine: 'line-through',
+                  }}
+                >
+                  {' '}
+                  {Format(item.price, dayamount)} đ
+                </Text>
+                {''} {Format(sum, 1)} đ
+              </Text>
+            </View>
+          </View>
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            width: 330,
-            alignSelf: 'center',
-            marginTop: 20,
-          }}
-        >
-          <Text style={{ fontWeight: '500', fontSize: 17 }}>
-            {t('number-people')}
-          </Text>
-          <Text
-            style={{
-              fontWeight: 'bold',
-              fontSize: 17,
-              color: COLORS.dark,
-            }}
-          >
-            {Number}
-          </Text>
-        </View>
-      </View>
-      <View
-        style={{
-          backgroundColor: COLORS.white,
-          height: 180,
-          borderRadius: 15,
-          width: '95%',
-          alignSelf: 'center',
-          marginTop: 20,
-        }}
-      >
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            width: 330,
-            alignSelf: 'center',
-            marginTop: 20,
-          }}
-        >
-          <Text style={{ fontWeight: '500', fontSize: 17 }}>
-            {amount} {t('day')}
-            {amount > 1 && t('day') === 'day' ? 's' : ''}
-          </Text>
-          <Text
-            style={{
-              fontWeight: 'bold',
-              fontSize: 17,
-              color: COLORS.dark,
-            }}
-          >
-            {sum} VNĐ
-          </Text>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            width: 330,
-            alignSelf: 'center',
-            marginTop: 20,
-          }}
-        ></View>
-        <View
-          style={{
-            borderWidth: 0.2,
-            borderColor: '#d0d0d0',
-            marginTop: 20,
-          }}
-        />
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            width: 330,
-            alignSelf: 'center',
-            marginTop: 20,
-          }}
-        >
-          <Text style={{ fontWeight: '500', fontSize: 17 }}>
-            {t('total-money')}
-          </Text>
-          <Text
-            style={{
-              fontWeight: 'bold',
-              fontSize: 17,
-              color: COLORS.dark,
-            }}
-          >
-            {sum} VNĐ
-          </Text>
-        </View>
-      </View>
-      <View style={{ marginVertical: 12 }}>
-        <Text
-          style={{
-            fontSize: 18,
-            color: COLORS.dark,
-            fontWeight: 'bold',
-            marginLeft: 23,
-          }}
-        >
-          {t('number-people')}
-        </Text>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            width: 350,
-            alignSelf: 'center',
-            height: 55,
-            alignItems: 'center',
-            borderRadius: 10,
-            marginTop: 10,
+
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
           }}
         >
           <TouchableOpacity
             style={{
-              width: 50,
-              backgroundColor: COLORS.blurprimary,
-              height: 40,
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              height: '100%',
               alignItems: 'center',
-              borderRadius: 15,
+              justifyContent: 'center',
             }}
-            onPress={() => {
-              setNumber(Number > 1 ? Number - 1 : Number);
-            }}
+            onPress={() => setModalVisible(false)}
           >
-            <Text style={{ fontSize: 30, color: COLORS.primary }}>-</Text>
+            <View
+              style={{
+                backgroundColor: 'white',
+                alignItems: 'center',
+                borderRadius: 20,
+                height: 200,
+                width: 300,
+                bottom: 30,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontWeight: '700',
+                  color: COLORS.primary,
+                  marginTop: 20,
+                }}
+              >
+                Đặt phòng thành công
+              </Text>
+              <TouchableOpacity
+                style={{
+                  width: '80%',
+                  height: 45,
+                  backgroundColor: COLORS.primary,
+                  borderRadius: 10,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginVertical: 15,
+                }}
+                onPress={() => {
+                  navigation.navigate('Booking');
+                }}
+              >
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: 15,
+                    fontWeight: '400',
+                    marginVertical: 10,
+                  }}
+                >
+                  Xem phòng
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  width: '80%',
+                  height: 45,
+                  backgroundColor: COLORS.blurprimary,
+                  borderRadius: 10,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+                onPress={() => {
+                  setModalVisible(false);
+                }}
+              >
+                <Text
+                  style={{
+                    color: COLORS.primary,
+                    fontSize: 15,
+                    fontWeight: 'bold',
+                    marginVertical: 10,
+                  }}
+                >
+                  Hủy
+                </Text>
+              </TouchableOpacity>
+            </View>
           </TouchableOpacity>
-          <Text
-            style={{
-              fontSize: 20,
-              marginTop: 3,
-              fontWeight: 'bold',
-              color: COLORS.black,
-              marginHorizontal: 30,
-            }}
-          >
-            {Number}
-          </Text>
-          <TouchableOpacity
-            style={{
-              width: 50,
-              backgroundColor: COLORS.blurprimary,
-              height: 40,
-              alignItems: 'center',
-              borderRadius: 15,
-            }}
-            onPress={() => setNumber(Number + 1)}
-          >
-            <Text style={{ fontSize: 30, color: COLORS.primary }}>+</Text>
-          </TouchableOpacity>
-        </View>
+        </Modal>
+      </ScrollView>
+      <View
+        style={{
+          width: '100%',
+          height: 65,
+          backgroundColor: 'white',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
         <TouchableOpacity
           style={{
-            backgroundColor: COLORS.primary,
+            width: '90%',
             height: 45,
-            width: 350,
-            alignSelf: 'center',
+            backgroundColor: COLORS.primary,
+            borderRadius: 15,
             alignItems: 'center',
             justifyContent: 'center',
-            borderRadius: 20,
-            marginTop: 15,
           }}
           onPress={() => {
             addbooking();
@@ -562,122 +830,6 @@ export default function Booked({ navigation, route }) {
           </Text>
         </TouchableOpacity>
       </View>
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <TouchableOpacity
-          style={{
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            height: '100%',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-          onPress={() => setModalVisible(false)}
-        >
-          <View
-            style={{
-              backgroundColor: 'white',
-              alignItems: 'center',
-              borderRadius: 20,
-              height: 200,
-              width: 300,
-              bottom: 30,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 18,
-                fontWeight: '700',
-                color: COLORS.primary,
-                marginTop: 20,
-              }}
-            >
-              Đặt phòng thành công
-            </Text>
-            <TouchableOpacity
-              style={{
-                width: '80%',
-                height: 45,
-                backgroundColor: COLORS.primary,
-                borderRadius: 10,
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginVertical: 15,
-              }}
-              onPress={() => {
-                navigation.navigate('Booking');
-              }}
-            >
-              <Text
-                style={{
-                  color: 'white',
-                  fontSize: 15,
-                  fontWeight: '400',
-                  marginVertical: 10,
-                }}
-              >
-                Xem phòng
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                width: '80%',
-                height: 45,
-                backgroundColor: COLORS.blurprimary,
-                borderRadius: 10,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              onPress={() => {
-                setModalVisible(false);
-              }}
-            >
-              <Text
-                style={{
-                  color: COLORS.primary,
-                  fontSize: 15,
-                  fontWeight: 'bold',
-                  marginVertical: 10,
-                }}
-              >
-                Hủy
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-      </Modal>
-    </ScrollView>
+    </View>
   );
 }
-const styles = StyleSheet.create({
-  Text: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: COLORS.dark,
-  },
-  RecentlyBox: {
-    width: '100%',
-    height: 300,
-    color: 'black',
-    backgroundColor: COLORS.white,
-    marginBottom: 15,
-    alignSelf: 'center',
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-    elevation: 15,
-    marginTop: 10,
-    shadowColor: COLORS.black,
-  },
-  IMGRecent: {
-    height: '100%',
-    width: '100%',
-    borderRadius: 10,
-    alignItems: 'center',
-    marginTop: 20,
-  },
-});

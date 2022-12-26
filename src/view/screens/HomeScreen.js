@@ -153,14 +153,16 @@ export default function HomeScreen({ navigation }) {
 
   const countHotel = (place) => {
     let count = 0;
+    let temp = [];
     dataProvince.forEach((item) => {
       if (item.index === place) {
         item.districts.forEach((item) => {
           count += item.data.length;
+          temp.push(...item.data);
         });
       }
     });
-    return count;
+    return { count, temp };
   };
 
   const formatAddress = (name) => {
@@ -501,7 +503,10 @@ export default function HomeScreen({ navigation }) {
     return (
       <Pressable
         onPress={() => {
-          console.log(place);
+          navigation.navigate('PlaceHotel', {
+            name: place.title,
+            data: countHotel(place.index).temp,
+          });
         }}
         style={{
           flexDirection: 'row',
@@ -526,7 +531,7 @@ export default function HomeScreen({ navigation }) {
             {place.title}
           </Text>
           <Text>
-            {t('have')} {countHotel(place.index)} {t('ho-tel')}
+            {t('have')} {countHotel(place.index).count} {t('ho-tel')}
           </Text>
         </View>
       </Pressable>

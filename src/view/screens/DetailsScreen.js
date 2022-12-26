@@ -1,23 +1,23 @@
+import slugify from '@sindresorhus/slugify';
 import React, { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
+  Animated,
+  Image,
   ImageBackground,
   ScrollView,
-  Text,
   StyleSheet,
-  View,
+  Text,
   TouchableOpacity,
-  Image,
-  Animated,
+  View,
 } from 'react-native';
-import COLORS from '../../consts/colors';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useSelector } from 'react-redux';
 import Icons from '../../assets/icons/icons';
-import slugify from '@sindresorhus/slugify';
-import { useTranslation } from 'react-i18next';
+import COLORS from '../../consts/colors';
 export default function DetailsScreen({ navigation, route }) {
   const { t } = useTranslation();
-  const item = route.params;
+  const { item, hotel } = route.params;
   const { dayamount, startday, endday } = useSelector(
     (state) => state.Globalreducer,
   );
@@ -134,7 +134,7 @@ export default function DetailsScreen({ navigation, route }) {
                 paddingTop: '1%',
               }}
             >
-              {dayamount} {t('day')}{' '}
+              {dayamount} {t('day')}
               {dayamount > 1 && t('day') === 'day' ? 's' : ''}
             </Text>
             <Text
@@ -172,13 +172,13 @@ export default function DetailsScreen({ navigation, route }) {
                   <Text style={{ fontSize: 16 }}>{t('check-in')}</Text>
                   <Text
                     style={{
-                      fontSize: 18,
+                      fontSize: 17,
                       marginTop: 5,
                       fontWeight: 'bold',
                       color: 'black',
                     }}
                   >
-                    {FormatDayMonthYear(startday)}
+                    12:00, {FormatDayMonthYear(startday)}
                   </Text>
                 </View>
               </View>
@@ -195,13 +195,13 @@ export default function DetailsScreen({ navigation, route }) {
                   <Text style={{ fontSize: 16 }}>{t('check-out')}</Text>
                   <Text
                     style={{
-                      fontSize: 18,
+                      fontSize: 17,
                       marginTop: 5,
                       fontWeight: 'bold',
                       color: 'black',
                     }}
                   >
-                    {FormatDayMonthYear(endday)}
+                    12:00, {FormatDayMonthYear(endday)}
                   </Text>
                 </View>
               </View>
@@ -305,7 +305,10 @@ export default function DetailsScreen({ navigation, route }) {
       <TouchableOpacity
         style={styles.bottomButton}
         onPress={() => {
-          navigation.navigate('Booked', item);
+          navigation.navigate('Booked', {
+            item: item,
+            hotel: hotel,
+          });
         }}
       >
         <View
