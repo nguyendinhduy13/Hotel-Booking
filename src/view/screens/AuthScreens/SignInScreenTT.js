@@ -98,6 +98,8 @@ export default function SignInScreenTT({ navigation }) {
   }, []);
   const getAdminAccount = async () => {
     let count = 0;
+    let roll = '';
+    let idks = '';
     await firestore()
       .collection('AdminAccounts')
       .get()
@@ -106,29 +108,51 @@ export default function SignInScreenTT({ navigation }) {
           dataAccount.push(documentSnapshot.data());
           if (documentSnapshot.data().email == emailHasSignIn) {
             count = 1;
-            dispatch(
-              Globalreducer.actions.setidks(documentSnapshot.data()._id),
-            );
+            roll = documentSnapshot.data().roll;
+            idks = documentSnapshot.data().id;
+            dispatch(Globalreducer.actions.setidks(documentSnapshot.data().id));
             dispatch(
               Globalreducer.actions.setadminuid(
                 documentSnapshot.data().adminuid,
               ),
             );
-            dispatchSignedIn({
-              type: 'UPDATE_SIGN_IN',
-              payload: {
-                userToken: documentSnapshot.data().roll,
-                _id: documentSnapshot.data()._id,
-              },
-            });
           }
         });
       });
+
     if (count == 0) {
       dispatchSignedIn({
         type: 'UPDATE_SIGN_IN',
         payload: { userToken: 'signed-In', _id: '' },
       });
+    } else {
+      firestore()
+        .collection('HotelList')
+        .doc(idks)
+        .get()
+        .then((documentSnapshot) => {
+          const data = documentSnapshot.data().Room;
+          data.map((item1) => {
+            item1.image.map(async (item2, index) => {
+              const url = await storage()
+                .ref(idks + '/' + item1.id + '/' + item2)
+                .getDownloadURL();
+              item1.image[index] = url;
+            });
+          });
+          setTimeout(() => {
+            dispatch(BookingHotel.actions.addRoom(data));
+          }, 3000);
+        });
+      setTimeout(() => {
+        dispatchSignedIn({
+          type: 'UPDATE_SIGN_IN',
+          payload: {
+            userToken: roll,
+            _id: idks,
+          },
+        });
+      }, 3000);
     }
   };
   useEffect(() => {
@@ -145,7 +169,7 @@ export default function SignInScreenTT({ navigation }) {
     try {
       const user = await auth().signInWithEmailAndPassword(email, password);
       let roll = 'signed-In';
-      let _id = '';
+      let id = '';
       let adminuid = '';
       await firestore()
         .collection('AdminAccounts')
@@ -158,38 +182,37 @@ export default function SignInScreenTT({ navigation }) {
       await dataAccount.filter((item) => {
         if (item.email === email) {
           roll = item.roll;
-          _id = item._id;
+          id = item.id;
           adminuid = item.adminuid;
         }
       });
-      if (roll === 'adminks') {
-        firestore()
-          .collection('HotelList')
-          .doc(_id)
-          .get()
-          .then((documentSnapshot) => {
-            const data = documentSnapshot.data().Room;
-            data.map((item1) => {
-              item1.image.map(async (item2, index) => {
-                const url = await storage()
-                  .ref(_id + '/' + item1.id + '/' + item2)
-                  .getDownloadURL();
-                item1.image[index] = url;
-              });
+      firestore()
+        .collection('HotelList')
+        .doc(id)
+        .get()
+        .then((documentSnapshot) => {
+          const data = documentSnapshot.data().Room;
+          data.map((item1) => {
+            item1.image.map(async (item2, index) => {
+              const url = await storage()
+                .ref(id + '/' + item1.id + '/' + item2)
+                .getDownloadURL();
+              item1.image[index] = url;
             });
-            setTimeout(() => {
-              dispatch(BookingHotel.actions.addRoom(data));
-            }, 3000);
           });
-      }
+          setTimeout(() => {
+            dispatch(BookingHotel.actions.addRoom(data));
+          }, 3000);
+        });
+
       setTimeout(() => {
-        dispatch(Globalreducer.actions.setidks(_id));
+        dispatch(Globalreducer.actions.setidks(id));
         dispatch(Globalreducer.actions.setadminuid(adminuid));
-        setAsyncStorage('userToken', roll + '-' + _id);
+        setAsyncStorage('userToken', roll + '-' + id);
         if (user) {
           dispatchSignedIn({
             type: 'UPDATE_SIGN_IN',
-            payload: { userToken: roll, _id: _id },
+            payload: { userToken: roll, _id: id },
           });
         }
       }, 3000);

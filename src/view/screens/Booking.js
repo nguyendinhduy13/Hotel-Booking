@@ -14,7 +14,7 @@ import Icon from 'react-native-vector-icons/Fontisto';
 import COLORS from '../../consts/colors';
 export default function Booking() {
   const [button, setbutton] = useState(1);
-  const [modalVisible, setModalVisible] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
   const [data, setdata] = useState([]);
   const [data1, setdata1] = useState([]);
   const [idroom, setidroom] = useState('');
@@ -64,7 +64,7 @@ export default function Booking() {
         item.hotelinfo.status = 'cancelled';
       }
     });
-    console.log(idhotel);
+
     firestore().collection('ListBooking').doc(idhotel).set({
       data: data1,
     });
