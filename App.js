@@ -147,6 +147,47 @@ export default function App() {
       });
   }, []);
 
+  let arr = {
+    labels: [''],
+    datasets: [
+      {
+        data: [0],
+      },
+    ],
+  };
+  const handleCalculate = async (data) => {
+    let nameHotel = data[0].hotelinfo.name;
+    let total = 0;
+    await data.forEach((item) => {
+      if (item.hotelinfo.status === 'completed') {
+        total += item.hotelinfo.total;
+      }
+    });
+    arr.labels.push(nameHotel);
+    arr.datasets[0].data.push((total / 1000).toFixed(2));
+  };
+
+  async function onResult(QuerySnapshot) {
+    arr = {
+      labels: [],
+      datasets: [
+        {
+          data: [],
+        },
+      ],
+    };
+    await QuerySnapshot.forEach((documentSnapshot) => {
+      handleCalculate(documentSnapshot.data().data);
+    });
+    dispatch(Globalreducer.actions.setDataReport(arr));
+  }
+
+  function onError(error) {
+    console.error(error);
+  }
+
+  firestore().collection('ListBooking').onSnapshot(onResult, onError);
+
   useEffect(() => {
     getAsyncStorage('language').then((lang) => {
       console.log('languauge: ' + lang);

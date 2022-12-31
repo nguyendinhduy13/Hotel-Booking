@@ -1,26 +1,22 @@
+import auth from '@react-native-firebase/auth';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import React, { useContext, useState } from 'react';
 import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
   Alert,
   ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { Avatar, Switch } from 'react-native-elements';
-import COLORS from '../../consts/colors';
+import { Switch } from 'react-native-elements';
+import Icon5 from 'react-native-vector-icons/AntDesign';
+import Icon3 from 'react-native-vector-icons/Entypo';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Icon1 from 'react-native-vector-icons/MaterialIcons';
-import Icon2 from 'react-native-vector-icons/Feather';
-import Icon3 from 'react-native-vector-icons/Entypo';
-import Icon4 from 'react-native-vector-icons/SimpleLineIcons';
-import Icon5 from 'react-native-vector-icons/AntDesign';
-import auth from '@react-native-firebase/auth';
-import { SignInContext } from '../../contexts/authContext';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { setAsyncStorage } from '../../functions/asyncStorageFunctions';
 import { useDispatch } from 'react-redux';
+import { SignInContext } from '../../contexts/authContext';
+import { setAsyncStorage } from '../../functions/asyncStorageFunctions';
 import Globalreducer from '../../redux/Globalreducer';
 export default function Profile({ navigation }) {
   const { dispatchSignedIn } = useContext(SignInContext);

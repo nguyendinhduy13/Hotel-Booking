@@ -237,6 +237,12 @@ export default function Booked({ navigation, route }) {
     }
     return name;
   };
+  const FormatName1 = (name) => {
+    if (name.length > 18) {
+      return name.substring(0, 18) + '...';
+    }
+    return name;
+  };
   return (
     <View style={{ flex: 1 }}>
       <ScrollView showsVerticalScrollIndicator={false} style={{}}>
@@ -274,9 +280,15 @@ export default function Booked({ navigation, route }) {
                     {hotel.name}
                   </Text>
                   <Text
-                    style={{ fontSize: 20, fontWeight: 'bold', color: 'black' }}
+                    style={{
+                      fontSize: 20,
+                      fontWeight: 'bold',
+                      color: 'black',
+                      width: '90%',
+                      height: 30,
+                    }}
                   >
-                    {item.name}
+                    {FormatName1(item.name)}
                   </Text>
                   <Text
                     style={{
@@ -690,16 +702,18 @@ export default function Booked({ navigation, route }) {
               <Text
                 style={{ fontSize: 22, color: 'black', fontWeight: 'bold' }}
               >
-                <Text
-                  style={{
-                    fontSize: 15,
-                    fontWeight: 'normal',
-                    textDecorationLine: 'line-through',
-                  }}
-                >
-                  {' '}
-                  {Format(item.price, dayamount)} đ
-                </Text>
+                {dayamount != 1 && (
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      fontWeight: 'normal',
+                      textDecorationLine: 'line-through',
+                    }}
+                  >
+                    {' '}
+                    {Format(item.price, dayamount)} đ
+                  </Text>
+                )}
                 {''} {Format(sum, 1)} đ
               </Text>
             </View>

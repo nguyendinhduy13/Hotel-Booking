@@ -22,6 +22,7 @@ const initialState = {
   dataHotel: [],
   dataDistrict: [],
   dataProvince: [],
+  dataReport: [],
 };
 
 export default createSlice({
@@ -85,6 +86,9 @@ export default createSlice({
     },
     setDataProvince(state, action) {
       state.dataProvince = action.payload;
+    },
+    setDataReport(state, action) {
+      state.dataReport = action.payload;
     },
   },
 });
