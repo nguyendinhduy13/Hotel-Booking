@@ -15,17 +15,17 @@ import Icon3 from 'react-native-vector-icons/Entypo';
 import Icon2 from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Icon1 from 'react-native-vector-icons/MaterialIcons';
-import Icon4 from 'react-native-vector-icons/SimpleLineIcons';
 import { SignInContext } from '../../contexts/authContext';
 
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setAsyncStorage } from '../../functions/asyncStorageFunctions';
 import '../../i18n/18n';
 import Globalreducer from '../../redux/Globalreducer';
 export default function Profile({ navigation }) {
   const { t, i18n } = useTranslation();
   const { dispatchSignedIn } = useContext(SignInContext);
+  const { nameUser } = useSelector((state) => state.Globalreducer);
   const dispatch = useDispatch();
   async function signOut() {
     try {
@@ -70,14 +70,14 @@ export default function Profile({ navigation }) {
               <Text
                 style={{ fontSize: 27, fontWeight: 'bold', color: 'black' }}
               >
-                {auth().currentUser.displayName}
+                {nameUser.name}
               </Text>
               <TouchableOpacity
                 onPress={() => navigation.navigate('InfoProfile')}
               >
                 <Icon2
                   name="edit-3"
-                  size={20}
+                  size={nameUser.type === 'google' ? 0 : 25}
                   color="red"
                   style={{ marginLeft: 5 }}
                 />
@@ -108,11 +108,17 @@ export default function Profile({ navigation }) {
               />
             </View>
           </View>
-          <Text style={{ color: 'black', fontSize: 15, paddingTop: 5 }}>
-            0976124912
+          <Text
+            style={{
+              color: 'black',
+              fontSize: nameUser.phone ? 15 : 0,
+              paddingTop: nameUser.phone ? 5 : 0,
+            }}
+          >
+            {nameUser.phone}
           </Text>
           <Text style={{ color: 'black', fontSize: 15, paddingTop: 5 }}>
-            {auth().currentUser.email}
+            {nameUser.email}
           </Text>
         </View>
       </View>
@@ -127,23 +133,7 @@ export default function Profile({ navigation }) {
               {t('my-booking-history')}
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.view}>
-            <Icon2 name="bookmark" size={25} />
-            <Text
-              style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}
-            >
-              {t('my-favorite')}
-            </Text>
-          </TouchableOpacity>
           <Text style={styles.tittle}>{t('setting')}</Text>
-          <TouchableOpacity style={styles.view}>
-            <Icon4 name="bell" size={25} />
-            <Text
-              style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}
-            >
-              {t('notification')}
-            </Text>
-          </TouchableOpacity>
           <View style={[styles.view, { justifyContent: 'space-between' }]}>
             <View style={{ flexDirection: 'row' }}>
               <Icon1 name="language" size={25} />

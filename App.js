@@ -49,7 +49,7 @@ export default function App() {
           .then((documentSnapshot) => {
             if (documentSnapshot.exists) {
               dispatch(
-                Globalreducer.actions.setNameUser(documentSnapshot.data().name),
+                Globalreducer.actions.setNameUser(documentSnapshot.data()),
               );
             }
           });

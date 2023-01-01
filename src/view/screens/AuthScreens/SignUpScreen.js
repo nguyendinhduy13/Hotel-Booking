@@ -1,23 +1,22 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  Pressable,
-  Keyboard,
-  TouchableOpacity,
-  Image,
-  Alert,
-} from 'react-native';
-import { SocialIcon, Icon } from 'react-native-elements';
-import Icon2 from 'react-native-vector-icons/AntDesign';
-import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons';
-import Icon3 from 'react-native-vector-icons/FontAwesome';
-import COLORS from '../../../consts/colors';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import {
+  Alert,
+  Image,
+  Keyboard,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { Icon } from 'react-native-elements';
+import Icon2 from 'react-native-vector-icons/AntDesign';
+import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons';
+import COLORS from '../../../consts/colors';
 export default function SignUpScreen({ navigation }) {
   const [getVisible, setVisible] = useState(false);
   const [name, setName] = useState('');
@@ -34,6 +33,7 @@ export default function SignUpScreen({ navigation }) {
           email: email,
           name: name,
           phone: '',
+          type: 'account',
         })
         .then(() => {
           console.log('User added!');
@@ -96,29 +96,6 @@ export default function SignUpScreen({ navigation }) {
                 alignItems: 'center',
               }}
             >
-              <Icon1 name="email" color={COLORS.grey} size={28} />
-              <TextInput
-                style={{
-                  height: 45,
-                  borderBottomWidth: 1,
-                  borderBottomColor: '#69b9f5',
-                  width: '90%',
-                  marginLeft: 10,
-                  fontSize: 16,
-                }}
-                placeholder={t('email')}
-                onChangeText={(text) => setEmail(text)}
-                value={email}
-              />
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                width: '100%',
-                alignItems: 'center',
-                marginTop: 15,
-              }}
-            >
               <Image
                 source={require('../../../assets/name_icon.png')}
                 style={{
@@ -143,6 +120,29 @@ export default function SignUpScreen({ navigation }) {
                   value={name}
                 />
               </View>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                width: '100%',
+                alignItems: 'center',
+                marginTop: 15,
+              }}
+            >
+              <Icon1 name="email" color={COLORS.grey} size={28} />
+              <TextInput
+                style={{
+                  height: 45,
+                  borderBottomWidth: 1,
+                  borderBottomColor: '#69b9f5',
+                  width: '90%',
+                  marginLeft: 10,
+                  fontSize: 16,
+                }}
+                placeholder={t('email')}
+                onChangeText={(text) => setEmail(text)}
+                value={email}
+              />
             </View>
             <View
               style={{

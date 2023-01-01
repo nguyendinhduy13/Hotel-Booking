@@ -60,6 +60,7 @@ export default function SignInScreenTT({ navigation }) {
             email: user.user.email,
             name: user.user.displayName,
             phone: user.user.phoneNumber,
+            type: 'google',
           })
           .then(() => {
             console.log('User added!');
