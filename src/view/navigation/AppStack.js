@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import Booked from '../screens/Booked';
+import ChangeLanguage from '../screens/ChangeLanguage';
 import ChangePassword from '../screens/ChangePassword';
 import DetailInfoBooking from '../screens/DetailInfoBooking';
 import DetailsScreen from '../screens/DetailsScreen';
@@ -110,6 +111,13 @@ export default function AppStack() {
       <Stack.Screen
         name="TestCalendar"
         component={TestCalendar}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="ChangeLanguage"
+        component={ChangeLanguage}
         options={{
           headerShown: false,
         }}

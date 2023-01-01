@@ -50,11 +50,7 @@ export default function Profile({ navigation }) {
     setIsEnabled((previousState) => !previousState);
     !isEnabled ? console.log('Dark Mode') : console.log('Light Mode');
   };
-  const handleChangeLang = (id) => {
-    setAsyncStorage('language', id);
-    i18n.changeLanguage(id);
-    console.log('languauge: ' + id);
-  };
+
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
       <View style={{ backgroundColor: 'white', elevation: 15 }}>
@@ -143,38 +139,16 @@ export default function Profile({ navigation }) {
                 {t('language')}
               </Text>
             </View>
-            <TouchableOpacity
-              onPress={() => {
-                handleChangeLang('en');
+            <Icon3
+              name="chevron-right"
+              size={25}
+              style={{
+                color: 'orange',
+                width: 30,
+                textAlign: 'right',
               }}
-            >
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontWeight: 'bold',
-                  paddingHorizontal: 15,
-                  color: 'orange',
-                }}
-              >
-                Tiếng Anh
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                handleChangeLang('vi');
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontWeight: 'bold',
-                  paddingHorizontal: 15,
-                  color: 'orange',
-                }}
-              >
-                Tiếng Việt
-              </Text>
-            </TouchableOpacity>
+              onPress={() => navigation.navigate('ChangeLanguage')}
+            />
           </View>
           <Text style={styles.tittle}>{t('information')}</Text>
           <TouchableOpacity style={styles.view}>
@@ -200,7 +174,7 @@ export default function Profile({ navigation }) {
               style={{
                 fontSize: 16,
                 fontWeight: 'bold',
-                paddingHorizontal: 15,
+                textAlign: 'right',
                 color: 'orange',
               }}
             >
@@ -244,10 +218,11 @@ const styles = StyleSheet.create({
   heaerProfile: {
     width: '100%',
     paddingBottom: 15,
-    marginHorizontal: 10,
+    marginHorizontal: 20,
+    marginTop: 10,
   },
   bodyProfile: {
-    marginHorizontal: 10,
+    marginHorizontal: 20,
   },
   tittle: {
     fontSize: 20,

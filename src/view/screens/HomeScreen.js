@@ -21,11 +21,11 @@ import {
 import Icon3 from 'react-native-vector-icons/AntDesign';
 import Icon5 from 'react-native-vector-icons/EvilIcons';
 import Icon4 from 'react-native-vector-icons/Ionicons';
-import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useDispatch, useSelector } from 'react-redux';
 import COLORS from '../../consts/colors';
 import Globalreducer from '../../redux/Globalreducer';
+import Header from '../components/Header';
 const { width } = Dimensions.get('screen');
 const cardWidth = width / 1.8;
 export default function HomeScreen({ navigation }) {
@@ -292,90 +292,7 @@ export default function HomeScreen({ navigation }) {
       </View>
     );
   };
-  //   if (index < 3) {
-  //     return (
-  //       <TouchableOpacity
-  //         style={styles.topHotelCard}
-  //         onPress={() => navigation.navigate('ListRoom', hotel)}
-  //       >
-  //         <View
-  //           style={{
-  //             position: 'absolute',
-  //             top: 5,
-  //             right: 10,
-  //             zIndex: 1,
-  //             flexDirection: 'row',
-  //             alignItems: 'center',
-  //           }}
-  //         >
-  //           <Icon name="star" size={15} color={COLORS.orange} />
-  //           <Text
-  //             style={{
-  //               color: COLORS.white,
-  //               fontWeight: 'bold',
-  //               fontSize: 15,
-  //               marginLeft: 3,
-  //             }}
-  //           >
-  //             5.0
-  //           </Text>
-  //         </View>
-  //         <Image
-  //           style={styles.topHotelCardImage}
-  //           source={{
-  //             uri: checkImage(hotel.image),
-  //           }}
-  //         />
-  //         <View
-  //           style={{
-  //             paddingHorizontal: 10,
-  //             paddingVertical: 5,
-  //           }}
-  //         >
-  //           <Text
-  //             style={{
-  //               fontsize: 17,
-  //               fontWeight: 'bold',
-  //               color: COLORS.dark,
-  //               height: 30,
-  //             }}
-  //           >
-  //             {hotel.name}
-  //           </Text>
-  //           <View
-  //             style={{
-  //               flexDirection: 'row',
-  //               height: 35,
-  //             }}
-  //           >
-  //             <Image
-  //               style={{
-  //                 width: 20,
-  //                 height: 20,
-  //                 resizeMode: 'cover',
-  //                 alignSelf: 'center',
-  //               }}
-  //               source={{
-  //                 uri: 'https://cdn2.iconfinder.com/data/icons/picons-basic-2/57/basic2-059_pin_location-256.png',
-  //               }}
-  //             />
-  //             <Text
-  //               style={{
-  //                 fontSize: 14,
-  //                 paddingHorizontal: 3,
-  //                 fontWeight: 'bold',
-  //                 color: COLORS.grey,
-  //                 alignSelf: 'center',
-  //               }}
-  //             >
-  //               {hotel.location}
-  //             </Text>
-  //           </View>
-  //         </View>
-  //       </TouchableOpacity>
-  //     );
-  //   }
-  // };
+
   const RecentlyBookedCard = ({ hotel }) => {
     return (
       <View>
@@ -555,45 +472,14 @@ export default function HomeScreen({ navigation }) {
             justifyContent: 'space-between',
           }}
         >
+          <Header name={'Hotel Booking'} />
           <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
             }}
           >
-            <Image
-              source={require('../../assets/logo.png')}
-              style={{
-                width: 30,
-                height: 30,
-                resizeMode: 'cover',
-              }}
-            />
-            <Text
-              style={{
-                marginLeft: 10,
-                fontSize: 18,
-                fontWeight: '700',
-                color: 'black',
-              }}
-            >
-              Hotel Booking
-            </Text>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}
-          >
-            <Animated.View
-              style={[
-                {
-                  paddingRight: 10,
-                },
-                SearchShow,
-              ]}
-            >
+            <Animated.View style={[{}, SearchShow]}>
               <TouchableOpacity
                 onPress={() => {
                   ShowModal();
@@ -602,20 +488,12 @@ export default function HomeScreen({ navigation }) {
                 <Icon5 name="search" size={32} color="#FF6347" />
               </TouchableOpacity>
             </Animated.View>
-            <TouchableOpacity
-              onPress={() => {
-                // navigation.navigate('TestCalendar');
-                console.log(dataHotel);
-              }}
-            >
-              <Icon1 name="bell-ring-outline" size={26} color={COLORS.grey} />
-            </TouchableOpacity>
           </View>
         </View>
       </View>
       <ScrollView
         showsHorizontalScrollIndicator={false}
-        style={{ height: '100%', marginTop: 20 }}
+        style={{ height: '100%', marginTop: 10 }}
         onScroll={(e) => {
           const currentOffset = e.nativeEvent.contentOffset.y;
           animatedValue.setValue(currentOffset);
