@@ -1,10 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { View, TextInput, Text, TouchableOpacity, StyleSheet, ToastAndroid } from 'react-native'
+import auth, { firebase } from '@react-native-firebase/auth';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  ToastAndroid,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import COLORS from '../../consts/colors'
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
-import { firebase } from '@react-native-firebase/auth';
+import COLORS from '../../consts/colors';
+import CustomHeader from '../components/CustomHeader';
 
 const user = auth().currentUser;
 
@@ -24,9 +30,12 @@ const ChangePassword = ({ navigation }) => {
   const [TrueConfirmPass, setTrueConfirmPass] = useState(false);
 
   const reauthenticate = (currentPassword) => {
-    var cred = firebase.auth.EmailAuthProvider.credential(user.email, currentPassword);
+    var cred = firebase.auth.EmailAuthProvider.credential(
+      user.email,
+      currentPassword,
+    );
     return user.reauthenticateWithCredential(cred);
-  }
+  };
   const handleCheck = async () => {
     if (password.length > 0) {
       try {
@@ -35,82 +44,87 @@ const ChangePassword = ({ navigation }) => {
         setTrueOldPass(true);
       } catch (error) {
         console.log(error);
-        setError('Mật khẩu hiện tại không đúng')
+        setError('Mật khẩu hiện tại không đúng');
         setTrueOldPass(false);
       }
-    }
-    else {
-      setError('Vui lòng nhập mật khẩu hiện tại')
+    } else {
+      setError('Vui lòng nhập mật khẩu hiện tại');
       setTrueOldPass(false);
     }
-  }
+  };
   const handleEnterPassword = (value) => {
     setError('');
     setTrueOldPass(false);
-    setPassword(value)
-  }
+    setPassword(value);
+  };
   const handleEnterNewPassword = (value) => {
     setErrornew('');
     setTrueNewPass(false);
-    setNewPassword(value)
-  }
+    setNewPassword(value);
+  };
   const handleEnterConfirmPassword = (value) => {
     setErrorconfirm('');
     setTrueConfirmPass(false);
-    setConfirmPassword(value)
+    setConfirmPassword(value);
     count.current = count.current + 1;
-  }
+  };
   useEffect(() => {
     if (count.current != 0 && password.length > 0 && newPassword.length > 0) {
       if (newPassword.length > 0) {
         if (newPassword.length < 6) {
-          setErrornew('Mật khẩu phải có ít nhất 6 ký tự')
+          setErrornew('Mật khẩu phải có ít nhất 6 ký tự');
           setTrueNewPass(false);
-        }
-        else {
+        } else {
           setErrornew('');
           setTrueNewPass(true);
         }
-      }
-      else {
-        setErrornew('Vui lòng nhập mật khẩu mới')
+      } else {
+        setErrornew('Vui lòng nhập mật khẩu mới');
         setTrueNewPass(false);
       }
       if (confirmPassword.length > 0) {
         if (confirmPassword != newPassword) {
-          setErrorconfirm('Mật khẩu xác nhận không khớp')
+          setErrorconfirm('Mật khẩu xác nhận không khớp');
           setTrueConfirmPass(false);
-        }
-        else {
+        } else {
           setErrorconfirm('');
           setTrueConfirmPass(true);
         }
-      }
-      else {
-        setErrorconfirm('Vui lòng nhập mật khẩu xác nhận')
+      } else {
+        setErrorconfirm('Vui lòng nhập mật khẩu xác nhận');
         setTrueConfirmPass(false);
       }
     }
-  }, [newPassword, confirmPassword])
+  }, [newPassword, confirmPassword]);
   const onChangePassword = () => {
     if (TrueOldPass && TrueNewPass && TrueConfirmPass) {
-      reauthenticate(password).then(() => {
-        var user = firebase.auth().currentUser;
-        user.updatePassword(newPassword).then(() => {
-          console.log("Password updated!");
-          ToastAndroid.show('Đổi mật khẩu thành công', ToastAndroid.SHORT);
-          navigation.goBack()
-        }).catch((error) => { console.log(error); });
-      }).catch((error) => { console.log(error); });
+      reauthenticate(password)
+        .then(() => {
+          var user = firebase.auth().currentUser;
+          user
+            .updatePassword(newPassword)
+            .then(() => {
+              console.log('Password updated!');
+              ToastAndroid.show('Đổi mật khẩu thành công', ToastAndroid.SHORT);
+              navigation.goBack();
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
-  }
+  };
   return (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
-      <View style={{ marginTop: 20, }}>
+    <View style={{ flex: 1, backgroundColor: 'white' }}>
+      <CustomHeader title={'Đổi mật khẩu'} />
+      <View style={{ marginTop: 20 }}>
         <Text style={{ marginLeft: 22 }}>Mật khẩu hiện tại</Text>
         <View>
           <TextInput
-            placeholder='Mật khẩu hiện tại'
+            placeholder="Mật khẩu hiện tại"
             style={{
               borderWidth: 1,
               borderRadius: 5,
@@ -125,18 +139,32 @@ const ChangePassword = ({ navigation }) => {
             selectTextOnFocus={true}
             showSoftInputOnFocus={true}
             onEndEditing={() => {
-              handleCheck()
+              handleCheck();
             }}
             on
             secureTextEntry={true}
           />
-          <Icon name="done" size={error == '' && TrueOldPass ? 25 : 0} color="green" style={{ position: 'absolute', top: 20, right: 35 }} />
+          <Icon
+            name="done"
+            size={error == '' && TrueOldPass ? 25 : 0}
+            color="green"
+            style={{ position: 'absolute', top: 20, right: 35 }}
+          />
         </View>
-        <Text style={{ color: 'red', marginLeft: 22, marginTop: 5, height: error == '' ? 0 : 'auto' }}>{error}</Text>
+        <Text
+          style={{
+            color: 'red',
+            marginLeft: 22,
+            marginTop: 5,
+            height: error == '' ? 0 : 'auto',
+          }}
+        >
+          {error}
+        </Text>
         <Text style={{ marginLeft: 22, marginTop: 20 }}>Mật khẩu mới</Text>
         <View>
           <TextInput
-            placeholder='Mật khẩu mới'
+            placeholder="Mật khẩu mới"
             style={{
               borderWidth: 1,
               borderRadius: 5,
@@ -150,22 +178,35 @@ const ChangePassword = ({ navigation }) => {
             onChangeText={(value) => handleEnterNewPassword(value)}
             onEndEditing={() => {
               if (newPassword.length < 6) {
-                setErrornew('Mật khẩu phải có ít nhất 6 ký tự')
+                setErrornew('Mật khẩu phải có ít nhất 6 ký tự');
                 setTrueNewPass(false);
-              }
-              else {
-                setErrornew('')
+              } else {
+                setErrornew('');
                 setTrueNewPass(true);
               }
             }}
             secureTextEntry={true}
           />
-          <Icon name="done" size={errornew == '' && TrueNewPass ? 25 : 0} color="green" style={{ position: 'absolute', top: 20, right: 35 }} />
+          <Icon
+            name="done"
+            size={errornew == '' && TrueNewPass ? 25 : 0}
+            color="green"
+            style={{ position: 'absolute', top: 20, right: 35 }}
+          />
         </View>
-        <Text style={{ color: 'red', marginLeft: 22, marginTop: 5, height: errornew == '' ? 0 : 'auto' }}>{errornew}</Text>
+        <Text
+          style={{
+            color: 'red',
+            marginLeft: 22,
+            marginTop: 5,
+            height: errornew == '' ? 0 : 'auto',
+          }}
+        >
+          {errornew}
+        </Text>
         <View>
           <TextInput
-            placeholder='Xác nhận mật khẩu mới'
+            placeholder="Xác nhận mật khẩu mới"
             style={{
               borderWidth: 1,
               borderRadius: 5,
@@ -180,49 +221,62 @@ const ChangePassword = ({ navigation }) => {
             secureTextEntry={true}
           />
         </View>
-        <Text style={{ color: 'red', marginLeft: 22, marginTop: 5, height: errorconfirm == '' ? 0 : 'auto' }}>{errorconfirm}</Text>
+        <Text
+          style={{
+            color: 'red',
+            marginLeft: 22,
+            marginTop: 5,
+            height: errorconfirm == '' ? 0 : 'auto',
+          }}
+        >
+          {errorconfirm}
+        </Text>
       </View>
       <TouchableOpacity
-        onPress={() => { onChangePassword() }}
+        onPress={() => {
+          onChangePassword();
+        }}
         style={
-          TrueOldPass && TrueNewPass && confirmPassword != '' ? styles.button : styles.buttonDisable
+          TrueOldPass && TrueNewPass && confirmPassword != ''
+            ? styles.button
+            : styles.buttonDisable
         }
       >
         <Text style={styles.text}>Hoàn thành</Text>
       </TouchableOpacity>
     </View>
-  )
-}
+  );
+};
 
-export default ChangePassword
+export default ChangePassword;
 const styles = StyleSheet.create({
   button: {
     borderWidth: 1,
     borderColor: '#d0d0d0',
     height: 45,
     width: 370,
-    alignItems: "center",
-    justifyContent: "center",
-    alignSelf: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
     borderRadius: 10,
     backgroundColor: COLORS.primary,
-    marginTop: 25
+    marginTop: 25,
   },
   buttonDisable: {
     borderWidth: 1,
     borderColor: '#d0d0d0',
     height: 45,
     width: 370,
-    alignItems: "center",
-    justifyContent: "center",
-    alignSelf: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
     borderRadius: 10,
     backgroundColor: 'gray',
-    marginTop: 25
+    marginTop: 25,
   },
   text: {
     fontSize: 17,
-    fontWeight: "600",
-    color: "white"
-  }
-})
+    fontWeight: '600',
+    color: 'white',
+  },
+});

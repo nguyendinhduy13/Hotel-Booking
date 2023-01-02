@@ -4,6 +4,7 @@ import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import COLORS from '../../consts/colors';
 import BookingHotel from '../../redux/BookingHotel';
+import CustomHeader from '../../view/components/CustomHeader';
 const EditRoom = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const { id_ks } = useSelector((state) => state.Globalreducer);
@@ -54,18 +55,16 @@ const EditRoom = ({ navigation, route }) => {
       Room: EditRoom,
     });
   };
+  const deleteRoom = () => {
+    const newRoom = room.filter((item1) => item1.id !== item.id);
+    firestore().collection('HotelList').doc(id_ks).set({
+      Room: newRoom,
+    });
+    dispatch(BookingHotel.actions.addRoom(newRoom));
+  };
   return (
     <View>
-      <Text
-        style={{
-          alignSelf: 'center',
-          fontSize: 18,
-          fontWeight: '500',
-          marginTop: 10,
-        }}
-      >
-        Chỉnh sửa thông tin phòng
-      </Text>
+      <CustomHeader title={'Chỉnh sửa thông tin phòng'} />
       <View style={{ alignItems: 'center' }}>
         <TextInput
           placeholder="Tên phòng"
@@ -180,6 +179,23 @@ const EditRoom = ({ navigation, route }) => {
       >
         <Text style={{ fontSize: 15, color: 'white', fontWeight: '700' }}>
           Cập nhật phòng
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: COLORS.primary,
+          height: 50,
+          borderRadius: 15,
+          width: '90%',
+          alignSelf: 'center',
+          marginTop: 25,
+        }}
+        onPress={deleteRoom}
+      >
+        <Text style={{ fontSize: 15, color: 'white', fontWeight: '700' }}>
+          Xoá phòng
         </Text>
       </TouchableOpacity>
     </View>

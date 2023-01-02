@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import { useDispatch, useSelector } from 'react-redux';
 import COLORS from '../../consts/colors';
 import BookingHotel from '../../redux/BookingHotel';
+import CustomHeader from '../../view/components/CustomHeader';
 export default function EditBenefit({ navigation, route }) {
   const { room } = useSelector((state) => state.BookingHotel);
   const countries = [
@@ -75,17 +76,7 @@ export default function EditBenefit({ navigation, route }) {
 
   return (
     <View style={{ flex: 1 }}>
-      <Text
-        style={{
-          fontSize: 18,
-          fontWeight: '600',
-          marginVertical: 10,
-          color: 'black',
-          alignSelf: 'center',
-        }}
-      >
-        Danh sách tiện ích
-      </Text>
+      <CustomHeader title={'Danh sách tiện ích'} />
       <ScrollView
         contentContainerStyle={{
           paddingTop: 20,

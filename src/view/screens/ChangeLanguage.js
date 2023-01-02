@@ -1,9 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
 import { setAsyncStorage } from '../../functions/asyncStorageFunctions';
 import '../../i18n/18n';
+import CustomHeader from '../components/CustomHeader';
 const ChangeLanguage = ({ navigation }) => {
   const { t, i18n } = useTranslation();
   const handleChangeLang = (id) => {
@@ -15,37 +15,7 @@ const ChangeLanguage = ({ navigation }) => {
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
       <View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            height: 60,
-            elevation: 5,
-            backgroundColor: 'white',
-            paddingHorizontal: 20,
-          }}
-        >
-          <Icon
-            onPress={() => {
-              navigation.goBack();
-            }}
-            name="arrowleft"
-            size={30}
-            style={{
-              color: 'black',
-            }}
-          />
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: 'bold',
-              marginLeft: 20,
-              color: 'black',
-            }}
-          >
-            {t('language')}
-          </Text>
-        </View>
+        <CustomHeader title={'Đổi ngôn ngữ'} />
         <View style={{ paddingHorizontal: 20, height: '100%', width: '100%' }}>
           <TouchableOpacity
             onPress={() => {

@@ -78,7 +78,13 @@ export default function AppStack() {
           headerShown: false,
         }}
       />
-      <Stack.Screen name="Booked" component={Booked} />
+      <Stack.Screen
+        name="Booked"
+        component={Booked}
+        options={{
+          headerShown: false,
+        }}
+      />
 
       <Stack.Screen
         name="Map"
@@ -87,13 +93,28 @@ export default function AppStack() {
           headerShown: false,
         }}
       />
-      <Stack.Screen name="Change Password" component={ChangePassword} />
+      <Stack.Screen
+        name="Change Password"
+        component={ChangePassword}
+        options={{
+          headerShown: false,
+        }}
+      />
 
       <Stack.Screen
         name="Chọn thông tin đặt phòng"
         component={DetailInfoBooking}
+        options={{
+          headerShown: false,
+        }}
       />
-      <Stack.Screen name="Chỉnh sửa thông tin" component={EditUserBooking} />
+      <Stack.Screen
+        name="Chỉnh sửa thông tin"
+        component={EditUserBooking}
+        options={{
+          headerShown: false,
+        }}
+      />
       <Stack.Screen
         name="InfoProfile"
         component={InfoProfile}

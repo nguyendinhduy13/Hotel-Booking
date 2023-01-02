@@ -23,6 +23,7 @@ const initialState = {
   dataDistrict: [],
   dataProvince: [],
   dataReport: [],
+  dataRevenue: [],
 };
 
 export default createSlice({
@@ -89,6 +90,9 @@ export default createSlice({
     },
     setDataReport(state, action) {
       state.dataReport = action.payload;
+    },
+    setDataRevenue(state, action) {
+      state.dataRevenue = action.payload;
     },
   },
 });

@@ -16,6 +16,7 @@ import {
 import uuid from 'react-native-uuid';
 import { useDispatch, useSelector } from 'react-redux';
 import COLORS from '../../consts/colors';
+import CustomHeader from '../components/CustomHeader';
 export default function Booked({ navigation, route }) {
   const { t } = useTranslation();
   const { item, hotel } = route.params;
@@ -82,8 +83,13 @@ export default function Booked({ navigation, route }) {
       );
     } else {
       let x =
-        start.getDate() + '/' + start.getMonth() + '/' + start.getFullYear();
-      let y = end.getDate() + '/' + end.getMonth() + '/' + end.getFullYear();
+        start.getDate() +
+        '/' +
+        (start.getMonth() + 1) +
+        '/' +
+        start.getFullYear();
+      let y =
+        end.getDate() + '/' + (end.getMonth() + 1) + '/' + end.getFullYear();
       if (checkdata) {
         firestore()
           .collection('Booking')
@@ -245,6 +251,7 @@ export default function Booked({ navigation, route }) {
   };
   return (
     <View style={{ flex: 1 }}>
+      <CustomHeader title={'Thông tin đặt phòng'} />
       <ScrollView showsVerticalScrollIndicator={false} style={{}}>
         <View
           style={{
@@ -254,11 +261,6 @@ export default function Booked({ navigation, route }) {
           }}
         >
           <View style={{ padding: 15 }}>
-            <Text
-              style={{ fontSize: 20, fontWeight: 'bold', color: COLORS.dark }}
-            >
-              Thông tin đặt phòng
-            </Text>
             <View>
               <View
                 style={{
@@ -340,7 +342,8 @@ export default function Booked({ navigation, route }) {
                 color: COLORS.dark,
               }}
             >
-              12:00, {start.getDate()}/{start.getMonth()}/{start.getFullYear()}
+              12:00, {start.getDate()}/{start.getMonth() + 1}/
+              {start.getFullYear()}
             </Text>
           </View>
           <View
@@ -363,7 +366,7 @@ export default function Booked({ navigation, route }) {
                 color: COLORS.dark,
               }}
             >
-              12:00, {end.getDate()}/{end.getMonth()}/{end.getFullYear()}
+              12:00, {end.getDate()}/{end.getMonth() + 1}/{end.getFullYear()}
             </Text>
           </View>
           <View

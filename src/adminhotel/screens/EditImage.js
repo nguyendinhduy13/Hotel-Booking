@@ -4,16 +4,15 @@ import React, { useEffect, useState } from 'react';
 import {
   Image,
   Platform,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
+  ScrollView, TouchableOpacity,
+  View
 } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { useDispatch, useSelector } from 'react-redux';
 import COLORS from '../../consts/colors';
 import BookingHotel from '../../redux/BookingHotel';
+import CustomHeader from '../../view/components/CustomHeader';
 export default function EditImage({ route }) {
   const { room } = useSelector((state) => state.BookingHotel);
   const data = route.params.item;
@@ -94,17 +93,7 @@ export default function EditImage({ route }) {
   return (
     <View>
       <ScrollView>
-        <Text
-          style={{
-            fontSize: 20,
-            alignSelf: 'center',
-            top: 5,
-            fontWeight: '700',
-            color: 'black',
-          }}
-        >
-          Hình của khách sạn
-        </Text>
+       <CustomHeader title={'Hình của khách sạn'}/>
         <View
           style={{
             flex: 1,

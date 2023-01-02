@@ -1,20 +1,42 @@
 import firestore from '@react-native-firebase/firestore';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import COLORS from '../../consts/colors';
-import BookingHotel from '../../redux/BookingHotel';
+import Globalreducer from '../../redux/Globalreducer';
 export default function AddItem({ navigation }) {
   const { room } = useSelector((state) => state.BookingHotel);
   const { id_ks } = useSelector((state) => state.Globalreducer);
   const dispatch = useDispatch();
-  const deleteRoom = (id) => {
-    const newRoom = room.filter((item) => item.id !== id);
-    firestore().collection('HotelList').doc(id_ks).set({
-      Room: newRoom,
-    });
-    dispatch(BookingHotel.actions.addRoom(newRoom));
+  let arr = {
+    labels: ['December', 'January'],
+    datasets: [
+      {
+        data: [],
+      },
+    ],
   };
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      firestore()
+        .collection('ListBooking')
+        .doc(id_ks)
+        .get()
+        .then(async (documentSnapshot) => {
+          if (documentSnapshot.exists) {
+            const data1 = documentSnapshot.data().data;
+            await data1.forEach((item) => {
+              if (item.hotelinfo.status === 'completed') {
+                let a = Math.trunc(item.hotelinfo.price / 1000);
+                arr.datasets[0].data.push(a);
+              }
+            });
+            dispatch(Globalreducer.actions.setDataRevenue(arr));
+          }
+        });
+    });
+    return unsubscribe;
+  }, [navigation]);
   return (
     <View>
       <Text
@@ -35,7 +57,7 @@ export default function AddItem({ navigation }) {
         }}
       >
         {room.map((item, index) => (
-          <View
+          <TouchableOpacity
             key={index}
             style={{
               height: 130,
@@ -45,6 +67,9 @@ export default function AddItem({ navigation }) {
               marginTop: 15,
               alignSelf: 'center',
               borderRadius: 20,
+            }}
+            onPress={() => {
+              navigation.navigate('EditRoom', { item: item });
             }}
           >
             <Image
@@ -87,39 +112,7 @@ export default function AddItem({ navigation }) {
                  </View>
                  ))} */}
             </View>
-            <TouchableOpacity
-              style={{
-                position: 'absolute',
-                right: 10,
-                width: 50,
-                height: 40,
-                top: 15,
-                borderRadius: 5,
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: 'red',
-              }}
-              onPress={() => navigation.navigate('EditRoom', { item })}
-            >
-              <Text style={{ color: 'white', fontWeight: '400' }}>Sửa</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                position: 'absolute',
-                top: 70,
-                right: 10,
-                width: 50,
-                height: 40,
-                borderRadius: 5,
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: 'red',
-              }}
-              onPress={() => deleteRoom(item.id)}
-            >
-              <Text style={{ color: 'white', fontWeight: '400' }}>Xóa</Text>
-            </TouchableOpacity>
-          </View>
+          </TouchableOpacity>
         ))}
       </ScrollView>
       <TouchableOpacity

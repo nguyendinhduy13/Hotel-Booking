@@ -12,8 +12,8 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { useDispatch, useSelector } from 'react-redux';
-import COLORS from '../../consts/colors';
 import Globalreducer from '../../redux/Globalreducer';
+import CustomHeader from '../components/CustomHeader';
 
 const { width, height } = Dimensions.get('screen');
 const InfoProfile = ({ navigation }) => {
@@ -56,37 +56,7 @@ const InfoProfile = ({ navigation }) => {
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
       <View style={{}}>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            height: 60,
-            elevation: 5,
-            backgroundColor: 'white',
-            paddingHorizontal: 20,
-          }}
-        >
-          <Icon
-            onPress={() => {
-              navigation.goBack();
-            }}
-            name="arrowleft"
-            size={30}
-            style={{
-              color: COLORS.dark,
-            }}
-          />
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: 'bold',
-              marginLeft: 20,
-              color: COLORS.dark,
-            }}
-          >
-            Thông tin tài khoản
-          </Text>
-        </View>
+        <CustomHeader title={'Thông tin tài khoản'} />
         <View style={{ paddingHorizontal: 20, height: height, width: '100%' }}>
           <View
             style={{

@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import { useDispatch, useSelector } from 'react-redux';
 import COLORS from '../../consts/colors';
 import BookingHotel from '../../redux/BookingHotel';
+import CustomHeader from '../../view/components/CustomHeader';
 const ItemInfo = ({ navigation }) => {
   const dispatch = useDispatch();
   const countries = [
@@ -120,16 +121,7 @@ const ItemInfo = ({ navigation }) => {
 
   return (
     <View>
-      <Text
-        style={{
-          alignSelf: 'center',
-          fontSize: 18,
-          fontWeight: '500',
-          marginTop: 10,
-        }}
-      >
-        Thêm thông tin phòng
-      </Text>
+      <CustomHeader title={'Thêm thông tin phòng'} />
       <View style={{ alignItems: 'center' }}>
         <TextInput
           placeholder="Tên phòng"

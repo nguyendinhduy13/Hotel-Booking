@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import AddItem from '../screens/AddItem';
 import EditBenefit from '../screens/EditBenefit';
+import EditHotel from '../screens/EditHotel';
 import EditImage from '../screens/EditImage';
 import EditRoom from '../screens/EditRoom';
 import ItemInfo from '../screens/ItemInfo';
@@ -58,6 +59,13 @@ export default function AdminHotelStack() {
       <Stack.Screen
         name="EditBenefit"
         component={EditBenefit}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="EditHotel"
+        component={EditHotel}
         options={{
           headerShown: false,
         }}

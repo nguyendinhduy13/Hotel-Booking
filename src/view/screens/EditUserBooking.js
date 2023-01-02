@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import COLORS from '../../consts/colors';
+import CustomHeader from '../components/CustomHeader';
 const EditUserBooking = ({ navigation }) => {
   const { t } = useTranslation();
   const userinfo = Auth().currentUser;
@@ -37,6 +38,7 @@ const EditUserBooking = ({ navigation }) => {
   const [email, setEmail] = useState('');
   return (
     <View>
+      <CustomHeader title={'Thông tin người đặt phòng'} />
       <TextInput
         placeholder={t('name')}
         style={{
