@@ -636,7 +636,7 @@ const ListRoom = ({ navigation, route }) => {
                       >
                         <Text
                           style={{
-                            color: colors.text,
+                            color: 'white',
                             fontSize: 15,
                             fontWeight: 'bold',
                           }}

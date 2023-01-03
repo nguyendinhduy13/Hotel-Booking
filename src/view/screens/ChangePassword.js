@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLORS from '../../consts/colors';
 import CustomHeader from '../components/CustomHeader';
@@ -20,6 +21,7 @@ const user = auth().currentUser;
 const ChangePassword = ({ navigation }) => {
   const count = useRef(0);
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const [error, setError] = useState('');
   const [errornew, setErrornew] = useState('');
   const [errorconfirm, setErrorconfirm] = useState('');
@@ -124,13 +126,16 @@ const ChangePassword = ({ navigation }) => {
     }
   };
   return (
-    <View style={{ flex: 1, backgroundColor: 'white' }}>
+    <View style={{ flex: 1, backgroundColor: colors.bg }}>
       <CustomHeader title={'change-password'} />
       <Pressable style={{ marginTop: 20 }} onPress={() => Keyboard.dismiss()}>
-        <Text style={{ marginLeft: 22 }}>{t('current-password')}</Text>
+        <Text style={{ marginLeft: 22, color: colors.icon }}>
+          {t('current-password')}
+        </Text>
         <View>
           <TextInput
             placeholder={t('current-password')}
+            placeholderTextColor={colors.icon}
             style={{
               borderWidth: 1,
               borderRadius: 5,
@@ -138,8 +143,9 @@ const ChangePassword = ({ navigation }) => {
               width: 350,
               height: 55,
               alignSelf: 'center',
-              marginTop: 5,
+              marginTop: 15,
               paddingLeft: 10,
+              color: colors.text,
             }}
             onChangeText={(value) => handleEnterPassword(value)}
             selectTextOnFocus={true}
@@ -154,7 +160,7 @@ const ChangePassword = ({ navigation }) => {
             name="done"
             size={error == '' && TrueOldPass ? 25 : 0}
             color="green"
-            style={{ position: 'absolute', top: 20, right: 35 }}
+            style={{ position: 'absolute', top: 30, right: 35 }}
           />
         </View>
         <Text
@@ -167,12 +173,13 @@ const ChangePassword = ({ navigation }) => {
         >
           {error}
         </Text>
-        <Text style={{ marginLeft: 22, marginTop: 20 }}>
+        <Text style={{ marginLeft: 22, marginTop: 20, color: colors.icon }}>
           {t('new-password')}
         </Text>
         <View>
           <TextInput
             placeholder={t('new-password')}
+            placeholderTextColor={colors.icon}
             style={{
               borderWidth: 1,
               borderRadius: 5,
@@ -182,6 +189,8 @@ const ChangePassword = ({ navigation }) => {
               alignSelf: 'center',
               marginTop: 2,
               paddingLeft: 10,
+              color: colors.text,
+              marginTop: 15,
             }}
             onChangeText={(value) => handleEnterNewPassword(value)}
             onEndEditing={() => {
@@ -199,7 +208,7 @@ const ChangePassword = ({ navigation }) => {
             name="done"
             size={errornew == '' && TrueNewPass ? 25 : 0}
             color="green"
-            style={{ position: 'absolute', top: 20, right: 35 }}
+            style={{ position: 'absolute', top: 30, right: 35 }}
           />
         </View>
         <Text
@@ -215,6 +224,7 @@ const ChangePassword = ({ navigation }) => {
         <View>
           <TextInput
             placeholder={t('confirm-password')}
+            placeholderTextColor={colors.icon}
             style={{
               borderWidth: 1,
               borderRadius: 5,
@@ -224,6 +234,7 @@ const ChangePassword = ({ navigation }) => {
               alignSelf: 'center',
               borderColor: errorconfirm == '' ? '#d0d0d0' : 'red',
               paddingLeft: 10,
+              color: colors.text,
             }}
             onChangeText={(value) => handleEnterConfirmPassword(value)}
             secureTextEntry={true}

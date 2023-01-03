@@ -13,14 +13,17 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { useDispatch, useSelector } from 'react-redux';
 import Globalreducer from '../../redux/Globalreducer';
 import CustomHeader from '../components/CustomHeader';
+
 const { width, height } = Dimensions.get('screen');
 const InfoProfile = ({ navigation }) => {
   const { nameUser } = useSelector((state) => state.Globalreducer);
   const dispatch = useDispatch();
+  const { colors } = useTheme();
   const [name, setName] = useState(nameUser.name);
   const [email, setEmail] = useState(nameUser.email);
   const [phone, setPhone] = useState(nameUser.phone);
@@ -56,7 +59,7 @@ const InfoProfile = ({ navigation }) => {
   };
   const { t } = useTranslation();
   return (
-    <View style={{ flex: 1, backgroundColor: 'white' }}>
+    <View style={{ flex: 1, backgroundColor: colors.bg }}>
       <View style={{}}>
         <CustomHeader title={'information-account'} />
         <Pressable
@@ -79,6 +82,7 @@ const InfoProfile = ({ navigation }) => {
                 fontSize: 16,
                 fontWeight: 'bold',
                 width: '40%',
+                color: colors.icon,
               }}
             >
               {t('user-name')}
@@ -86,7 +90,7 @@ const InfoProfile = ({ navigation }) => {
             <TextInput
               style={{
                 fontSize: 17,
-                color: 'black',
+                color: colors.text,
                 width: '60%',
               }}
               value={name}
@@ -109,6 +113,7 @@ const InfoProfile = ({ navigation }) => {
                 fontSize: 16,
                 fontWeight: 'bold',
                 width: '40%',
+                color: colors.icon,
               }}
             >
               {t('email')}
@@ -116,7 +121,7 @@ const InfoProfile = ({ navigation }) => {
             <TextInput
               style={{
                 fontSize: 17,
-                color: 'black',
+                color: colors.text,
                 width: '60%',
               }}
               value={email}
@@ -140,6 +145,7 @@ const InfoProfile = ({ navigation }) => {
                 fontSize: 16,
                 fontWeight: 'bold',
                 width: '40%',
+                color: colors.icon,
               }}
             >
               {t('phone')}
@@ -147,7 +153,7 @@ const InfoProfile = ({ navigation }) => {
             <TextInput
               style={{
                 fontSize: 17,
-                color: 'black',
+                color: colors.text,
                 width: '60%',
               }}
               value={phone}
@@ -177,11 +183,14 @@ const InfoProfile = ({ navigation }) => {
                   fontSize: 16,
                   fontWeight: 'bold',
                   width: '40%',
+                  color: colors.icon,
                 }}
               >
                 {t('password')}
               </Text>
-              <Text style={{ fontSize: 17, color: 'black' }}>{'********'}</Text>
+              <Text style={{ fontSize: 17, color: colors.text }}>
+                {'********'}
+              </Text>
             </View>
             <Icon
               name="edit"

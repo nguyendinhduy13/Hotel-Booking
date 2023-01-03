@@ -62,7 +62,7 @@ export default function DetailsScreen({ navigation, route }) {
           <Icon
             name="arrow-back-ios"
             size={28}
-            color={colors.text}
+            color="white"
             onPress={navigation.goBack}
           />
         </View>

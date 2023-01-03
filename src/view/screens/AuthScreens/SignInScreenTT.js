@@ -17,6 +17,7 @@ import {
   View,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
+import { useTheme } from 'react-native-paper';
 import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useDispatch, useSelector } from 'react-redux';
 import COLORS from '../../../consts/colors';
@@ -33,6 +34,7 @@ GoogleSignin.configure({
 export default function SignInScreenTT({ navigation }) {
   const { dispatchSignedIn } = useContext(SignInContext);
   const [getVisible, setVisible] = useState(false);
+  const { colors } = useTheme();
   let dataAccount = [];
   const dispatch = useDispatch();
   const { emailHasSignIn } = useSelector((state) => state.Globalreducer);
@@ -245,7 +247,7 @@ export default function SignInScreenTT({ navigation }) {
       onPress={() => {
         Keyboard.dismiss();
       }}
-      style={{ flex: 1, backgroundColor: 'white' }}
+      style={{ flex: 1, backgroundColor: colors.bg }}
     >
       <View>
         <Image
@@ -263,7 +265,7 @@ export default function SignInScreenTT({ navigation }) {
           style={{
             fontSize: 30,
             fontWeight: 'bold',
-            color: 'black',
+            color: colors.text,
           }}
         >
           {t('sign-in')}
@@ -285,8 +287,10 @@ export default function SignInScreenTT({ navigation }) {
                 width: '90%',
                 marginLeft: 10,
                 fontSize: 16,
+                color: colors.text,
               }}
               placeholder={t('email')}
+              placeholderTextColor={colors.icon}
               onChangeText={(text) => setEmail(text)}
               value={email}
             />
@@ -308,11 +312,13 @@ export default function SignInScreenTT({ navigation }) {
                 width: '90%',
                 borderBottomWidth: 1,
                 borderBottomColor: '#69b9f5',
+                color: colors.text,
               }}
             >
               <TextInput
                 placeholder={t('password')}
-                style={{ width: '90%' }}
+                placeholderTextColor={colors.icon}
+                style={{ width: '90%', color: colors.text, fontSize: 16 }}
                 secureTextEntry={getVisible ? false : true}
                 onChangeText={(text) => setPassword(text)}
                 value={password}
@@ -372,7 +378,7 @@ export default function SignInScreenTT({ navigation }) {
             />
             <Text
               style={{
-                color: '#86939e',
+                color: colors.icon,
                 fontSize: 16,
                 marginHorizontal: '3%',
               }}
@@ -397,7 +403,7 @@ export default function SignInScreenTT({ navigation }) {
               alignSelf: 'center',
               alignContent: 'center',
               justifyContent: 'center',
-              backgroundColor: '#f4f2f2',
+              backgroundColor: colors.box,
             }}
             onPress={() => onGoogleButtonPress()}
           >
@@ -413,7 +419,7 @@ export default function SignInScreenTT({ navigation }) {
             />
             <Text
               style={{
-                color: 'black',
+                color: colors.text,
                 fontSize: 16,
                 fontWeight: 'bold',
               }}
@@ -434,7 +440,7 @@ export default function SignInScreenTT({ navigation }) {
       >
         <Text
           style={{
-            color: '#86939e',
+            color: colors.icon,
             fontSize: 16,
           }}
         >

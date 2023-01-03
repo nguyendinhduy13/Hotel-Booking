@@ -1,11 +1,13 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, StyleSheet, Text, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import CustomHeader from '../components/CustomHeader';
 const About = () => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   return (
-    <View style={{ backgroundColor: 'white', flex: 1 }}>
+    <View style={{ backgroundColor: colors.bg, flex: 1 }}>
       <CustomHeader title={t('contact')} />
       <View style={{ padding: 10 }}>
         <View>
@@ -23,21 +25,21 @@ const About = () => {
               marginTop: 20,
             }}
           >
-            <Text style={{ fontSize: 16 }}>
+            <Text style={{ fontSize: 16, color: colors.icon }}>
               Hotline:{' '}
-              <Text style={{ color: 'black', fontWeight: '500' }}>
+              <Text style={{ color: colors.text, fontWeight: '500' }}>
                 1900 636 636
               </Text>
             </Text>
-            <Text style={{ fontSize: 16 }}>
+            <Text style={{ fontSize: 16, color: colors.icon }}>
               {t('support-customer')}:{' '}
-              <Text style={{ color: 'black', fontWeight: '500' }}>
+              <Text style={{ color: colors.text, fontWeight: '500' }}>
                 cskh@hotelbooking.vn
               </Text>
             </Text>
-            <Text style={{ fontSize: 16 }}>
+            <Text style={{ fontSize: 16, color: colors.icon }}>
               {t('contact-for-cooperation')}:{' '}
-              <Text style={{ color: 'black', fontWeight: '500' }}>
+              <Text style={{ color: colors.text, fontWeight: '500' }}>
                 1900 636 636
               </Text>{' '}
             </Text>
@@ -58,9 +60,9 @@ const About = () => {
               marginTop: 20,
             }}
           >
-            <Text style={{ fontSize: 16 }}>
+            <Text style={{ fontSize: 16, color: colors.icon }}>
               {t('headquarters')}:{' '}
-              <Text style={{ color: 'black', fontWeight: '500' }}>
+              <Text style={{ color: colors.text, fontWeight: '500' }}>
                 5A Đường số 2, Khu phố 6, Phường Linh Trung, Quận Thủ Đức, Tp.
                 Hồ Chí Minh
               </Text>
@@ -82,9 +84,9 @@ const About = () => {
               marginTop: 20,
             }}
           >
-            <Text style={{ fontSize: 16 }}>
+            <Text style={{ fontSize: 16, color: colors.icon }}>
               {t('headquarters')}:{' '}
-              <Text style={{ color: 'black', fontWeight: '500' }}>
+              <Text style={{ color: colors.text, fontWeight: '500' }}>
                 19 Ngõ 1, Nguyễn Khang, Cầu Giấy, Hà Nội
               </Text>
             </Text>

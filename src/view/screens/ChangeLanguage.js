@@ -1,11 +1,13 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import { setAsyncStorage } from '../../functions/asyncStorageFunctions';
 import '../../i18n/18n';
 import CustomHeader from '../components/CustomHeader';
 const ChangeLanguage = ({ navigation }) => {
   const { t, i18n } = useTranslation();
+  const { colors } = useTheme();
   const handleChangeLang = (id) => {
     setAsyncStorage('language', id);
     i18n.changeLanguage(id);
@@ -13,7 +15,7 @@ const ChangeLanguage = ({ navigation }) => {
     navigation.goBack();
   };
   return (
-    <View style={{ flex: 1, backgroundColor: 'white' }}>
+    <View style={{ flex: 1, backgroundColor: colors.bg }}>
       <View>
         <CustomHeader title={'change-language'} />
         <View style={{ paddingHorizontal: 20, height: '100%', width: '100%' }}>
@@ -27,6 +29,9 @@ const ChangeLanguage = ({ navigation }) => {
                 flexDirection: 'row',
                 alignItems: 'center',
                 marginTop: 20,
+                padding: 10,
+                borderBottomWidth: 1,
+                borderBottomColor: 'gray',
               }}
             >
               <Image
@@ -57,6 +62,9 @@ const ChangeLanguage = ({ navigation }) => {
                 flexDirection: 'row',
                 alignItems: 'center',
                 marginTop: 20,
+                padding: 10,
+                borderBottomWidth: 1,
+                borderBottomColor: 'gray',
               }}
             >
               <Image
