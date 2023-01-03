@@ -8,6 +8,7 @@ import DetailsScreen from '../screens/DetailsScreen';
 import EditUserBooking from '../screens/EditUserBooking';
 import HomeScreen from '../screens/HomeScreen';
 import HotelPhotos from '../screens/HotelPhotos';
+import InfoBooking from '../screens/InfoBooking';
 import InfoProfile from '../screens/InfoProfile';
 import ListPlace from '../screens/ListPlace';
 import ListRoom from '../screens/ListRoom';
@@ -139,6 +140,13 @@ export default function AppStack() {
       <Stack.Screen
         name="ChangeLanguage"
         component={ChangeLanguage}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="InfoBooking"
+        component={InfoBooking}
         options={{
           headerShown: false,
         }}

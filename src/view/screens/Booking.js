@@ -10,7 +10,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import Icon2 from 'react-native-vector-icons/AntDesign';
 import Icon from 'react-native-vector-icons/Fontisto';
+import Icon1 from 'react-native-vector-icons/Ionicons';
 import COLORS from '../../consts/colors';
 export default function Booking() {
   const [button, setbutton] = useState(1);
@@ -36,6 +38,10 @@ export default function Booking() {
       unsubscribe;
     };
   }, [navigation]);
+
+  const Format = (prices) => {
+    return prices.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+  };
 
   useEffect(() => {
     if (idhotel) {
@@ -75,13 +81,14 @@ export default function Booking() {
       <View
         key={index}
         style={{
-          marginTop: 20,
-          elevation: 10,
+          marginTop: 5,
+          width: '93%',
+          justifyContent: 'center',
+          padding: 10,
           borderRadius: 20,
           backgroundColor: COLORS.white,
-          width: 350,
           alignSelf: 'center',
-          height: 165,
+          height: 210,
         }}
       >
         <View
@@ -91,112 +98,379 @@ export default function Booking() {
         >
           <Image
             source={{ uri: item.image }}
-            style={{ width: 100, height: 100, borderRadius: 20 }}
+            style={{ width: 120, height: 120, borderRadius: 20 }}
           />
-          <View style={{ marginLeft: 15 }}>
+          <View
+            style={{
+              marginLeft: 15,
+              justifyContent: 'space-between',
+            }}
+          >
+            <View>
+              <Text
+                style={{
+                  fontSize: 20,
+                  color: COLORS.dark,
+                  fontWeight: '600',
+                }}
+              >
+                {item.name}
+              </Text>
+              <Text
+                style={{
+                  width: 215,
+                  fontWeight: '400',
+                  color: COLORS.dark,
+                  fontSize: 15,
+                  marginVertical: 2,
+                }}
+              >
+                {item.roomname}
+              </Text>
+            </View>
             <View
               style={{
-                justifyContent: 'space-between',
-                height: 85,
+                bottom: 3,
               }}
             >
-              <View>
-                <Text
-                  style={{
-                    fontSize: 20,
-                    color: COLORS.dark,
-                    fontWeight: '600',
-                  }}
-                >
-                  {item.name}
-                </Text>
-                <Text
-                  style={{
-                    width: 230,
-                    fontWeight: '400',
-                    color: COLORS.dark,
-                    fontSize: 15,
-                  }}
-                >
-                  {item.roomname}
-                </Text>
-              </View>
               <Text style={{ fontSize: 18, fontWeight: '700' }}>
-                {item.total} VNĐ
+                {Format(item.total)} VNĐ
+              </Text>
+            </View>
+            <View
+              style={{
+                backgroundColor: COLORS.blurprimary,
+                width: 90,
+                height: 25,
+                borderRadius: 10,
+                alignItems: 'center',
+                justifyContent: 'center',
+                bottom: 3,
+              }}
+            >
+              <Text
+                style={{
+                  fontWeight: '700',
+                  color: COLORS.primary,
+                }}
+              >
+                Đang xử lý
               </Text>
             </View>
           </View>
         </View>
         <View
           style={{
-            borderWidth: 0.2,
+            borderWidth: 1,
             height: 0,
             width: 350,
-            borderColor: COLORS.grey,
+            borderColor: '#f2f2f2',
             marginTop: 8,
           }}
         />
-        {item.status === 'ongoing' && button === 1 ? (
-          <View
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginTop: 15,
+          }}
+        >
+          <TouchableOpacity
             style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginHorizontal: 10,
-              marginTop: 10,
+              borderWidth: 2,
+              borderColor: COLORS.primary,
+              borderRadius: 20,
+              width: 160,
+              height: 37,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            onPress={() => {
+              setModalVisible(true);
+              setidroom(item.id);
             }}
           >
-            <TouchableOpacity
+            <Text
               style={{
-                borderWidth: 2,
-                borderColor: COLORS.primary,
-                borderRadius: 20,
-                width: 150,
-                height: 37,
-                justifyContent: 'center',
-                alignItems: 'center',
+                fontSize: 16,
+                fontWeight: 'bold',
+                color: COLORS.primary,
               }}
-              onPress={() => {
-                setModalVisible(true);
-                setidroom(item.id);
+            >
+              Hủy đặt phòng
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              backgroundColor: COLORS.primary,
+              borderRadius: 20,
+              width: 160,
+              height: 37,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            onPress={() => {
+              navigation.navigate('InfoBooking', { item: item });
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: 'bold',
+                color: COLORS.white,
+              }}
+            >
+              Xem thông tin
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
+
+  const CardCompleted = ({ item, index }) => {
+    return (
+      <View
+        key={index}
+        style={{
+          marginTop: 5,
+          width: '93%',
+          justifyContent: 'center',
+          padding: 10,
+          borderRadius: 20,
+          backgroundColor: COLORS.white,
+          alignSelf: 'center',
+        }}
+      >
+        <View
+          style={{
+            flexDirection: 'row',
+          }}
+        >
+          <Image
+            source={{ uri: item.image }}
+            style={{ width: 120, height: 120, borderRadius: 20 }}
+          />
+          <View
+            style={{
+              marginLeft: 15,
+              justifyContent: 'space-between',
+            }}
+          >
+            <View>
+              <Text
+                style={{
+                  fontSize: 20,
+                  color: COLORS.dark,
+                  fontWeight: '600',
+                }}
+              >
+                {item.name}
+              </Text>
+              <Text
+                style={{
+                  width: 215,
+                  fontWeight: '400',
+                  color: COLORS.dark,
+                  fontSize: 15,
+                  marginVertical: 2,
+                }}
+              >
+                {item.roomname}
+              </Text>
+            </View>
+            <View
+              style={{
+                bottom: 3,
+              }}
+            >
+              <Text style={{ fontSize: 18, fontWeight: '700' }}>
+                {Format(item.total)} VNĐ
+              </Text>
+            </View>
+            <View
+              style={{
+                backgroundColor: COLORS.blurprimary,
+                width: 90,
+                height: 25,
+                borderRadius: 10,
+                alignItems: 'center',
+                justifyContent: 'center',
+                bottom: 3,
               }}
             >
               <Text
                 style={{
-                  fontSize: 16,
-                  fontWeight: 'bold',
+                  fontWeight: '700',
                   color: COLORS.primary,
                 }}
               >
-                Hủy đặt phòng
+                Hoàn tất
               </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
+            </View>
+          </View>
+        </View>
+        <View
+          style={{
+            borderWidth: 1,
+            height: 0,
+            width: 350,
+            borderColor: '#f2f2f2',
+            marginTop: 8,
+          }}
+        />
+        <View
+          style={{
+            backgroundColor: COLORS.blurprimary,
+            width: '95%',
+            borderRadius: 10,
+            alignSelf: 'center',
+            height: 35,
+            marginVertical: 15,
+            top: 5,
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingLeft: 10,
+          }}
+        >
+          <Icon1 size={20} name="checkbox" color={COLORS.primary} />
+          <Text
+            style={{
+              fontSize: 14,
+              fontWeight: '600',
+              color: COLORS.primary,
+              marginLeft: 10,
+            }}
+          >
+            Tuyệt, Bạn đã hoàn tất đặt phòng
+          </Text>
+        </View>
+      </View>
+    );
+  };
+
+  const CardCancelled = ({ item, index }) => {
+    return (
+      <View
+        key={index}
+        style={{
+          marginTop: 5,
+          width: '93%',
+          justifyContent: 'center',
+          padding: 10,
+          borderRadius: 20,
+          backgroundColor: COLORS.white,
+          alignSelf: 'center',
+        }}
+      >
+        <View
+          style={{
+            flexDirection: 'row',
+          }}
+        >
+          <Image
+            source={{ uri: item.image }}
+            style={{ width: 120, height: 120, borderRadius: 20 }}
+          />
+          <View
+            style={{
+              marginLeft: 15,
+              justifyContent: 'space-between',
+            }}
+          >
+            <View>
+              <Text
+                style={{
+                  fontSize: 20,
+                  color: COLORS.dark,
+                  fontWeight: '600',
+                }}
+              >
+                {item.name}
+              </Text>
+              <Text
+                style={{
+                  width: 215,
+                  fontWeight: '400',
+                  color: COLORS.dark,
+                  fontSize: 15,
+                  marginVertical: 2,
+                }}
+              >
+                {item.roomname}
+              </Text>
+            </View>
+            <View
               style={{
-                backgroundColor: COLORS.primary,
-                borderRadius: 15,
-                width: 150,
-                height: 37,
-                justifyContent: 'center',
+                bottom: 3,
+              }}
+            >
+              <Text style={{ fontSize: 18, fontWeight: '700' }}>
+                {Format(item.total)} VNĐ
+              </Text>
+            </View>
+            <View
+              style={{
+                backgroundColor: '#fddbdb',
+                width: 90,
+                height: 25,
+                borderRadius: 10,
                 alignItems: 'center',
+                justifyContent: 'center',
+                bottom: 3,
               }}
             >
               <Text
                 style={{
-                  fontSize: 16,
-                  fontWeight: 'bold',
-                  color: COLORS.white,
+                  fontWeight: '700',
+                  color: '#f76e64',
                 }}
               >
-                Xem thông tin
+                Đã hủy
               </Text>
-            </TouchableOpacity>
+            </View>
           </View>
-        ) : null}
+        </View>
+        <View
+          style={{
+            borderWidth: 1,
+            height: 0,
+            width: 350,
+            borderColor: '#f2f2f2',
+            marginTop: 8,
+          }}
+        />
+        <View
+          style={{
+            backgroundColor: '#fddbdb',
+            width: '95%',
+            borderRadius: 10,
+            alignSelf: 'center',
+            height: 35,
+            marginVertical: 15,
+            top: 5,
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingLeft: 10,
+          }}
+        >
+          <Icon2 size={20} name="exclamationcircle" color="#f76e64" />
+          <Text
+            style={{
+              fontSize: 14,
+              fontWeight: '600',
+              color: '#f76e64',
+              marginLeft: 10,
+            }}
+          >
+            Bạn đã hủy phòng này
+          </Text>
+        </View>
       </View>
     );
   };
   return (
-    <View style={{ flex: 1, backgroundColor: 'white' }}>
+    <View style={{ flex: 1 }}>
       <ScrollView>
         <View
           style={{
@@ -240,7 +514,7 @@ export default function Booking() {
             justifyContent: 'space-between',
             width: 320,
             alignSelf: 'center',
-            marginTop: 20,
+            marginTop: 10,
           }}
         >
           <TouchableOpacity
@@ -377,11 +651,11 @@ export default function Booking() {
             </View>
           ) : item.hotelinfo.status === 'completed' && button === 2 ? (
             <View key={index} style={{ paddingVertical: 10 }}>
-              <CardBooking item={item.hotelinfo} index={index} />
+              <CardCompleted item={item.hotelinfo} index={index} />
             </View>
           ) : item.hotelinfo.status === 'cancelled' && button === 3 ? (
             <View key={index} style={{ paddingVertical: 10 }}>
-              <CardBooking item={item.hotelinfo} index={index} />
+              <CardCancelled item={item.hotelinfo} index={index} />
             </View>
           ) : null,
         )}
@@ -505,6 +779,7 @@ export default function Booking() {
                 }}
                 onPress={() => {
                   CancelBooking(idroom);
+                  setModalVisible(!modalVisible);
                 }}
               >
                 <Text

@@ -11,7 +11,7 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 import uuid from 'react-native-uuid';
 import { useDispatch, useSelector } from 'react-redux';
@@ -220,6 +220,7 @@ export default function Booked({ navigation, route }) {
             console.log('Booking false!');
           });
       }
+      setModalVisible(true);
     }
   };
 
@@ -734,7 +735,6 @@ export default function Booked({ navigation, route }) {
           <TouchableOpacity
             style={{
               backgroundColor: 'rgba(0,0,0,0.5)',
-              height: '100%',
               alignItems: 'center',
               justifyContent: 'center',
             }}
@@ -833,7 +833,6 @@ export default function Booked({ navigation, route }) {
           }}
           onPress={() => {
             addbooking();
-            setModalVisible(true);
           }}
         >
           <Text

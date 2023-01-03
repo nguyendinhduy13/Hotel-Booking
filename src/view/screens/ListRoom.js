@@ -151,8 +151,11 @@ const ListRoom = ({ navigation, route }) => {
     if (!checkbook) {
       Alert.alert('Vui lòng đặt phòng trước khi đánh giá');
     } else {
-      dataHotel.map((item1) => {
+      let dataHotelRate = dataHotel.map((item1) => {
         if (item1.id === item.id) {
+          console.log(item1);
+          let newcomment = [...item1.comments];
+          let newstar = [...item1.star];
           const timeElapsed = Date.now();
           const today = new Date(timeElapsed);
           const data = {
@@ -165,13 +168,16 @@ const ListRoom = ({ navigation, route }) => {
               today.getFullYear(),
             user: user.displayName,
           };
-          item1.comments.push(data);
-          item1.star.push(starhotel);
+          newcomment.push(data);
+          newstar.push(starhotel);
+          return { ...item1, comments: newcomment, star: newstar };
         }
+        return item1;
       });
-      await firestore().collection('ListHotel').doc('ListHotel').set({
-        ListHotel: dataHotel,
-      });
+      console.log(dataHotelRate);
+      // await firestore().collection('ListHotel').doc('ListHotel').set({
+      //   ListHotel: dataHotelRate,
+      // });
       setStarhotel(0);
       setRatecontent('');
       setModalVisible(!modalVisible);
