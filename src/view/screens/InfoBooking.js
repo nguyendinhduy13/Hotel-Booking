@@ -5,11 +5,14 @@ import COLORS from '../../consts/colors';
 import CustomHeader from '../components/CustomHeader';
 export default function InfoBooking({ navigation, route }) {
   const { t } = useTranslation();
-  const { item } = route.params;
-
+  const item = route.params.item;
+  const user = route.params.user;
+  const Format = (prices) => {
+    return prices.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+  };
   return (
     <View style={{ flex: 1 }}>
-      <CustomHeader title={'Thông tin đặt phòng'} />
+      <CustomHeader title={t('booking-infomation')} />
       <ScrollView showsVerticalScrollIndicator={false} style={{}}>
         <View
           style={{
@@ -33,32 +36,22 @@ export default function InfoBooking({ navigation, route }) {
                     height: 100,
                     borderRadius: 10,
                   }}
-                  source={{ uri: '' }}
+                  source={{ uri: item.image }}
                 />
                 <View style={{ marginLeft: 10 }}>
                   <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
-                    'ten ks'
+                    {item.name}
                   </Text>
                   <Text
                     style={{
                       fontSize: 20,
                       fontWeight: 'bold',
                       color: 'black',
-                      width: '90%',
+                      width: '100%',
                       height: 30,
                     }}
                   >
-                    'ten phong'
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 15,
-                      width: 240,
-                      fontWeight: 'bold',
-                      marginTop: 10,
-                    }}
-                  >
-                    vi tri
+                    {item.roomname}
                   </Text>
                 </View>
               </View>
@@ -100,7 +93,7 @@ export default function InfoBooking({ navigation, route }) {
                 color: COLORS.dark,
               }}
             >
-              'check in'
+              {item.checkin}
             </Text>
           </View>
           <View
@@ -123,7 +116,7 @@ export default function InfoBooking({ navigation, route }) {
                 color: COLORS.dark,
               }}
             >
-              'check out'
+              {item.checkout}
             </Text>
           </View>
           <View
@@ -155,7 +148,7 @@ export default function InfoBooking({ navigation, route }) {
                   marginHorizontal: 10,
                 }}
               >
-                'so nguoi'
+                {item.guess}
               </Text>
             </View>
           </View>
@@ -179,7 +172,7 @@ export default function InfoBooking({ navigation, route }) {
             <Text
               style={{ fontSize: 20, fontWeight: 'bold', color: COLORS.dark }}
             >
-              Thông tin người đặt
+              {t('booker-information')}
             </Text>
           </View>
           <View style={{ marginTop: 5 }}>
@@ -206,7 +199,7 @@ export default function InfoBooking({ navigation, route }) {
                   fontWeight: 'bold',
                 }}
               >
-                'ten'
+                {user.name}
               </Text>
             </View>
             <View
@@ -232,7 +225,7 @@ export default function InfoBooking({ navigation, route }) {
                   fontWeight: 'bold',
                 }}
               >
-                'so dien thoai'
+                {user.phone}
               </Text>
             </View>
             <View
@@ -258,7 +251,7 @@ export default function InfoBooking({ navigation, route }) {
                   fontWeight: 'bold',
                 }}
               >
-                'email'
+                {user.email}
               </Text>
             </View>
             <View
@@ -284,7 +277,7 @@ export default function InfoBooking({ navigation, route }) {
                   fontWeight: 'bold',
                 }}
               >
-                'tuoi'
+                {user.birthday}
               </Text>
             </View>
           </View>
@@ -300,7 +293,7 @@ export default function InfoBooking({ navigation, route }) {
             <Text
               style={{ fontSize: 20, fontWeight: 'bold', color: COLORS.dark }}
             >
-              Thanh toán
+              {t('payment')}
             </Text>
             <View
               style={{
@@ -325,7 +318,7 @@ export default function InfoBooking({ navigation, route }) {
                   marginLeft: 10,
                 }}
               >
-                Thanh toán tại khách sạn
+                {t('payment-at-hotel')}
               </Text>
             </View>
           </View>
@@ -342,7 +335,7 @@ export default function InfoBooking({ navigation, route }) {
             <Text
               style={{ fontSize: 20, fontWeight: 'bold', color: COLORS.dark }}
             >
-              Chi tiết thanh toán
+              {t('payment-details')}
             </Text>
             <View
               style={{
@@ -371,7 +364,7 @@ export default function InfoBooking({ navigation, route }) {
                     marginLeft: 10,
                   }}
                 >
-                  Tiền phòng
+                  {t('cost-of-room')}
                 </Text>
               </View>
               <Text
@@ -380,7 +373,7 @@ export default function InfoBooking({ navigation, route }) {
                   color: 'black',
                 }}
               >
-                'tien phong'
+                {Format(item.price)}
               </Text>
             </View>
             <View
@@ -402,22 +395,13 @@ export default function InfoBooking({ navigation, route }) {
               <Text
                 style={{ fontSize: 20, color: 'black', fontWeight: 'bold' }}
               >
-                Tổng tiền
+                {t('total')}
               </Text>
               <Text
                 style={{ fontSize: 22, color: 'black', fontWeight: 'bold' }}
               >
-                <Text
-                  style={{
-                    fontSize: 15,
-                    fontWeight: 'normal',
-                    textDecorationLine: 'line-through',
-                  }}
-                >
-                  {' '}
-                  tong tien
-                </Text>
-                'd'
+                {' '}
+                {Format(item.price)} đ
               </Text>
             </View>
           </View>

@@ -63,7 +63,6 @@ export default function DetailsScreen({ navigation, route }) {
             color={COLORS.white}
             onPress={navigation.goBack}
           />
-          <Icon name="bookmark-border" size={28} color={COLORS.white} />
         </View>
       </Animated.View>
       <Animated.View style={[styles.HeadrViewWhite, HeaderAnimatedScrollWhite]}>
@@ -74,7 +73,6 @@ export default function DetailsScreen({ navigation, route }) {
             color="black"
             onPress={navigation.goBack}
           />
-          <Icon name="bookmark-border" size={0} color={COLORS.white} />
         </View>
       </Animated.View>
       <Animated.View style={[styles.HeadrView1, HeaderAnimated]}>
@@ -302,43 +300,52 @@ export default function DetailsScreen({ navigation, route }) {
           </View>
         </View>
       </ScrollView>
-      <TouchableOpacity
-        style={styles.bottomButton}
-        onPress={() => {
-          navigation.navigate('Booked', {
-            item: item,
-            hotel: hotel,
-          });
+      <View
+        style={{
+          width: '100%',
+          height: 65,
+          backgroundColor: 'white',
+          alignItems: 'center',
+          justifyContent: 'center',
+          position: 'absolute',
+          zIndex: 1,
+          bottom: 0,
         }}
       >
-        <View
+        <TouchableOpacity
           style={{
-            backgroundColor: COLORS.primary,
             width: '90%',
-            height: 47,
+            height: 45,
+            backgroundColor: COLORS.primary,
+            borderRadius: 15,
+            alignItems: 'center',
             justifyContent: 'center',
-            borderRadius: 18,
+          }}
+          onPress={() => {
+            navigation.navigate('Booked', {
+              item: item,
+              hotel: hotel,
+            });
           }}
         >
           <Text
             style={{
-              fontSize: 18,
-              color: COLORS.white,
-              textAlign: 'center',
+              fontSize: 15,
               fontWeight: 'bold',
+              color: COLORS.white,
             }}
           >
             {t('book-now')}
           </Text>
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   headerImage: {
-    height: 400,
+    height: 350,
     overflow: 'hidden',
     borderBottomLeftRadius: 15,
     borderBottomRightRadius: 15,
@@ -379,20 +386,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
     marginHorizontal: 20,
     borderRadius: 10,
-  },
-  bottomButton: {
-    alignItems: 'center',
-    padding: 10,
-    borderTopLeftRadius: 15,
-    borderTopRightRadius: 15,
-    backgroundColor: 'white',
-    position: 'absolute',
-    zIndex: 1,
-    width: '100%',
-    bottom: 0,
-    borderStyle: 'solid',
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
   },
   HeadrView: {
     position: 'absolute',

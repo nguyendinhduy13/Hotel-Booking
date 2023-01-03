@@ -1,5 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
+import About from '../screens/About';
 import Booked from '../screens/Booked';
 import ChangeLanguage from '../screens/ChangeLanguage';
 import ChangePassword from '../screens/ChangePassword';
@@ -15,6 +16,7 @@ import ListRoom from '../screens/ListRoom';
 import Map from '../screens/Map';
 import MapHotel from '../screens/MapHotel';
 import PlaceHotel from '../screens/PlaceHotel';
+import Terms from '../screens/Terms';
 import Test from '../screens/Test';
 import TestCalendar from '../screens/TestCalendar';
 import TabNavigator from './TabNavigator';
@@ -144,9 +146,25 @@ export default function AppStack() {
           headerShown: false,
         }}
       />
+
       <Stack.Screen
         name="InfoBooking"
         component={InfoBooking}
+        options={{
+          headerShown: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="About"
+        component={About}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Terms"
+        component={Terms}
         options={{
           headerShown: false,
         }}

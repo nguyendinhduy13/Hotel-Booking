@@ -6,13 +6,13 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import React, { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  Alert,
   Image,
   Keyboard,
   Pressable,
   StyleSheet,
   Text,
   TextInput,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -47,27 +47,33 @@ export default function SignInScreenTT({ navigation }) {
       // Sign-in the user with the credential
       const user = await auth().signInWithCredential(googleCredential);
       if (user) {
+        if (user.additionalUserInfo.isNewUser) {
+          firestore()
+            .collection('Users')
+            .doc(auth().currentUser.uid)
+            .set({
+              email: user.user.email,
+              name: user.user.displayName,
+              phone: user.user.phoneNumber,
+              type: 'google',
+            })
+            .then(() => {
+              console.log('User added!');
+              Globalreducer.actions.setNameUser({
+                email: user.user.email,
+                name: user.user.displayName,
+                phone: user.user.phoneNumber,
+                type: 'google',
+              });
+            });
+        }
         dispatchSignedIn({
           type: 'UPDATE_SIGN_IN',
           payload: { userToken: 'user' },
         });
       }
-      if (user.additionalUserInfo.isNewUser) {
-        firestore()
-          .collection('Users')
-          .doc(auth().currentUser.uid)
-          .set({
-            email: user.user.email,
-            name: user.user.displayName,
-            phone: user.user.phoneNumber,
-            type: 'google',
-          })
-          .then(() => {
-            console.log('User added!');
-          });
-      }
     } catch (error) {
-      Alert.alert('Error', error.message);
+      console.log(error);
     }
   }
   const componentDidMount = () => {
@@ -168,57 +174,67 @@ export default function SignInScreenTT({ navigation }) {
   }, []);
   async function signIn({ email, password }) {
     try {
-      const user = await auth().signInWithEmailAndPassword(email, password);
-      let roll = 'signed-In';
-      let id = '';
-      let adminuid = '';
-      await firestore()
-        .collection('AdminAccounts')
-        .get()
-        .then((querySnapshot) => {
-          querySnapshot.forEach((documentSnapshot) => {
-            dataAccount.push(documentSnapshot.data());
-          });
-        });
-      await dataAccount.filter((item) => {
-        if (item.email === email) {
-          roll = item.roll;
-          id = item.id;
-          adminuid = item.adminuid;
-        }
-      });
-      firestore()
-        .collection('HotelList')
-        .doc(id)
-        .get()
-        .then((documentSnapshot) => {
-          const data = documentSnapshot.data().Room;
-          data.map((item1) => {
-            item1.image.map(async (item2, index) => {
-              const url = await storage()
-                .ref(id + '/' + item1.id + '/' + item2)
-                .getDownloadURL();
-              item1.image[index] = url;
+      if (email == '' || password == '') {
+        ToastAndroid.show(t('please-fill-all-information'), ToastAndroid.SHORT);
+      } else {
+        const user = await auth().signInWithEmailAndPassword(email, password);
+        let roll = 'signed-In';
+        let id = '';
+        let adminuid = '';
+        await firestore()
+          .collection('AdminAccounts')
+          .get()
+          .then((querySnapshot) => {
+            querySnapshot.forEach((documentSnapshot) => {
+              dataAccount.push(documentSnapshot.data());
             });
           });
-          setTimeout(() => {
-            dispatch(BookingHotel.actions.addRoom(data));
-          }, 3000);
+        await dataAccount.filter((item) => {
+          if (item.email === email) {
+            roll = item.roll;
+            id = item.id;
+            adminuid = item.adminuid;
+          }
         });
-
-      setTimeout(() => {
-        dispatch(Globalreducer.actions.setidks(id));
-        dispatch(Globalreducer.actions.setadminuid(adminuid));
-        setAsyncStorage('userToken', roll + '-' + id);
-        if (user) {
-          dispatchSignedIn({
-            type: 'UPDATE_SIGN_IN',
-            payload: { userToken: roll, _id: id },
+        firestore()
+          .collection('HotelList')
+          .doc(id)
+          .get()
+          .then((documentSnapshot) => {
+            const data = documentSnapshot.data().Room;
+            data.map((item1) => {
+              item1.image.map(async (item2, index) => {
+                const url = await storage()
+                  .ref(id + '/' + item1.id + '/' + item2)
+                  .getDownloadURL();
+                item1.image[index] = url;
+              });
+            });
+            setTimeout(() => {
+              dispatch(BookingHotel.actions.addRoom(data));
+            }, 3000);
           });
-        }
-      }, 3000);
+
+        setTimeout(() => {
+          dispatch(Globalreducer.actions.setidks(id));
+          dispatch(Globalreducer.actions.setadminuid(adminuid));
+          setAsyncStorage('userToken', roll + '-' + id);
+          if (user) {
+            dispatchSignedIn({
+              type: 'UPDATE_SIGN_IN',
+              payload: { userToken: roll, _id: id },
+            });
+          }
+        }, 3000);
+      }
     } catch (error) {
-      Alert.alert('Error', error.message);
+      if (error.code == 'auth/user-not-found') {
+        ToastAndroid.show(t('email-not-found'), ToastAndroid.SHORT);
+      } else if (error.code == 'auth/wrong-password') {
+        ToastAndroid.show(t('wrong-password'), ToastAndroid.SHORT);
+      } else {
+        ToastAndroid.show(t('error'), ToastAndroid.SHORT);
+      }
     }
   }
   const { t } = useTranslation();

@@ -1,8 +1,11 @@
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Dimensions,
+  Keyboard,
+  Pressable,
   StyleSheet,
   Text,
   TextInput,
@@ -14,7 +17,6 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import { useDispatch, useSelector } from 'react-redux';
 import Globalreducer from '../../redux/Globalreducer';
 import CustomHeader from '../components/CustomHeader';
-
 const { width, height } = Dimensions.get('screen');
 const InfoProfile = ({ navigation }) => {
   const { nameUser } = useSelector((state) => state.Globalreducer);
@@ -49,15 +51,18 @@ const InfoProfile = ({ navigation }) => {
       .then(() => {
         console.log('User updated!');
         dispatch(Globalreducer.actions.setNameUser(data));
-        ToastAndroid.show('Cập nhật thành công', ToastAndroid.SHORT);
+        ToastAndroid.show(t('update-success'), ToastAndroid.SHORT);
       });
   };
-
+  const { t } = useTranslation();
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
       <View style={{}}>
-        <CustomHeader title={'Thông tin tài khoản'} />
-        <View style={{ paddingHorizontal: 20, height: height, width: '100%' }}>
+        <CustomHeader title={'information-account'} />
+        <Pressable
+          style={{ paddingHorizontal: 20, height: height, width: '100%' }}
+          onPress={() => Keyboard.dismiss()}
+        >
           <View
             style={{
               flexDirection: 'row',
@@ -76,7 +81,7 @@ const InfoProfile = ({ navigation }) => {
                 width: '40%',
               }}
             >
-              Tên tài khoản:
+              {t('user-name')}
             </Text>
             <TextInput
               style={{
@@ -106,7 +111,7 @@ const InfoProfile = ({ navigation }) => {
                 width: '40%',
               }}
             >
-              Email:
+              {t('email')}
             </Text>
             <TextInput
               style={{
@@ -137,7 +142,7 @@ const InfoProfile = ({ navigation }) => {
                 width: '40%',
               }}
             >
-              Số điện thoại:
+              {t('phone')}
             </Text>
             <TextInput
               style={{
@@ -174,18 +179,18 @@ const InfoProfile = ({ navigation }) => {
                   width: '40%',
                 }}
               >
-                Password:
+                {t('password')}
               </Text>
               <Text style={{ fontSize: 17, color: 'black' }}>{'********'}</Text>
             </View>
             <Icon
               name="edit"
-              size={25}
+              size={nameUser.type === 'google' ? 0 : 25}
               style={{
                 position: 'absolute',
                 right: 15,
                 alignSelf: 'center',
-                color: 'orange',
+                color: 'red',
               }}
               onPress={() => {
                 navigation.navigate('Change Password');
@@ -215,10 +220,10 @@ const InfoProfile = ({ navigation }) => {
                 color: 'white',
               }}
             >
-              Cập nhật
+              {t('update')}
             </Text>
           </TouchableOpacity>
-        </View>
+        </Pressable>
       </View>
     </View>
   );

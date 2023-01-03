@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Dimensions,
   Pressable,
@@ -18,6 +19,7 @@ const { width, height } = Dimensions.get('window');
 const ListPlace = ({ navigation }) => {
   const { dataProvince } = useSelector((state) => state.Globalreducer);
   const [codeSelected, setCodeSelected] = useState(0);
+  const { t } = useTranslation();
 
   return (
     <View style={{ backgroundColor: 'white', flex: 1 }}>
@@ -46,7 +48,7 @@ const ListPlace = ({ navigation }) => {
               color: 'black',
             }}
           >
-            Vui lòng chọn khu vực
+            {t('please-choice-place')}
           </Text>
           <Icon name="close" size={0} color="black" />
         </View>
@@ -85,7 +87,12 @@ const ListPlace = ({ navigation }) => {
             </Text>
           </View>
           <TouchableOpacity
-            onPress={() => {}}
+            onPress={() => {
+              navigation.navigate('PlaceHotel', {
+                name: 'Hồ Chí Minh',
+                data: [],
+              });
+            }}
             style={{
               flexDirection: 'row',
               alignItems: 'center',
@@ -94,7 +101,7 @@ const ListPlace = ({ navigation }) => {
               padding: 4,
             }}
           >
-            <Text style={{ paddingHorizontal: 5 }}>Gần bạn</Text>
+            <Text style={{ paddingHorizontal: 5 }}>{t('near-you')}</Text>
             <Icon2
               name="target"
               size={20}
@@ -236,7 +243,7 @@ const ListPlace = ({ navigation }) => {
                                 color: 'black',
                               }}
                             >
-                              Không có khách sạn nào
+                              {t('no-have-hotel-available')}
                             </Text>
                           </View>
                         ) : null}

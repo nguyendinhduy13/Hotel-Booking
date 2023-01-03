@@ -59,7 +59,7 @@ export default function Profile({ navigation }) {
               <Text
                 style={{ fontSize: 27, fontWeight: 'bold', color: 'black' }}
               >
-                {auth().currentUser.displayName}
+                Admin
               </Text>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>

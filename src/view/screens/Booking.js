@@ -2,6 +2,7 @@ import Auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Image,
   Modal,
@@ -11,10 +12,10 @@ import {
   View,
 } from 'react-native';
 import Icon2 from 'react-native-vector-icons/AntDesign';
-import Icon from 'react-native-vector-icons/Fontisto';
 import Icon1 from 'react-native-vector-icons/Ionicons';
 import COLORS from '../../consts/colors';
 export default function Booking() {
+  const { t } = useTranslation();
   const [button, setbutton] = useState(1);
   const [modalVisible, setModalVisible] = useState(false);
   const [data, setdata] = useState([]);
@@ -76,7 +77,7 @@ export default function Booking() {
     });
   };
 
-  const CardBooking = ({ item, index }) => {
+  const CardBooking = ({ item, user, index }) => {
     return (
       <View
         key={index}
@@ -154,7 +155,7 @@ export default function Booking() {
                   color: COLORS.primary,
                 }}
               >
-                Đang xử lý
+                {t('ongoing')}
               </Text>
             </View>
           </View>
@@ -197,7 +198,7 @@ export default function Booking() {
                 color: COLORS.primary,
               }}
             >
-              Hủy đặt phòng
+              {t('Cancel-booking')}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -210,7 +211,7 @@ export default function Booking() {
               alignItems: 'center',
             }}
             onPress={() => {
-              navigation.navigate('InfoBooking', { item: item });
+              navigation.navigate('InfoBooking', { item: item, user: user });
             }}
           >
             <Text
@@ -220,7 +221,7 @@ export default function Booking() {
                 color: COLORS.white,
               }}
             >
-              Xem thông tin
+              {t('see-information')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -305,7 +306,7 @@ export default function Booking() {
                   color: COLORS.primary,
                 }}
               >
-                Hoàn tất
+                {t('completed')}
               </Text>
             </View>
           </View>
@@ -342,7 +343,7 @@ export default function Booking() {
               marginLeft: 10,
             }}
           >
-            Tuyệt, Bạn đã hoàn tất đặt phòng
+            {t('great-you-have-completed-your-booking')}
           </Text>
         </View>
       </View>
@@ -426,7 +427,7 @@ export default function Booking() {
                   color: '#f76e64',
                 }}
               >
-                Đã hủy
+                {t('cancelled')}
               </Text>
             </View>
           </View>
@@ -463,7 +464,7 @@ export default function Booking() {
               marginLeft: 10,
             }}
           >
-            Bạn đã hủy phòng này
+            {t('sorry-your-booking-has-been-cancelled')}
           </Text>
         </View>
       </View>
@@ -474,39 +475,20 @@ export default function Booking() {
       <ScrollView>
         <View
           style={{
-            flexDirection: 'row',
             paddingTop: '4%',
-            justifyContent: 'space-between',
           }}
         >
-          <View style={{ flexDirection: 'row' }}>
-            <Image
-              source={require('../../assets/logo.png')}
-              style={{
-                width: 40,
-                height: 40,
-                borderRadius: 20,
-                marginLeft: 10,
-              }}
-            />
-            <Text
-              style={{
-                fontSize: 22,
-                fontWeight: 'bold',
-                color: COLORS.dark,
-                paddingTop: 2,
-                marginLeft: 15,
-              }}
-            >
-              My Booking
-            </Text>
-          </View>
-          <Icon
-            name="search"
-            size={22}
-            color={COLORS.dark}
-            style={{ right: 20 }}
-          />
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: '700',
+              alignSelf: 'center',
+              textAlign: 'center',
+              color: COLORS.black,
+            }}
+          >
+            {t('my-booking')}
+          </Text>
         </View>
         <View
           style={{
@@ -555,7 +537,7 @@ export default function Booking() {
                     }
               }
             >
-              Ongoing
+              {t('ongoing')}
             </Text>
           </TouchableOpacity>
 
@@ -597,7 +579,7 @@ export default function Booking() {
                     }
               }
             >
-              Completed
+              {t('completed')}
             </Text>
           </TouchableOpacity>
 
@@ -639,7 +621,7 @@ export default function Booking() {
                     }
               }
             >
-              Canceled
+              {t('cancelled')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -647,7 +629,11 @@ export default function Booking() {
         {data.map((item, index) =>
           item.hotelinfo.status === 'ongoing' && button === 1 ? (
             <View key={index} style={{ paddingVertical: 10 }}>
-              <CardBooking item={item.hotelinfo} index={index} />
+              <CardBooking
+                item={item.hotelinfo}
+                user={item.userinfo}
+                index={index}
+              />
             </View>
           ) : item.hotelinfo.status === 'completed' && button === 2 ? (
             <View key={index} style={{ paddingVertical: 10 }}>
@@ -674,6 +660,7 @@ export default function Booking() {
             flex: 1,
             backgroundColor: 'rgba(0,0,0,0.5)',
           }}
+          onPress={() => setModalVisible(!modalVisible)}
         >
           <View
             style={{
@@ -702,6 +689,7 @@ export default function Booking() {
                 height: 5,
                 top: 5,
               }}
+              onPress={() => setModalVisible(!modalVisible)}
             />
             <Text
               style={{
@@ -711,7 +699,7 @@ export default function Booking() {
                 marginVertical: 20,
               }}
             >
-              Cancel Booking
+              {t('Cancel-booking')}
             </Text>
             <TouchableOpacity
               style={{ width: '90%', height: 2, backgroundColor: '#f3f6f4' }}
@@ -725,7 +713,7 @@ export default function Booking() {
                 textAlign: 'center',
               }}
             >
-              Are you sure you want to cancel your hotel booking?
+              {t('are-you-sure-you-want-to-cancel-your-hotel-booking')}
             </Text>
             <Text
               style={{
@@ -734,8 +722,9 @@ export default function Booking() {
                 textAlign: 'center',
               }}
             >
-              Only 80% of the money you can refund from your payment according
-              to our policy
+              {t(
+                'only-80%-of-the-money-you-can-refund-from-payment-according-to-our-policy',
+              )}
             </Text>
             <View
               style={{
@@ -765,7 +754,7 @@ export default function Booking() {
                     color: COLORS.primary,
                   }}
                 >
-                  Cancel
+                  {t('cancel')}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -789,7 +778,7 @@ export default function Booking() {
                     color: COLORS.white,
                   }}
                 >
-                  Yes, Continue
+                  {t('yes-continue')}
                 </Text>
               </TouchableOpacity>
             </View>

@@ -17,6 +17,7 @@ import { Icon } from 'react-native-elements';
 import Icon2 from 'react-native-vector-icons/AntDesign';
 import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons';
 import COLORS from '../../../consts/colors';
+import Globalreducer from '../../../redux/Globalreducer';
 export default function SignUpScreen({ navigation }) {
   const [getVisible, setVisible] = useState(false);
   const [name, setName] = useState('');
@@ -37,7 +38,13 @@ export default function SignUpScreen({ navigation }) {
         })
         .then(() => {
           console.log('User added!');
-          navigation.navigate('SignInScreenTT');
+          Globalreducer.actions.setNameUser({
+            name: name,
+            email: email,
+            phone: '',
+            type: 'account',
+          }),
+            navigation.navigate('SignInScreenTT');
         });
     } catch (error) {
       if (error.code == 'auth/email-already-in-use') {

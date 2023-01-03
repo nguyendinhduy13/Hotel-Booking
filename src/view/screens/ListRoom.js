@@ -56,7 +56,7 @@ const ListRoom = ({ navigation, route }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [ratecontent, setRatecontent] = useState('');
   const [checkbook, setCheckbook] = useState(false);
-  const { dayamount, startday, endday, dataHotel } = useSelector(
+  const { dayamount, startday, endday, dataHotel, nameUser } = useSelector(
     (state) => state.Globalreducer,
   );
   const Format = (number) => {
@@ -143,8 +143,18 @@ const ListRoom = ({ navigation, route }) => {
         }
       });
   }, []);
+
   const handleShow = () => {
     setShow(!show);
+  };
+
+  const ImageDefault = (image) => {
+    let temp = image.split('%');
+    let temp1 = temp[1].split('?');
+    //remove 2 words "2F" and "2E" in string
+    let temp2 = temp1[0].replace('2F', '');
+    let temp3 = temp2.replace('2E', '');
+    return temp3;
   };
 
   const ratehotel = async () => {
@@ -153,7 +163,34 @@ const ListRoom = ({ navigation, route }) => {
     } else {
       let dataHotelRate = dataHotel.map((item1) => {
         if (item1.id === item.id) {
-          console.log(item1);
+          let newcomment = [...item1.comments];
+          let newstar = [...item1.star];
+          let image = ImageDefault(item1.image);
+          const timeElapsed = Date.now();
+          const today = new Date(timeElapsed);
+          const data = {
+            content: ratecontent,
+            date:
+              today.getDate() +
+              '/' +
+              (today.getMonth() + 1) +
+              '/' +
+              today.getFullYear(),
+            user: nameUser.name,
+          };
+          newcomment.push(data);
+          newstar.push(starhotel);
+          return {
+            ...item1,
+            comments: newcomment,
+            star: newstar,
+            image: image,
+          };
+        }
+        return item1;
+      });
+      let dataHotelRate1 = dataHotel.map((item1) => {
+        if (item1.id === item.id) {
           let newcomment = [...item1.comments];
           let newstar = [...item1.star];
           const timeElapsed = Date.now();
@@ -166,18 +203,22 @@ const ListRoom = ({ navigation, route }) => {
               (today.getMonth() + 1) +
               '/' +
               today.getFullYear(),
-            user: user.displayName,
+            user: nameUser.name,
           };
           newcomment.push(data);
           newstar.push(starhotel);
-          return { ...item1, comments: newcomment, star: newstar };
+          return {
+            ...item1,
+            comments: newcomment,
+            star: newstar,
+          };
         }
         return item1;
       });
-      console.log(dataHotelRate);
-      // await firestore().collection('ListHotel').doc('ListHotel').set({
-      //   ListHotel: dataHotelRate,
-      // });
+      await firestore().collection('ListHotel').doc('ListHotel').set({
+        ListHotel: dataHotelRate,
+      });
+      dispatch(Globalreducer.actions.setDataHotel(dataHotelRate1));
       setStarhotel(0);
       setRatecontent('');
       setModalVisible(!modalVisible);
@@ -664,20 +705,6 @@ const ListRoom = ({ navigation, route }) => {
               >
                 {t('description')}
               </Text>
-              <TouchableOpacity
-                onPress={() => {
-                  handleShow();
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 15,
-                    color: COLORS.primary,
-                  }}
-                >
-                  {t('show')}
-                </Text>
-              </TouchableOpacity>
             </View>
             <Text
               style={{
@@ -899,7 +926,7 @@ const ListRoom = ({ navigation, route }) => {
           </TouchableOpacity>
         </View>
       </Animated.View>
-      <TouchableOpacity
+      <Pressable
         style={styles.bottomSheet1}
         onPress={() => {
           handleOpenCalendar();
@@ -949,12 +976,12 @@ const ListRoom = ({ navigation, route }) => {
               }}
             >
               <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'red' }}>
-                Đổi ngày
+                {t('change-day')}
               </Text>
             </View>
           </View>
         </View>
-      </TouchableOpacity>
+      </Pressable>
       <TouchableOpacity
         style={{
           position: 'absolute',

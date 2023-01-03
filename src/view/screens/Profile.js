@@ -73,7 +73,7 @@ export default function Profile({ navigation }) {
               >
                 <Icon2
                   name="edit-3"
-                  size={nameUser.type === 'google' ? 0 : 25}
+                  size={25}
                   color="red"
                   style={{ marginLeft: 5 }}
                 />
@@ -151,12 +151,17 @@ export default function Profile({ navigation }) {
             />
           </View>
           <Text style={styles.tittle}>{t('information')}</Text>
-          <TouchableOpacity style={styles.view}>
+          <TouchableOpacity
+            style={styles.view}
+            onPress={() => {
+              navigation.navigate('Terms');
+            }}
+          >
             <Icon name="shield-checkmark-outline" size={25} />
             <Text
               style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}
             >
-              {t('terms-and-policy')}
+              {t('terms-and-conditions')}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -181,7 +186,12 @@ export default function Profile({ navigation }) {
               14.3.1
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.view}>
+          <TouchableOpacity
+            style={styles.view}
+            onPress={() => {
+              navigation.navigate('About');
+            }}
+          >
             <Icon1 name="info-outline" size={25} />
             <Text
               style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}

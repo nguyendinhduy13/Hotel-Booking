@@ -121,7 +121,7 @@ const ItemInfo = ({ navigation }) => {
 
   return (
     <View>
-      <CustomHeader title={'Thêm thông tin phòng'} />
+      <CustomHeader title={'add-information-room'} />
       <View style={{ alignItems: 'center' }}>
         <TextInput
           placeholder="Tên phòng"
