@@ -87,7 +87,12 @@ const ListPlace = ({ navigation }) => {
             </Text>
           </View>
           <TouchableOpacity
-            onPress={() => {}}
+            onPress={() => {
+              navigation.navigate('PlaceHotel', {
+                name: 'Hồ Chí Minh',
+                data: [],
+              });
+            }}
             style={{
               flexDirection: 'row',
               alignItems: 'center',

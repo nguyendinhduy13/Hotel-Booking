@@ -432,7 +432,7 @@ const PlaceHotel = ({ navigation, route }) => {
                     <Text
                       style={{ fontSize: 20, marginTop: 30, color: 'black' }}
                     >
-                      Không có khách sạn nào
+                      {t('no-have-hotel-available')}
                     </Text>
                   </View>
                 </>
