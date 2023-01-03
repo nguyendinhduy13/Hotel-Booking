@@ -9,20 +9,20 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import Icon1 from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useSelector } from 'react-redux';
-
 const { width, height } = Dimensions.get('window');
 
 const ListPlace = ({ navigation }) => {
   const { dataProvince } = useSelector((state) => state.Globalreducer);
   const [codeSelected, setCodeSelected] = useState(0);
   const { t } = useTranslation();
-
+  const { colors } = useTheme();
   return (
-    <View style={{ backgroundColor: 'white', flex: 1 }}>
+    <View style={{ backgroundColor: colors.bg, flex: 1 }}>
       <View style={{ padding: 15 }}>
         <View
           style={{
@@ -39,13 +39,13 @@ const ListPlace = ({ navigation }) => {
             }}
             name="close"
             size={30}
-            color="black"
+            color={colors.text}
           />
           <Text
             style={{
               fontSize: 18,
               fontWeight: 'bold',
-              color: 'black',
+              color: colors.text,
             }}
           >
             {t('please-choice-place')}
@@ -69,17 +69,12 @@ const ListPlace = ({ navigation }) => {
               alignItems: 'center',
             }}
           >
-            <Icon1
-              name="md-location-sharp"
-              size={25}
-              color="orange"
-              style={{}}
-            />
+            <Icon1 name="md-location-sharp" size={25} color="orange" />
             <Text
               style={{
                 fontSize: 18,
                 fontWeight: 'bold',
-                color: 'black',
+                color: colors.text,
                 marginLeft: 10,
               }}
             >
@@ -96,16 +91,18 @@ const ListPlace = ({ navigation }) => {
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              backgroundColor: '#eeeeee',
+              backgroundColor: colors.special,
               borderRadius: 10,
               padding: 4,
             }}
           >
-            <Text style={{ paddingHorizontal: 5 }}>{t('near-you')}</Text>
+            <Text style={{ paddingHorizontal: 5, color: colors.text }}>
+              {t('near-you')}
+            </Text>
             <Icon2
               name="target"
               size={20}
-              color="gray"
+              color={colors.icon}
               style={{
                 marginLeft: 2,
               }}
@@ -155,7 +152,8 @@ const ListPlace = ({ navigation }) => {
                       <Text
                         style={{
                           fontSize: 16,
-                          color: index === codeSelected ? 'orange' : 'black',
+                          color:
+                            index === codeSelected ? 'orange' : colors.text,
                           marginLeft: 10,
                           width: width * 0.3,
                         }}
@@ -205,7 +203,7 @@ const ListPlace = ({ navigation }) => {
                           <Text
                             style={{
                               fontSize: 16,
-                              color: 'black',
+                              color: colors.text,
                               marginLeft: 10,
                               width: width * 0.6,
                             }}
@@ -240,7 +238,7 @@ const ListPlace = ({ navigation }) => {
                             <Text
                               style={{
                                 fontSize: 16,
-                                color: 'black',
+                                color: colors.text,
                               }}
                             >
                               {t('no-have-hotel-available')}

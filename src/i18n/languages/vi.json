@@ -153,6 +153,12 @@
     "support-customer": "Hỗ trợ khách hàng",
     "contact-for-cooperation": "Liên hệ hợp tác",
     "headquarters": "Trụ sở chính",
-    "Hotel-Booking-VIET-NAM-Joint-Stock-Company": "Công ty Cổ phần Hotel Booking Việt Nam"
+    "Hotel-Booking-VIET-NAM-Joint-Stock-Company": "Công ty Cổ phần Hotel Booking Việt Nam",
+    "please-book-this-hotel-before-review": "Vui lòng đặt phòng khách sạn này trước khi đánh giá",
+    "no-room-available": "Không có phòng trống",
+    "rate-this-hotel": "Đánh giá khách sạn này",
+    "please-give-your-rate-&-review": "Vui lòng cho điểm và đánh giá của bạn",
+    "rate-now": "Đánh giá ngay",
+    "later": "Để sau"
   }
 }

@@ -24,6 +24,7 @@ import {
 } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import { useTheme } from 'react-native-paper';
 import Icon5 from 'react-native-vector-icons/AntDesign';
 import Icon4 from 'react-native-vector-icons/FontAwesome5';
 import Icon3 from 'react-native-vector-icons/Fontisto';
@@ -41,6 +42,7 @@ const MAX_DOWNWARD_TRANSLATE_Y = 0;
 const DRAG_THRESHOLD = 50;
 const ListRoom = ({ navigation, route }) => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const star = [1, 2, 3, 4, 5];
   const dispatch = useDispatch();
   const item = route.params;
@@ -149,7 +151,7 @@ const ListRoom = ({ navigation, route }) => {
 
   const ratehotel = async () => {
     if (!checkbook) {
-      Alert.alert('Vui lòng đặt phòng trước khi đánh giá');
+      Alert.alert(t('please-book-this-hotel-before-review'));
     } else {
       dataHotel.map((item1) => {
         if (item1.id === item.id) {
@@ -314,14 +316,20 @@ const ListRoom = ({ navigation, route }) => {
     const temp = image.split('.');
     return temp[temp.length - 1] === 'jpg' ? null : image;
   };
-  console.log('die');
+
   return (
-    <SafeAreaView style={{ backgroundColor: 'white' }}>
-      <AnimatedView style={[styles.HeaderBack, HeaderAnimated]}>
+    <SafeAreaView style={{ backgroundColor: colors.bg }}>
+      <AnimatedView
+        style={[
+          styles.HeaderBack,
+          { backgroundColor: colors.bg },
+          HeaderAnimated,
+        ]}
+      >
         <Icon
           name="arrow-back-ios"
           size={28}
-          color="black"
+          color={colors.text}
           onPress={navigation.goBack}
         />
         <View style={{ alignItems: 'center', paddingRight: 20 }}>
@@ -334,7 +342,9 @@ const ListRoom = ({ navigation, route }) => {
           >
             {item.name}
           </Text>
-          <Text style={{ textAlign: 'center' }}>{item.location}</Text>
+          <Text style={{ textAlign: 'center', color: colors.icon }}>
+            {item.location}
+          </Text>
         </View>
         <Icon2 name="heart-outline" size={0} color="black" style={{}} />
       </AnimatedView>
@@ -370,7 +380,7 @@ const ListRoom = ({ navigation, route }) => {
               style={{
                 fontSize: 25,
                 fontWeight: 'bold',
-                color: 'black',
+                color: colors.text,
                 paddingVertical: 10,
               }}
             >
@@ -393,11 +403,11 @@ const ListRoom = ({ navigation, route }) => {
                   fontSize: 17,
                   fontWeight: 'bold',
                   paddingHorizontal: 5,
-                  color: 'black',
+                  color: colors.text,
                 }}
               >
                 {TotalStar(item.star)}
-                <Text style={{ color: 'gray' }}>
+                <Text style={{ color: colors.icon }}>
                   {' (' + item.star.length + ` ${t('review')})`}
                 </Text>
               </Text>
@@ -421,7 +431,7 @@ const ListRoom = ({ navigation, route }) => {
                   paddingRight: 20,
                 }}
               >
-                <Text style={{ color: 'black', fontSize: 15 }}>
+                <Text style={{ color: colors.text, fontSize: 15 }}>
                   <Text style={{ color: 'orange' }}>
                     ~{calculateDistance(item.position)} km
                   </Text>{' '}
@@ -446,7 +456,7 @@ const ListRoom = ({ navigation, route }) => {
                 style={{
                   fontSize: 20,
                   fontWeight: 'bold',
-                  color: 'black',
+                  color: colors.text,
                 }}
               >
                 {t('map')}
@@ -501,17 +511,21 @@ const ListRoom = ({ navigation, route }) => {
             style={{
               fontSize: 20,
               fontWeight: 'bold',
-              color: 'black',
+              color: colors.text,
               paddingVertical: 15,
             }}
           >
             {t('list-rooms')}
           </Text>
           {DataRoom.map((items, index) =>
-            items.name === 'Không có phòng trống' ? (
+            items.name === t('no-room-available') ? (
               <View key={index} style={{ alignSelf: 'center' }}>
                 <Text
-                  style={{ fontSize: 17, color: 'black', fontWeight: 'bold' }}
+                  style={{
+                    fontSize: 17,
+                    color: colors.text,
+                    fontWeight: 'bold',
+                  }}
                 >
                   {items.name}
                 </Text>
@@ -519,7 +533,7 @@ const ListRoom = ({ navigation, route }) => {
             ) : (
               <TouchableOpacity
                 key={index}
-                style={styles.RecentlyBox}
+                style={[styles.RecentlyBox, { backgroundColor: colors.box }]}
                 onPress={() => {
                   navigation.navigate('DetailsScreen', {
                     item: items,
@@ -545,7 +559,7 @@ const ListRoom = ({ navigation, route }) => {
                       style={{
                         fontSize: 20,
                         height: 25,
-                        color: 'black',
+                        color: colors.text,
                       }}
                     >
                       {items.name}
@@ -561,11 +575,11 @@ const ListRoom = ({ navigation, route }) => {
                               marginRight: 10,
                             }}
                           >
-                            <Text style={{ color: 'gray', fontSize: 14 }}>
+                            <Text style={{ color: colors.icon, fontSize: 14 }}>
                               {item.split(' ')[1] === 'm²'
                                 ? item + ' '
                                 : t(`${slugify(item)}`)}
-                              <Text style={{ color: 'black' }}>
+                              <Text style={{ color: colors.text }}>
                                 {index == 0 ? ' |' : ''}
                               </Text>
                             </Text>
@@ -577,7 +591,7 @@ const ListRoom = ({ navigation, route }) => {
                     </View>
                     <Text
                       style={{
-                        color: 'black',
+                        color: colors.text,
                         fontSize: 14,
                         marginTop: 5,
                         fontWeight: '500',
@@ -597,14 +611,14 @@ const ListRoom = ({ navigation, route }) => {
                           fontSize: 20,
                           paddingVertical: 10,
                           fontWeight: 'bold',
-                          color: 'black',
+                          color: colors.text,
                         }}
                       >
                         {Format(items.price)}{' '}
                         <Text
                           style={{
                             fontSize: 13,
-                            color: 'black',
+                            color: colors.text,
                           }}
                         >
                           đ
@@ -622,7 +636,7 @@ const ListRoom = ({ navigation, route }) => {
                       >
                         <Text
                           style={{
-                            color: 'white',
+                            color: colors.text,
                             fontSize: 15,
                             fontWeight: 'bold',
                           }}
@@ -653,7 +667,7 @@ const ListRoom = ({ navigation, route }) => {
                 style={{
                   fontSize: 20,
                   fontWeight: 'bold',
-                  color: 'black',
+                  color: colors.text,
                 }}
               >
                 {t('description')}
@@ -661,7 +675,7 @@ const ListRoom = ({ navigation, route }) => {
             </View>
             <Text
               style={{
-                color: 'black',
+                color: colors.text,
                 fontSize: 15,
                 paddingVertical: 10,
               }}
@@ -674,7 +688,7 @@ const ListRoom = ({ navigation, route }) => {
               style={{
                 fontSize: 20,
                 fontWeight: 'bold',
-                color: 'black',
+                color: colors.text,
               }}
             >
               {t('review')}
@@ -691,7 +705,7 @@ const ListRoom = ({ navigation, route }) => {
                           style={{
                             marginTop: 10,
                             width: '100%',
-                            backgroundColor: 'white',
+                            backgroundColor: colors.box,
                             borderRadius: 10,
                             elevation: 5,
                             shadowColor: COLORS.black,
@@ -724,7 +738,7 @@ const ListRoom = ({ navigation, route }) => {
                                   style={{
                                     fontWeight: '700',
                                     fontSize: 16,
-                                    color: 'black',
+                                    color: colors.text,
                                   }}
                                 >
                                   {item1.user}
@@ -754,7 +768,7 @@ const ListRoom = ({ navigation, route }) => {
                                 size={15}
                                 color={COLORS.orange}
                               />
-                              <Text style={{ color: 'white' }}>
+                              <Text style={{ color: colors.text }}>
                                 {items.star[index]}
                               </Text>
                             </View>
@@ -777,7 +791,13 @@ const ListRoom = ({ navigation, route }) => {
           </View>
         </View>
       </ScrollView>
-      <Animated.View style={[styles.bottomSheet, bottomSheetAnimation]}>
+      <Animated.View
+        style={[
+          styles.bottomSheet,
+          { backgroundColor: colors.box },
+          bottomSheetAnimation,
+        ]}
+      >
         <View style={styles.draggableArea} {...panResponder.panHandlers}>
           <Text
             style={{
@@ -797,23 +817,35 @@ const ListRoom = ({ navigation, route }) => {
                 justifyContent: 'space-around',
                 width: '95%',
                 height: 60,
-                backgroundColor: '#f3f6f4',
+                backgroundColor: colors.special,
                 borderRadius: 10,
               }}
             >
               <View style={{ width: '33%' }}>
-                <Text style={{ fontSize: 14 }}>{t('check-in')}</Text>
+                <Text style={{ fontSize: 14, color: colors.icon }}>
+                  {t('check-in')}
+                </Text>
                 <Text
-                  style={{ color: 'black', fontWeight: 'bold', fontSize: 16 }}
+                  style={{
+                    color: colors.text,
+                    fontWeight: 'bold',
+                    fontSize: 16,
+                  }}
                 >
                   12:00, {formatDayShow(start)}
                 </Text>
               </View>
               <Icon4 name="long-arrow-alt-right" size={25} color="orange" />
               <View style={{ width: '33%' }}>
-                <Text style={{ fontSize: 14 }}>{t('check-out')}</Text>
+                <Text style={{ fontSize: 14, color: colors.icon }}>
+                  {t('check-out')}
+                </Text>
                 <Text
-                  style={{ color: 'black', fontWeight: 'bold', fontSize: 16 }}
+                  style={{
+                    color: colors.text,
+                    fontWeight: 'bold',
+                    fontSize: 16,
+                  }}
                 >
                   12:00, {formatDayShow(end)}
                 </Text>
@@ -844,6 +876,14 @@ const ListRoom = ({ navigation, route }) => {
             onDayPress={(day) => handleTest(day)}
             hideExtraDays={true}
             minDate={String(minday)}
+            theme={{
+              backgroundColor: colors.box,
+              calendarBackground: colors.box,
+              textSectionTitleColor: colors.text,
+              dayTextColor: colors.text,
+              monthTextColor: colors.text,
+              textDisabledColor: '#d9e1e8',
+            }}
           />
         </View>
         <View
@@ -880,7 +920,7 @@ const ListRoom = ({ navigation, route }) => {
         </View>
       </Animated.View>
       <Pressable
-        style={styles.bottomSheet1}
+        style={[styles.bottomSheet1, { backgroundColor: colors.box }]}
         onPress={() => {
           handleOpenCalendar();
         }}
@@ -895,14 +935,14 @@ const ListRoom = ({ navigation, route }) => {
           >
             <View>
               <Text
-                style={{ fontSize: 15, fontWeight: 'bold', color: 'black' }}
+                style={{ fontSize: 15, fontWeight: 'bold', color: colors.text }}
               >
                 {t('time-booking')}
               </Text>
               <View style={{ flexDirection: 'row', marginTop: 10 }}>
                 <Text
                   style={{
-                    color: 'black',
+                    color: colors.text,
                     textDecorationStyle: 'dashed',
                     textDecorationLine: 'underline',
                     fontSize: 15,
@@ -921,7 +961,7 @@ const ListRoom = ({ navigation, route }) => {
                 borderRadius: 20,
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: 'white',
+                backgroundColor: colors.box,
                 borderWidth: 1,
                 borderColor: 'red',
                 paddingHorizontal: 20,
@@ -945,7 +985,7 @@ const ListRoom = ({ navigation, route }) => {
           borderRadius: 20,
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: 'white',
+          backgroundColor: colors.box,
           zIndex: 2,
           right: 5,
           bottom: '20%',
@@ -990,7 +1030,7 @@ const ListRoom = ({ navigation, route }) => {
             <View
               style={{
                 height: '75%',
-                backgroundColor: 'white',
+                backgroundColor: colors.box,
                 borderTopLeftRadius: 30,
                 borderTopRightRadius: 30,
                 alignItems: 'center',
@@ -1001,7 +1041,7 @@ const ListRoom = ({ navigation, route }) => {
                 style={{
                   width: '15%',
                   borderRadius: 20,
-                  backgroundColor: '#bcbcbc',
+                  backgroundColor: colors.icon,
                   height: 5,
                   marginTop: 5,
                 }}
@@ -1011,10 +1051,10 @@ const ListRoom = ({ navigation, route }) => {
                   marginVertical: 10,
                   fontSize: 21,
                   fontWeight: 'bold',
-                  color: 'black',
+                  color: colors.text,
                 }}
               >
-                Rate the hotel
+                {t('rate-this-hotel')}
               </Text>
               <View
                 style={{
@@ -1028,7 +1068,7 @@ const ListRoom = ({ navigation, route }) => {
                 <View
                   style={{
                     height: 120,
-                    backgroundColor: 'white',
+                    backgroundColor: colors.special,
                     borderRadius: 20,
                     elevation: 5,
                     flexDirection: 'row',
@@ -1064,7 +1104,7 @@ const ListRoom = ({ navigation, route }) => {
                         style={{
                           fontSize: 17,
                           fontWeight: 'bold',
-                          color: 'black',
+                          color: colors.text,
                         }}
                       >
                         {item.name}
@@ -1073,6 +1113,7 @@ const ListRoom = ({ navigation, route }) => {
                         style={{
                           fontSize: 15,
                           width: '70%',
+                          color: colors.icon,
                         }}
                       >
                         {item.location}
@@ -1098,12 +1139,13 @@ const ListRoom = ({ navigation, route }) => {
                         <Text
                           style={{
                             fontSize: 15,
-                            color: 'gray',
+                            color: colors.icon,
                             marginLeft: 10,
                           }}
                         >
                           {'('}
-                          {item.star.length} reviews{')'}
+                          {item.star.length} {t('review')}
+                          {')'}
                         </Text>
                       </View>
                     </View>
@@ -1114,10 +1156,10 @@ const ListRoom = ({ navigation, route }) => {
                 style={{
                   fontSize: 18,
                   fontWeight: 'bold',
-                  color: 'black',
+                  color: colors.text,
                 }}
               >
-                Please give your rating & review
+                {t('please-give-your-rate-&-review')}
               </Text>
               <View
                 style={{
@@ -1155,10 +1197,11 @@ const ListRoom = ({ navigation, route }) => {
                   borderColor: '#f3f6f4',
                   height: 80,
                   textAlignVertical: 'top',
-                  backgroundColor: '#eeeeee',
+                  backgroundColor: colors.special,
                   borderRadius: 20,
                   marginVertical: 10,
                   padding: 10,
+                  color: colors.text,
                 }}
                 multiline={true}
                 onChangeText={(text) => setRatecontent(text)}
@@ -1185,7 +1228,7 @@ const ListRoom = ({ navigation, route }) => {
                     fontWeight: '700',
                   }}
                 >
-                  Rate Now
+                  {t('rate-now')}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -1206,12 +1249,12 @@ const ListRoom = ({ navigation, route }) => {
               >
                 <Text
                   style={{
-                    color: COLORS.primary,
+                    color: COLORS.white,
                     fontSize: 16,
                     fontWeight: '700',
                   }}
                 >
-                  Later
+                  {t('later')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -1226,8 +1269,6 @@ const styles = StyleSheet.create({
   RecentlyBox: {
     width: '100%',
     height: 280,
-    color: 'black',
-    backgroundColor: COLORS.white,
     marginBottom: 15,
     alignSelf: 'center',
     borderRadius: 10,
@@ -1255,7 +1296,7 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     elevation: 10,
     shadowColor: COLORS.black,
-    backgroundColor: '#fffafa',
+
     justifyContent: 'space-between',
   },
   HeaderTitle: {
@@ -1301,7 +1342,6 @@ const styles = StyleSheet.create({
         },
       },
     }),
-    backgroundColor: 'white',
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     zIndex: 2,
@@ -1326,7 +1366,6 @@ const styles = StyleSheet.create({
         },
       },
     }),
-    backgroundColor: 'white',
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     zIndex: 1,

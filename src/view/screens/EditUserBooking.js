@@ -2,11 +2,19 @@ import Auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import {
+  Keyboard,
+  Pressable,
+  Text,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native';
+import { useTheme } from 'react-native-paper';
 import COLORS from '../../consts/colors';
 import CustomHeader from '../components/CustomHeader';
 const EditUserBooking = ({ navigation }) => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const userinfo = Auth().currentUser;
   const adduserbooking = () => {
     const a = {
@@ -37,10 +45,16 @@ const EditUserBooking = ({ navigation }) => {
   const [birthday, setBirthday] = useState('');
   const [email, setEmail] = useState('');
   return (
-    <View style={{ backgroundColor: 'white' }}>
+    <Pressable
+      style={{ flex: 1, backgroundColor: colors.bg }}
+      onPress={() => {
+        Keyboard.dismiss();
+      }}
+    >
       <CustomHeader title={'information-user-booking'} />
       <TextInput
         placeholder={t('name')}
+        placeholderTextColor={colors.icon}
         style={{
           borderWidth: 1,
           borderRadius: 10,
@@ -51,13 +65,15 @@ const EditUserBooking = ({ navigation }) => {
           borderColor: '#d0d0d0',
           marginTop: 30,
           paddingLeft: 10,
-          backgroundColor: 'white',
+          backgroundColor: colors.box,
         }}
         value={name}
         onChangeText={(text) => setName(text)}
+        color={colors.text}
       />
       <TextInput
         placeholder={t('phone')}
+        placeholderTextColor={colors.icon}
         style={{
           borderWidth: 1,
           borderRadius: 10,
@@ -67,14 +83,16 @@ const EditUserBooking = ({ navigation }) => {
           alignSelf: 'center',
           paddingLeft: 10,
           borderColor: '#d0d0d0',
-          backgroundColor: 'white',
+          backgroundColor: colors.box,
           marginVertical: 30,
         }}
         value={phone}
         onChangeText={(text) => setPhone(text)}
+        color={colors.text}
       />
       <TextInput
         placeholder={t('age')}
+        placeholderTextColor={colors.icon}
         style={{
           borderWidth: 1,
           borderRadius: 10,
@@ -84,13 +102,15 @@ const EditUserBooking = ({ navigation }) => {
           height: 55,
           alignSelf: 'center',
           borderColor: '#d0d0d0',
-          backgroundColor: 'white',
+          backgroundColor: colors.box,
         }}
         value={birthday}
         onChangeText={(text) => setBirthday(text)}
+        color={colors.text}
       />
       <TextInput
         placeholder={t('email')}
+        placeholderTextColor={colors.icon}
         style={{
           borderWidth: 1,
           borderRadius: 10,
@@ -100,11 +120,12 @@ const EditUserBooking = ({ navigation }) => {
           paddingLeft: 10,
           alignSelf: 'center',
           borderColor: '#d0d0d0',
-          backgroundColor: 'white',
+          backgroundColor: colors.box,
           marginTop: 30,
         }}
         value={email}
         onChangeText={(text) => setEmail(text)}
+        color={colors.text}
       />
       <TouchableOpacity
         style={{
@@ -131,7 +152,7 @@ const EditUserBooking = ({ navigation }) => {
           {t('save')}
         </Text>
       </TouchableOpacity>
-    </View>
+    </Pressable>
   );
 };
 

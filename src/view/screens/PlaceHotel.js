@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import { useTheme } from 'react-native-paper';
 import Icon1 from 'react-native-vector-icons/AntDesign';
 import Icon from 'react-native-vector-icons/Feather';
 import Icon2 from 'react-native-vector-icons/Fontisto';
@@ -29,6 +30,7 @@ const DRAG_THRESHOLD = 50;
 const PlaceHotel = ({ navigation, route }) => {
   const { data, name } = route.params;
   const { t } = useTranslation();
+  const { colors } = useTheme();
 
   const currentPosition = useSelector((state) => state.currentPosition);
   const position =
@@ -131,11 +133,11 @@ const PlaceHotel = ({ navigation, route }) => {
     return location;
   };
   return (
-    <View style={{ flex: 1, backgroundColor: 'white' }}>
+    <View style={{ flex: 1, backgroundColor: colors.bg }}>
       <View
         style={{
           padding: 15,
-          backgroundColor: 'white',
+          backgroundColor: colors.bg,
           shadowColor: '#000',
           shadowOffset: {
             width: 0,
@@ -162,13 +164,13 @@ const PlaceHotel = ({ navigation, route }) => {
             }}
             name="chevron-left"
             size={30}
-            color="black"
+            color={colors.text}
           />
           <Text
             style={{
               fontSize: 18,
               fontWeight: 'bold',
-              color: 'black',
+              color: colors.text,
             }}
           >
             {name}
@@ -179,7 +181,7 @@ const PlaceHotel = ({ navigation, route }) => {
       <MapView
         style={{
           flex: 1,
-          backgroundColor: 'white',
+          backgroundColor: colors.bg,
           zIndex: -1,
           marginTop: -10,
         }}
@@ -215,7 +217,13 @@ const PlaceHotel = ({ navigation, route }) => {
           );
         })}
       </MapView>
-      <Animated.View style={[styles.bottomSheet, bottomSheetAnimation]}>
+      <Animated.View
+        style={[
+          styles.bottomSheet,
+          { backgroundColor: colors.bg },
+          bottomSheetAnimation,
+        ]}
+      >
         <View style={styles.draggableArea} {...panResponder.panHandlers}>
           <View
             style={{
@@ -243,7 +251,7 @@ const PlaceHotel = ({ navigation, route }) => {
               <Text
                 style={{
                   fontSize: 16,
-                  color: 'black',
+                  color: colors.text,
                 }}
               >
                 {t('have')} {data.length} {t('ho-tel')}
@@ -316,12 +324,13 @@ const PlaceHotel = ({ navigation, route }) => {
                           <View
                             style={{
                               padding: 10,
+                              backgroundColor: colors.box,
                             }}
                           >
                             <Text
                               style={{
                                 fontSize: 20,
-                                color: 'black',
+                                color: colors.text,
                               }}
                             >
                               {formatName(item.name)}
@@ -359,7 +368,7 @@ const PlaceHotel = ({ navigation, route }) => {
                                   alignItems: 'center',
                                 }}
                               >
-                                <Text style={{ color: 'black' }}>
+                                <Text style={{ color: colors.text }}>
                                   {calculateDistance(item.position)} km
                                 </Text>
                                 <Icon2
@@ -383,7 +392,7 @@ const PlaceHotel = ({ navigation, route }) => {
                               <Text
                                 style={{
                                   fontSize: 15,
-                                  color: 'black',
+                                  color: colors.text,
                                 }}
                               >
                                 {item.advantage}
@@ -430,7 +439,11 @@ const PlaceHotel = ({ navigation, route }) => {
                       }}
                     />
                     <Text
-                      style={{ fontSize: 20, marginTop: 30, color: 'black' }}
+                      style={{
+                        fontSize: 20,
+                        marginTop: 30,
+                        color: colors.text,
+                      }}
                     >
                       {t('no-have-hotel-available')}
                     </Text>
@@ -465,7 +478,6 @@ const styles = StyleSheet.create({
         },
       },
     }),
-    backgroundColor: 'white',
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     zIndex: 1,

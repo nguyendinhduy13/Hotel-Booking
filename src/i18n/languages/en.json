@@ -153,6 +153,12 @@
     "support-customer": "Support Customer",
     "contact-for-cooperation": "Contact for cooperation",
     "headquarters": "Headquarters",
-    "Hotel-Booking-Viet-Nam-Joint-Stock-Company": "Hotel Booking VIET NAM Joint Stock Company"
+    "Hotel-Booking-Viet-Nam-Joint-Stock-Company": "Hotel Booking VIET NAM Joint Stock Company",
+    "please-book-this-hotel-before-review": "Please book this hotel before review",
+    "no-room-available": "No room available",
+    "rate-this-hotel": "Rate this hotel",
+    "please-give-your-rate-&-review": "Please give your rate & review",
+    "rate-now": "Rate now",
+    "later": "Later"
   }
 }

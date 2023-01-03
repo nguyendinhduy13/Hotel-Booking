@@ -11,12 +11,14 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useSelector } from 'react-redux';
 import Icons from '../../assets/icons/icons';
 import COLORS from '../../consts/colors';
 export default function DetailsScreen({ navigation, route }) {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const { item, hotel } = route.params;
   const { dayamount, startday, endday } = useSelector(
     (state) => state.Globalreducer,
@@ -60,22 +62,34 @@ export default function DetailsScreen({ navigation, route }) {
           <Icon
             name="arrow-back-ios"
             size={28}
-            color={COLORS.white}
+            color={colors.text}
             onPress={navigation.goBack}
           />
         </View>
       </Animated.View>
-      <Animated.View style={[styles.HeadrViewWhite, HeaderAnimatedScrollWhite]}>
+      <Animated.View
+        style={[
+          styles.HeadrViewWhite,
+          { backgroundColor: colors.box },
+          HeaderAnimatedScrollWhite,
+        ]}
+      >
         <View style={styles.header}>
           <Icon
             name="arrow-back-ios"
             size={28}
-            color="black"
+            color={colors.text}
             onPress={navigation.goBack}
           />
         </View>
       </Animated.View>
-      <Animated.View style={[styles.HeadrView1, HeaderAnimated]}>
+      <Animated.View
+        style={[
+          styles.HeadrView1,
+          { backgroundColor: colors.box },
+          HeaderAnimated,
+        ]}
+      >
         <View
           style={{
             flexDirection: 'row',
@@ -86,15 +100,15 @@ export default function DetailsScreen({ navigation, route }) {
           <Icon
             name="arrow-back-ios"
             size={28}
-            color="black"
+            color={colors.text}
             onPress={navigation.goBack}
           />
           <Text
             style={{
-              fontSize: 20,
+              fontSize: 17,
               width: '90%',
               fontWeight: 'bold',
-              color: 'black',
+              color: colors.text,
               textAlign: 'center',
             }}
           >
@@ -109,7 +123,7 @@ export default function DetailsScreen({ navigation, route }) {
         }}
         scrollEventThrottle={16}
         contentContainerStyle={{
-          backgroundColor: COLORS.white,
+          backgroundColor: colors.bg,
           paddingBottom: 80,
         }}
       >
@@ -120,7 +134,7 @@ export default function DetailsScreen({ navigation, route }) {
         <View>
           <View style={{ marginTop: 15, paddingHorizontal: 20 }}>
             <Text
-              style={{ fontSize: 27, fontWeight: 'bold', color: COLORS.dark }}
+              style={{ fontSize: 27, fontWeight: 'bold', color: colors.text }}
             >
               {item.name}
             </Text>
@@ -140,11 +154,11 @@ export default function DetailsScreen({ navigation, route }) {
                 fontSize: 20,
                 paddingTop: '1%',
                 fontWeight: 'bold',
-                color: 'black',
+                color: colors.text,
               }}
             >
               {Format(item.price)}{' '}
-              <Text style={{ fontSize: 13, color: 'black' }}>đ</Text>
+              <Text style={{ fontSize: 13, color: colors.text }}>đ</Text>
             </Text>
             <View
               style={{
@@ -167,13 +181,15 @@ export default function DetailsScreen({ navigation, route }) {
                 }}
               >
                 <View style={{ paddingHorizontal: 10 }}>
-                  <Text style={{ fontSize: 16 }}>{t('check-in')}</Text>
+                  <Text style={{ fontSize: 16, color: colors.icon }}>
+                    {t('check-in')}
+                  </Text>
                   <Text
                     style={{
                       fontSize: 17,
                       marginTop: 5,
                       fontWeight: 'bold',
-                      color: 'black',
+                      color: colors.text,
                     }}
                   >
                     12:00, {FormatDayMonthYear(startday)}
@@ -190,13 +206,15 @@ export default function DetailsScreen({ navigation, route }) {
                 }}
               >
                 <View style={{ paddingHorizontal: 10 }}>
-                  <Text style={{ fontSize: 16 }}>{t('check-out')}</Text>
+                  <Text style={{ fontSize: 16, color: colors.icon }}>
+                    {t('check-out')}
+                  </Text>
                   <Text
                     style={{
                       fontSize: 17,
                       marginTop: 5,
                       fontWeight: 'bold',
-                      color: 'black',
+                      color: colors.text,
                     }}
                   >
                     12:00, {FormatDayMonthYear(endday)}
@@ -214,7 +232,7 @@ export default function DetailsScreen({ navigation, route }) {
                 <Text
                   style={{
                     fontSize: 18,
-                    color: COLORS.dark,
+                    color: colors.text,
                     fontWeight: 'bold',
                   }}
                 >
@@ -225,7 +243,7 @@ export default function DetailsScreen({ navigation, route }) {
                 >
                   <Text
                     style={{
-                      fontSize: 18,
+                      fontSize: 16,
                       fontWeight: 'bold',
                       color: COLORS.primary,
                     }}
@@ -253,7 +271,7 @@ export default function DetailsScreen({ navigation, route }) {
             </View>
             <View style={{ paddingTop: '5%' }}>
               <Text
-                style={{ fontSize: 18, color: COLORS.dark, fontWeight: 'bold' }}
+                style={{ fontSize: 18, color: colors.text, fontWeight: 'bold' }}
               >
                 {t('details')}
               </Text>
@@ -268,9 +286,16 @@ export default function DetailsScreen({ navigation, route }) {
                       style={{
                         width: 22,
                         height: 22,
+                        tintColor: colors.icon,
                       }}
                     />
-                    <Text style={{ paddingHorizontal: 15, fontSize: 15 }}>
+                    <Text
+                      style={{
+                        paddingHorizontal: 15,
+                        fontSize: 15,
+                        color: colors.text,
+                      }}
+                    >
                       {item.split(' ')[1] === 'm²'
                         ? item + ' '
                         : t(`${slugify(item)}`)}
@@ -284,7 +309,7 @@ export default function DetailsScreen({ navigation, route }) {
                 <Text
                   style={{
                     fontSize: 18,
-                    color: COLORS.dark,
+                    color: colors.text,
                     fontWeight: 'bold',
                   }}
                 >
@@ -292,7 +317,7 @@ export default function DetailsScreen({ navigation, route }) {
                 </Text>
               </View>
               <View style={{ marginTop: 12 }}>
-                <Text style={{ lineHeight: 20, color: COLORS.black }}>
+                <Text style={{ lineHeight: 20, color: colors.text }}>
                   {item.description}
                 </Text>
               </View>
@@ -304,7 +329,7 @@ export default function DetailsScreen({ navigation, route }) {
         style={{
           width: '100%',
           height: 65,
-          backgroundColor: 'white',
+          backgroundColor: colors.box,
           alignItems: 'center',
           justifyContent: 'center',
           position: 'absolute',
@@ -406,7 +431,6 @@ const styles = StyleSheet.create({
     height: 60,
     width: '100%',
     justifyContent: 'center',
-    backgroundColor: 'white',
   },
   HeadrView1: {
     position: 'absolute',
@@ -417,7 +441,6 @@ const styles = StyleSheet.create({
     height: 60,
     width: '100%',
     justifyContent: 'center',
-    backgroundColor: 'white',
   },
 });
 

@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import uuid from 'react-native-uuid';
 import { useDispatch, useSelector } from 'react-redux';
 import COLORS from '../../consts/colors';
@@ -20,6 +21,7 @@ import CustomHeader from '../components/CustomHeader';
 export default function Booked({ navigation, route }) {
   const { t } = useTranslation();
   const { item, hotel } = route.params;
+  const { colors } = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigation();
   const [Number, setNumber] = useState(1);
@@ -254,11 +256,16 @@ export default function Booked({ navigation, route }) {
   return (
     <View style={{ flex: 1 }}>
       <CustomHeader title={'information-booking'} />
-      <ScrollView showsVerticalScrollIndicator={false} style={{}}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{
+          backgroundColor: colors.special,
+        }}
+      >
         <View
           style={{
             width: '100%',
-            backgroundColor: COLORS.white,
+            backgroundColor: colors.bg,
             marginTop: 10,
           }}
         >
@@ -280,14 +287,20 @@ export default function Booked({ navigation, route }) {
                   source={{ uri: item.image[1] }}
                 />
                 <View style={{ marginLeft: 10 }}>
-                  <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontWeight: 'bold',
+                      color: colors.icon,
+                    }}
+                  >
                     {hotel.name}
                   </Text>
                   <Text
                     style={{
                       fontSize: 20,
                       fontWeight: 'bold',
-                      color: 'black',
+                      color: colors.text,
                       width: '90%',
                       height: 30,
                     }}
@@ -300,6 +313,7 @@ export default function Booked({ navigation, route }) {
                       width: 240,
                       fontWeight: 'bold',
                       marginTop: 10,
+                      color: colors.icon,
                     }}
                   >
                     {FormatName(hotel.location + hotel.location)}
@@ -319,7 +333,7 @@ export default function Booked({ navigation, route }) {
         </View>
         <View
           style={{
-            backgroundColor: COLORS.white,
+            backgroundColor: colors.bg,
             height: 'auto',
             width: '100%',
             alignSelf: 'center',
@@ -334,14 +348,16 @@ export default function Booked({ navigation, route }) {
               paddingHorizontal: 15,
             }}
           >
-            <Text style={{ fontWeight: '500', fontSize: 17 }}>
+            <Text
+              style={{ fontWeight: '500', fontSize: 17, color: colors.icon }}
+            >
               {t('check-in')}
             </Text>
             <Text
               style={{
                 fontWeight: 'bold',
                 fontSize: 17,
-                color: COLORS.dark,
+                color: colors.text,
               }}
             >
               12:00, {start.getDate()}/{start.getMonth() + 1}/
@@ -358,14 +374,16 @@ export default function Booked({ navigation, route }) {
               marginTop: 10,
             }}
           >
-            <Text style={{ fontWeight: '500', fontSize: 17 }}>
+            <Text
+              style={{ fontWeight: '500', fontSize: 17, color: colors.icon }}
+            >
               {t('check-out')}
             </Text>
             <Text
               style={{
                 fontWeight: 'bold',
                 fontSize: 17,
-                color: COLORS.dark,
+                color: colors.text,
               }}
             >
               12:00, {end.getDate()}/{end.getMonth() + 1}/{end.getFullYear()}
@@ -382,7 +400,9 @@ export default function Booked({ navigation, route }) {
               marginBottom: 20,
             }}
           >
-            <Text style={{ fontWeight: '500', fontSize: 17 }}>
+            <Text
+              style={{ fontWeight: '500', fontSize: 17, color: colors.icon }}
+            >
               {t('number-people')}
             </Text>
             <View
@@ -399,7 +419,7 @@ export default function Booked({ navigation, route }) {
                 style={{
                   width: 30,
                   height: 20,
-                  backgroundColor: '#E5E5E5',
+                  backgroundColor: colors.special,
                   borderRadius: 5,
                   justifyContent: 'center',
                   alignItems: 'center',
@@ -409,7 +429,7 @@ export default function Booked({ navigation, route }) {
                   style={{
                     fontWeight: 'bold',
                     fontSize: 15,
-                    color: COLORS.dark,
+                    color: colors.text,
                   }}
                 >
                   -
@@ -419,7 +439,7 @@ export default function Booked({ navigation, route }) {
                 style={{
                   fontWeight: 'bold',
                   fontSize: 17,
-                  color: COLORS.dark,
+                  color: colors.text,
                   marginHorizontal: 10,
                 }}
               >
@@ -430,7 +450,7 @@ export default function Booked({ navigation, route }) {
                 style={{
                   width: 30,
                   height: 20,
-                  backgroundColor: '#E5E5E5',
+                  backgroundColor: colors.special,
                   borderRadius: 5,
                   justifyContent: 'center',
                   alignItems: 'center',
@@ -440,7 +460,7 @@ export default function Booked({ navigation, route }) {
                   style={{
                     fontWeight: 'bold',
                     fontSize: 15,
-                    color: COLORS.dark,
+                    color: colors.text,
                   }}
                 >
                   +
@@ -451,7 +471,7 @@ export default function Booked({ navigation, route }) {
         </View>
         <View
           style={{
-            backgroundColor: COLORS.white,
+            backgroundColor: colors.bg,
             height: 190,
             width: '100%',
             marginTop: 10,
@@ -466,7 +486,7 @@ export default function Booked({ navigation, route }) {
             }}
           >
             <Text
-              style={{ fontSize: 20, fontWeight: 'bold', color: COLORS.dark }}
+              style={{ fontSize: 20, fontWeight: 'bold', color: colors.text }}
             >
               {t('information-user-booking')}
             </Text>
@@ -494,7 +514,7 @@ export default function Booked({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 17,
-                  color: 'gray',
+                  color: colors.icon,
                 }}
               >
                 {t('name')}
@@ -502,7 +522,7 @@ export default function Booked({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 17,
-                  color: COLORS.dark,
+                  color: colors.text,
                   fontWeight: 'bold',
                 }}
               >
@@ -520,7 +540,7 @@ export default function Booked({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 17,
-                  color: 'gray',
+                  color: colors.icon,
                 }}
               >
                 {t('phone')}
@@ -528,7 +548,7 @@ export default function Booked({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 17,
-                  color: COLORS.dark,
+                  color: colors.text,
                   fontWeight: 'bold',
                 }}
               >
@@ -546,7 +566,7 @@ export default function Booked({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 17,
-                  color: 'gray',
+                  color: colors.icon,
                 }}
               >
                 {t('email')}
@@ -554,7 +574,7 @@ export default function Booked({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 17,
-                  color: COLORS.dark,
+                  color: colors.text,
                   fontWeight: 'bold',
                 }}
               >
@@ -572,7 +592,7 @@ export default function Booked({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 17,
-                  color: 'gray',
+                  color: colors.icon,
                 }}
               >
                 {t('age')}
@@ -580,7 +600,7 @@ export default function Booked({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 17,
-                  color: COLORS.dark,
+                  color: colors.text,
                   fontWeight: 'bold',
                 }}
               >
@@ -592,13 +612,13 @@ export default function Booked({ navigation, route }) {
         <View style={{ marginTop: 10 }}>
           <View
             style={{
-              backgroundColor: COLORS.white,
+              backgroundColor: colors.bg,
               width: '100%',
               padding: 15,
             }}
           >
             <Text
-              style={{ fontSize: 20, fontWeight: 'bold', color: COLORS.dark }}
+              style={{ fontSize: 20, fontWeight: 'bold', color: colors.text }}
             >
               {t('payment')}
             </Text>
@@ -621,7 +641,7 @@ export default function Booked({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 17,
-                  color: 'black',
+                  color: colors.text,
                   marginLeft: 10,
                 }}
               >
@@ -633,14 +653,14 @@ export default function Booked({ navigation, route }) {
         <View style={{ marginTop: 10 }}>
           <View
             style={{
-              backgroundColor: COLORS.white,
+              backgroundColor: colors.bg,
               width: '100%',
               padding: 15,
               marginBottom: 10,
             }}
           >
             <Text
-              style={{ fontSize: 20, fontWeight: 'bold', color: COLORS.dark }}
+              style={{ fontSize: 20, fontWeight: 'bold', color: colors.text }}
             >
               {t('payment-details')}
             </Text>
@@ -667,7 +687,7 @@ export default function Booked({ navigation, route }) {
                 <Text
                   style={{
                     fontSize: 17,
-                    color: 'black',
+                    color: colors.text,
                     marginLeft: 10,
                   }}
                 >
@@ -677,7 +697,7 @@ export default function Booked({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 17,
-                  color: 'black',
+                  color: colors.text,
                 }}
               >
                 {Format(item.price, dayamount)} đ
@@ -700,12 +720,12 @@ export default function Booked({ navigation, route }) {
               }}
             >
               <Text
-                style={{ fontSize: 20, color: 'black', fontWeight: 'bold' }}
+                style={{ fontSize: 20, color: colors.text, fontWeight: 'bold' }}
               >
                 {t('total')}
               </Text>
               <Text
-                style={{ fontSize: 22, color: 'black', fontWeight: 'bold' }}
+                style={{ fontSize: 22, color: colors.text, fontWeight: 'bold' }}
               >
                 {dayamount != 1 && (
                   <Text
@@ -713,6 +733,8 @@ export default function Booked({ navigation, route }) {
                       fontSize: 15,
                       fontWeight: 'normal',
                       textDecorationLine: 'line-through',
+                      textDecorationColor: colors.icon,
+                      color: colors.icon,
                     }}
                   >
                     {' '}
@@ -744,7 +766,7 @@ export default function Booked({ navigation, route }) {
           >
             <View
               style={{
-                backgroundColor: 'white',
+                backgroundColor: colors.box,
                 alignItems: 'center',
                 borderRadius: 20,
                 height: 200,
@@ -820,7 +842,7 @@ export default function Booked({ navigation, route }) {
         style={{
           width: '100%',
           height: 65,
-          backgroundColor: 'white',
+          backgroundColor: colors.box,
           alignItems: 'center',
           justifyContent: 'center',
         }}

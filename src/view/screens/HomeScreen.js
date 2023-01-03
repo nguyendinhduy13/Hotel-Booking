@@ -19,6 +19,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import Icon3 from 'react-native-vector-icons/AntDesign';
 import Icon5 from 'react-native-vector-icons/EvilIcons';
 import Icon4 from 'react-native-vector-icons/Ionicons';
@@ -30,6 +31,7 @@ import Header from '../components/Header';
 const { width } = Dimensions.get('screen');
 const cardWidth = width / 1.8;
 export default function HomeScreen({ navigation }) {
+  const { colors } = useTheme();
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { dataHotel, dataProvince } = useSelector(
@@ -319,13 +321,13 @@ export default function HomeScreen({ navigation }) {
           <Text
             style={{
               fontSize: 15,
-              color: COLORS.dark,
+              color: colors.text,
               marginTop: 5,
             }}
           >
             {place.title}
           </Text>
-          <Text>
+          <Text style={{ color: colors.text }}>
             {t('have')} {countHotel(place.index).count} {t('ho-tel')}
           </Text>
         </View>
@@ -336,7 +338,7 @@ export default function HomeScreen({ navigation }) {
     <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: COLORS.white,
+        backgroundColor: colors.bg,
       }}
     >
       <View
@@ -383,7 +385,12 @@ export default function HomeScreen({ navigation }) {
             ShowModal();
           }}
         >
-          <View style={styles.searchInputContainer}>
+          <View
+            style={[
+              styles.searchInputContainer,
+              { backgroundColor: colors.bg },
+            ]}
+          >
             <Icon5
               name="search"
               size={30}
@@ -396,6 +403,7 @@ export default function HomeScreen({ navigation }) {
               style={{
                 fontSize: 17,
                 paddingLeft: 10,
+                color: colors.text,
               }}
             >
               {t('search')}
@@ -442,7 +450,7 @@ export default function HomeScreen({ navigation }) {
           <Text
             style={{
               fontWeight: 'bold',
-              color: 'black',
+              color: colors.text,
               fontSize: 18,
               paddingHorizontal: 20,
               marginTop: 10,
@@ -494,7 +502,7 @@ export default function HomeScreen({ navigation }) {
           <Text
             style={{
               fontWeight: 'bold',
-              color: 'black',
+              color: colors.text,
               fontSize: 18,
             }}
           >
@@ -508,7 +516,7 @@ export default function HomeScreen({ navigation }) {
             <Text
               style={{
                 fontWeight: 'bold',
-                color: COLORS.primary,
+                color: colors.text,
               }}
             >
               {t('more')}
@@ -535,12 +543,12 @@ export default function HomeScreen({ navigation }) {
       >
         <View style={styles.centeredView}>
           <Pressable
-            style={styles.modalView}
+            style={[styles.modalView, { backgroundColor: colors.bg }]}
             onPress={() => {
               Keyboard.dismiss();
             }}
           >
-            <View style={styles.generalView}>
+            <View style={[styles.generalView, { backgroundColor: colors.bg }]}>
               <View
                 style={{
                   flexDirection: 'row',
@@ -562,7 +570,12 @@ export default function HomeScreen({ navigation }) {
                     color="#FF6347"
                   />
                 </TouchableOpacity>
-                <View style={styles.searchInputContainer1}>
+                <View
+                  style={[
+                    styles.searchInputContainer1,
+                    { backgroundColor: colors.bg },
+                  ]}
+                >
                   <Icon5
                     name="search"
                     size={30}
@@ -577,12 +590,14 @@ export default function HomeScreen({ navigation }) {
                       paddingLeft: 10,
                     }}
                     placeholder={t('search')}
+                    placeholderTextColor={colors.icon}
                     autoFocus={true}
                     ref={textInput}
                     value={search}
                     onChangeText={(text) => {
                       handleSearch(text);
                     }}
+                    color={colors.text}
                   />
                 </View>
               </View>
@@ -599,6 +614,7 @@ export default function HomeScreen({ navigation }) {
                         marginBottom: 10,
                         fontSize: 16,
                         fontWeight: 'bold',
+                        color: colors.text,
                       }}
                     >
                       {t('recently-viewed')}
@@ -644,7 +660,7 @@ export default function HomeScreen({ navigation }) {
                               marginLeft: 10,
                               fontSize: 17,
                               height: 22,
-                              color: 'black',
+                              color: colors.text,
                               fontWeight: 'bold',
                             }}
                           >
@@ -655,6 +671,7 @@ export default function HomeScreen({ navigation }) {
                               marginLeft: 10,
                               fontSize: 15,
                               height: 20,
+                              color: colors.icon,
                             }}
                           >
                             {item.location}
@@ -673,7 +690,7 @@ export default function HomeScreen({ navigation }) {
                             name="close"
                             size={22}
                             style={{
-                              color: 'black',
+                              color: colors.icon,
                             }}
                           />
                         </TouchableOpacity>
@@ -692,6 +709,7 @@ export default function HomeScreen({ navigation }) {
                       marginBottom: 10,
                       fontSize: 16,
                       fontWeight: 'bold',
+                      color: colors.text,
                     }}
                   >
                     {t('hotel')}
@@ -704,7 +722,12 @@ export default function HomeScreen({ navigation }) {
                       }}
                       onPress={() => navigateTo(item)}
                     >
-                      <View style={styles.ModalBoxes}>
+                      <View
+                        style={[
+                          styles.ModalBoxes,
+                          { backgroundColor: colors.bg },
+                        ]}
+                      >
                         <Image
                           source={{
                             uri: item.image,
@@ -727,7 +750,7 @@ export default function HomeScreen({ navigation }) {
                             style={{
                               fontSize: 17,
                               fontWeight: 'bold',
-                              color: 'black',
+                              color: colors.text,
                             }}
                           >
                             {item.name}
@@ -737,6 +760,7 @@ export default function HomeScreen({ navigation }) {
                               height: 40,
                               lineHeight: 20,
                               marginTop: 10,
+                              color: colors.icon,
                             }}
                           >
                             {item.location}
@@ -766,7 +790,7 @@ const styles = StyleSheet.create({
   },
   searchInputContainer: {
     height: 45,
-    backgroundColor: 'white',
+
     marginTop: 5,
     marginLeft: 20,
     marginRight: 20,
@@ -878,7 +902,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   modalView: {
-    backgroundColor: '#f4eded',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     alignItems: 'center',
@@ -898,7 +921,6 @@ const styles = StyleSheet.create({
     height: '100%',
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
-    backgroundColor: 'white',
   },
   ModalBoxes: {
     flexDirection: 'row',

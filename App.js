@@ -2,10 +2,9 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import React, { useEffect, useState } from 'react';
-import { LogBox, PermissionsAndroid, StatusBar, View } from 'react-native';
+import { LogBox, PermissionsAndroid, View } from 'react-native';
 import 'react-native-gesture-handler';
 import { useDispatch } from 'react-redux';
-import COLORS from './src/consts/colors';
 import { SignInContextProvider } from './src/contexts/authContext';
 import {
   getAsyncStorage,
@@ -202,6 +201,22 @@ export default function App() {
       }
     });
   }, []);
+
+  const [theme, setTheme] = useState('');
+  useEffect(() => {
+    getAsyncStorage('theme').then((theme) => {
+      if (theme) {
+        console.log('theme: ' + theme);
+        dispatch(Globalreducer.actions.setTheme(theme));
+        setTheme(theme);
+      } else {
+        setTheme('light');
+        console.log('no theme');
+        setAsyncStorage('theme', 'light');
+      }
+    });
+  }, []);
+
   useEffect(() => {
     requestLocation();
   }, []);
@@ -211,7 +226,6 @@ export default function App() {
       {wait === false ? (
         <>
           <View style={{ flex: 1 }}>
-            <StatusBar backgroundColor={COLORS.white} barStyle="dark-content" />
             <RootNavigation />
           </View>
         </>
