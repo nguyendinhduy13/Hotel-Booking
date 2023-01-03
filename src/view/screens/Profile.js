@@ -18,14 +18,16 @@ import Icon1 from 'react-native-vector-icons/MaterialIcons';
 import { SignInContext } from '../../contexts/authContext';
 
 import { useTranslation } from 'react-i18next';
+import { useTheme } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAsyncStorage } from '../../functions/asyncStorageFunctions';
 import '../../i18n/18n';
 import Globalreducer from '../../redux/Globalreducer';
 export default function Profile({ navigation }) {
   const { t, i18n } = useTranslation();
+  const { colors } = useTheme();
   const { dispatchSignedIn } = useContext(SignInContext);
-  const { nameUser } = useSelector((state) => state.Globalreducer);
+  const { nameUser, theme } = useSelector((state) => state.Globalreducer);
   const dispatch = useDispatch();
   async function signOut() {
     try {
@@ -45,15 +47,32 @@ export default function Profile({ navigation }) {
       Alert.alert('Error', error.message);
     }
   }
-  const [isEnabled, setIsEnabled] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(theme === 'dark' ? true : false);
   const toggleSwitch = () => {
     setIsEnabled((previousState) => !previousState);
-    !isEnabled ? console.log('Dark Mode') : console.log('Light Mode');
+    if (isEnabled) {
+      dispatch(Globalreducer.actions.setTheme('light'));
+      setAsyncStorage('theme', 'light');
+    } else {
+      dispatch(Globalreducer.actions.setTheme('dark'));
+      setAsyncStorage('theme', 'dark');
+    }
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: 'white' }}>
-      <View style={{ backgroundColor: 'white', elevation: 15 }}>
+    <View style={{ flex: 1, backgroundColor: colors.bg }}>
+      <View
+        style={{
+          backgroundColor: colors.bg,
+          elevation: 15,
+          shadowColor: colors.text,
+          shadowOffset: {
+            width: 0,
+            height: 12,
+          },
+          shadowOpacity: 0.58,
+        }}
+      >
         <View style={styles.heaerProfile}>
           <View
             style={{
@@ -64,7 +83,7 @@ export default function Profile({ navigation }) {
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text
-                style={{ fontSize: 27, fontWeight: 'bold', color: 'black' }}
+                style={{ fontSize: 27, fontWeight: 'bold', color: colors.text }}
               >
                 {nameUser.name}
               </Text>
@@ -84,7 +103,7 @@ export default function Profile({ navigation }) {
                 <Icon3
                   name="moon"
                   size={25}
-                  color="#767577"
+                  color="#f5dd4b"
                   style={{ marginRight: 5 }}
                 />
               ) : (
@@ -106,35 +125,61 @@ export default function Profile({ navigation }) {
           </View>
           <Text
             style={{
-              color: 'black',
+              color: colors.text,
               fontSize: nameUser.phone ? 15 : 0,
               paddingTop: nameUser.phone ? 5 : 0,
             }}
           >
             {nameUser.phone}
           </Text>
-          <Text style={{ color: 'black', fontSize: 15, paddingTop: 5 }}>
+          <Text style={{ color: colors.text, fontSize: 15, paddingTop: 5 }}>
             {nameUser.email}
           </Text>
         </View>
       </View>
-      <ScrollView style={{ backgroundColor: 'white', marginVertical: 10 }}>
+      <ScrollView style={{ backgroundColor: colors.bg, marginVertical: 10 }}>
         <View style={styles.bodyProfile}>
-          <Text style={styles.tittle}>{t('my-booking')}</Text>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: colors.text,
+              marginTop: 10,
+            }}
+          >
+            {t('my-booking')}
+          </Text>
           <TouchableOpacity style={styles.view}>
-            <Icon3 name="back-in-time" size={25} />
+            <Icon3 name="back-in-time" size={25} color={colors.icon} />
             <Text
-              style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}
+              style={{
+                fontSize: 16,
+                paddingHorizontal: 15,
+                color: colors.text,
+              }}
             >
               {t('my-booking-history')}
             </Text>
           </TouchableOpacity>
-          <Text style={styles.tittle}>{t('setting')}</Text>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: colors.text,
+              marginTop: 10,
+            }}
+          >
+            {t('setting')}
+          </Text>
           <View style={[styles.view, { justifyContent: 'space-between' }]}>
             <View style={{ flexDirection: 'row' }}>
-              <Icon1 name="language" size={25} />
+              <Icon1 name="language" size={25} color={colors.icon} />
               <Text
-                style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}
+                style={{
+                  fontSize: 16,
+                  paddingHorizontal: 15,
+                  color: colors.text,
+                }}
               >
                 {t('language')}
               </Text>
@@ -150,16 +195,33 @@ export default function Profile({ navigation }) {
               onPress={() => navigation.navigate('ChangeLanguage')}
             />
           </View>
-          <Text style={styles.tittle}>{t('information')}</Text>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: colors.text,
+              marginTop: 10,
+            }}
+          >
+            {t('information')}
+          </Text>
           <TouchableOpacity
             style={styles.view}
             onPress={() => {
               navigation.navigate('Terms');
             }}
           >
-            <Icon name="shield-checkmark-outline" size={25} />
+            <Icon
+              name="shield-checkmark-outline"
+              size={25}
+              color={colors.icon}
+            />
             <Text
-              style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}
+              style={{
+                fontSize: 16,
+                paddingHorizontal: 15,
+                color: colors.text,
+              }}
             >
               {t('terms-and-conditions')}
             </Text>
@@ -168,9 +230,13 @@ export default function Profile({ navigation }) {
             style={[styles.view, { justifyContent: 'space-between' }]}
           >
             <View style={{ flexDirection: 'row' }}>
-              <Icon1 name="phonelink-setup" size={25} />
+              <Icon1 name="phonelink-setup" size={25} color={colors.icon} />
               <Text
-                style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}
+                style={{
+                  fontSize: 16,
+                  paddingHorizontal: 15,
+                  color: colors.text,
+                }}
               >
                 {t('version')}
               </Text>
@@ -192,9 +258,13 @@ export default function Profile({ navigation }) {
               navigation.navigate('About');
             }}
           >
-            <Icon1 name="info-outline" size={25} />
+            <Icon1 name="info-outline" size={25} color={colors.icon} />
             <Text
-              style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}
+              style={{
+                fontSize: 16,
+                paddingHorizontal: 15,
+                color: colors.text,
+              }}
             >
               {t('contact-us')}
             </Text>
@@ -205,9 +275,13 @@ export default function Profile({ navigation }) {
               signOut();
             }}
           >
-            <Icon5 name="logout" size={25} />
+            <Icon5 name="logout" size={25} color={colors.icon} />
             <Text
-              style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}
+              style={{
+                fontSize: 16,
+                paddingHorizontal: 15,
+                color: colors.text,
+              }}
             >
               {t('logout')}
             </Text>
@@ -234,12 +308,7 @@ const styles = StyleSheet.create({
   bodyProfile: {
     marginHorizontal: 20,
   },
-  tittle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'black',
-    marginTop: 10,
-  },
+  tittle: {},
   view: {
     flexDirection: 'row',
     alignItems: 'center',

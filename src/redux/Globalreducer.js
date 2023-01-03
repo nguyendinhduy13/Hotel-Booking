@@ -24,6 +24,7 @@ const initialState = {
   dataProvince: [],
   dataReport: [],
   dataRevenue: [],
+  theme: '',
 };
 
 export default createSlice({
@@ -93,6 +94,9 @@ export default createSlice({
     },
     setDataRevenue(state, action) {
       state.dataRevenue = action.payload;
+    },
+    setTheme(state, action) {
+      state.theme = action.payload;
     },
   },
 });

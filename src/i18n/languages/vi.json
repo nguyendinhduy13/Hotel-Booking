@@ -166,6 +166,12 @@
     "cancel": "Hủy",
     "yes-continue": "Đồng ý, tiếp tục",
     "booking-infomation": "Thông tin đặt phòng",
-    "booker-information": "Thông tin người đặt"
+    "booker-information": "Thông tin người đặt",
+    "please-book-this-hotel-before-review": "Vui lòng đặt phòng khách sạn này trước khi đánh giá",
+    "no-room-available": "Không có phòng trống",
+    "rate-this-hotel": "Đánh giá khách sạn này",
+    "please-give-your-rate-&-review": "Vui lòng cho điểm và đánh giá của bạn",
+    "rate-now": "Đánh giá ngay",
+    "later": "Để sau"
   }
 }

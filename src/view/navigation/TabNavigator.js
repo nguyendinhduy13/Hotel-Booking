@@ -1,22 +1,29 @@
-import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { View } from 'react-native';
-import HomeScreen from '../screens/HomeScreen';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useTheme } from 'react-native-paper';
+import Icon2 from 'react-native-vector-icons/AntDesign';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon1 from 'react-native-vector-icons/Ionicons';
-import Icon2 from 'react-native-vector-icons/AntDesign';
-import Profile from '../screens/Profile';
 import COLORS from '../../consts/colors';
 import Booking from '../screens/Booking';
-import { useTranslation } from 'react-i18next';
+import HomeScreen from '../screens/HomeScreen';
+import Profile from '../screens/Profile';
 const Tab = createBottomTabNavigator();
 export default function TabNavigator() {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: COLORS.primary,
+        tabBarInactiveTintColor: colors.text,
+        tabBarStyle: {
+          backgroundColor: colors.bg,
+          borderTopWidth: 0,
+          elevation: 0,
+        },
       }}
     >
       <Tab.Screen

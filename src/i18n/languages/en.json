@@ -166,6 +166,12 @@
     "cancel": "Cancel",
     "yes-continue": "Yes, continue",
     "booking-infomation": "Booking Infomation",
-    "booker-information": "Booker Information"
+    "booker-information": "Booker Information",
+    "please-book-this-hotel-before-review": "Please book this hotel before review",
+    "no-room-available": "No room available",
+    "rate-this-hotel": "Rate this hotel",
+    "please-give-your-rate-&-review": "Please give your rate & review",
+    "rate-now": "Rate now",
+    "later": "Later"
   }
 }

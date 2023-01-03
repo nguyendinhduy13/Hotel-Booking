@@ -1,23 +1,24 @@
 import React, { useState } from 'react';
 import { Image, Modal, ScrollView, TouchableOpacity, View } from 'react-native';
-import COLORS from '../../consts/colors';
+import { useTheme } from 'react-native-paper';
 import CustomHeader from '../components/CustomHeader';
 export default function HotelPhotos({ route, navigation }) {
   const [item, setItem] = useState(route.params);
   const [index, setIndex] = useState(0);
   const [itemzoom, setitemzoom] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const { colors } = useTheme();
   return (
     <ScrollView
       contentContainerStyle={
         !modalVisible
           ? {
-              backgroundColor: COLORS.white,
+              backgroundColor: colors.bg,
               flex: 1,
               paddingBottom: 20,
             }
           : {
-              backgroundColor: COLORS.grey,
+              backgroundColor: colors.box,
               flex: 1,
               paddingBottom: 20,
             }

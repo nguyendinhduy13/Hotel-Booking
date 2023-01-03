@@ -14,6 +14,7 @@ import {
   View,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
+import { useTheme } from 'react-native-paper';
 import Icon2 from 'react-native-vector-icons/AntDesign';
 import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons';
 import COLORS from '../../../consts/colors';
@@ -23,6 +24,7 @@ export default function SignUpScreen({ navigation }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { colors } = useTheme();
 
   async function signUp() {
     try {
@@ -62,7 +64,7 @@ export default function SignUpScreen({ navigation }) {
     <Pressable
       style={{
         flex: 1,
-        backgroundColor: COLORS.white,
+        backgroundColor: colors.bg,
       }}
       onPress={() => Keyboard.dismiss()}
     >
@@ -89,7 +91,7 @@ export default function SignUpScreen({ navigation }) {
           style={{
             fontSize: 30,
             fontWeight: 'bold',
-            color: 'black',
+            color: colors.text,
           }}
         >
           {t('sign-up')}
@@ -108,6 +110,8 @@ export default function SignUpScreen({ navigation }) {
                 style={{
                   width: 28,
                   height: 28,
+                  resizeMode: 'contain',
+                  tintColor: COLORS.grey,
                 }}
               />
               <View
@@ -118,11 +122,13 @@ export default function SignUpScreen({ navigation }) {
                   width: '90%',
                   borderBottomWidth: 1,
                   borderBottomColor: '#69b9f5',
+                  color: colors.text,
                 }}
               >
                 <TextInput
                   placeholder={t('name')}
-                  style={{ width: '90%' }}
+                  placeholderTextColor={colors.icon}
+                  style={{ width: '90%', color: colors.text }}
                   onChangeText={(text) => setName(text)}
                   value={name}
                 />
@@ -145,8 +151,10 @@ export default function SignUpScreen({ navigation }) {
                   width: '90%',
                   marginLeft: 10,
                   fontSize: 16,
+                  color: colors.text,
                 }}
                 placeholder={t('email')}
+                placeholderTextColor={colors.icon}
                 onChangeText={(text) => setEmail(text)}
                 value={email}
               />
@@ -172,7 +180,8 @@ export default function SignUpScreen({ navigation }) {
               >
                 <TextInput
                   placeholder={t('password')}
-                  style={{ width: '90%' }}
+                  placeholderTextColor={colors.icon}
+                  style={{ width: '90%', color: colors.text }}
                   secureTextEntry={getVisible ? false : true}
                   onChangeText={(text) => setPassword(text)}
                   value={password}
@@ -193,7 +202,7 @@ export default function SignUpScreen({ navigation }) {
               marginTop: 20,
             }}
           >
-            <Text style={{ color: COLORS.grey, marginTop: 10 }}>
+            <Text style={{ color: colors.icon, marginTop: 10 }}>
               {t('by-creating-an-account')}
               <Text
                 style={{
@@ -205,7 +214,7 @@ export default function SignUpScreen({ navigation }) {
               >
                 {' '}
                 {t('terms-of-service')}{' '}
-                <Text style={{ color: COLORS.grey, marginTop: 5 }}>
+                <Text style={{ color: colors.icon, marginTop: 5 }}>
                   {t('and')}{' '}
                   <Text
                     style={{
@@ -259,7 +268,7 @@ export default function SignUpScreen({ navigation }) {
       >
         <Text
           style={{
-            color: COLORS.grey,
+            color: colors.icon,
             marginTop: 15,
             alignSelf: 'center',
             fontSize: 16,
