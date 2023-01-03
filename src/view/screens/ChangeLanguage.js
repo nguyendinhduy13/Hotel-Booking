@@ -39,7 +39,7 @@ const ChangeLanguage = ({ navigation }) => {
                 style={{
                   fontSize: 20,
                   fontWeight: 'bold',
-                  paddingHorizontal: 15,
+                  paddingHorizontal: 30,
                   color: 'orange',
                 }}
               >
@@ -70,7 +70,7 @@ const ChangeLanguage = ({ navigation }) => {
                 style={{
                   fontSize: 20,
                   fontWeight: 'bold',
-                  paddingHorizontal: 15,
+                  paddingHorizontal: 30,
                   color: 'orange',
                 }}
               >

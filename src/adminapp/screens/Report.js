@@ -21,25 +21,16 @@ const Report = () => {
     },
   };
   const findMaxandMin = () => {
-    //find max and min total in dataReport.datasets[0].data
+    const data = dataReport.datasets[0].data.filter((item) => item !== 0);
+    console.log(data);
     let max = {
-      value: dataReport.datasets[0].data[0],
-      index: 0,
+      value: Math.max(...data),
+      index: data.indexOf(Math.max(...data)),
     };
     let min = {
-      value: dataReport.datasets[0].data[0],
-      index: 0,
+      value: Math.min(...data),
+      index: data.indexOf(Math.min(...data)),
     };
-    dataReport.datasets[0].data.forEach((item, index) => {
-      if (item > max.value) {
-        max.value = item;
-        max.index = index;
-      }
-      if (item < min.value) {
-        min.value = item;
-        min.index = index;
-      }
-    });
     return { max, min };
   };
   const Format = (number) => {
@@ -63,6 +54,7 @@ const Report = () => {
         style={{
           width: '100%',
         }}
+        showsVerticalScrollIndicator={false}
       >
         <Text
           style={{

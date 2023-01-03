@@ -74,7 +74,7 @@
     "notification": "Thông báo",
     "language": "Ngôn ngữ",
     "about-us": "Về chúng tôi",
-    "terms-and-policy": "Điều khoản và chính sách bảo mật",
+    "terms-and-conditions": "Điều khoản và điều kiện",
     "version": "Phiên bản",
     "contact-us": "Liên hệ với chúng tôi",
     "nhin-ra-bien": "Nhìn ra biển",
@@ -148,6 +148,11 @@
     "new-password": "Mật khẩu mới",
     "confirm-password": "Xác nhận mật khẩu mới",
     "complete": "Hoàn thành",
-    "update-success": "Cập nhật thành công"
+    "update-success": "Cập nhật thành công",
+    "contact": "Liên hệ",
+    "support-customer": "Hỗ trợ khách hàng",
+    "contact-for-cooperation": "Liên hệ hợp tác",
+    "headquarters": "Trụ sở chính",
+    "Hotel-Booking-VIET-NAM-Joint-Stock-Company": "Công ty Cổ phần Hotel Booking Việt Nam"
   }
 }

@@ -164,8 +164,9 @@ export default function App() {
         total += item.hotelinfo.total;
       }
     });
+
     arr.labels.push(nameHotel);
-    arr.datasets[0].data.push((total / 1000).toFixed(2));
+    arr.datasets[0].data.push(Number((total / 1000).toFixed(2)));
   };
 
   async function onResult(QuerySnapshot) {

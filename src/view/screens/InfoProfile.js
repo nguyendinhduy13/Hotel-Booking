@@ -185,12 +185,12 @@ const InfoProfile = ({ navigation }) => {
             </View>
             <Icon
               name="edit"
-              size={25}
+              size={nameUser.type === 'google' ? 0 : 25}
               style={{
                 position: 'absolute',
                 right: 15,
                 alignSelf: 'center',
-                color: 'orange',
+                color: 'red',
               }}
               onPress={() => {
                 navigation.navigate('Change Password');

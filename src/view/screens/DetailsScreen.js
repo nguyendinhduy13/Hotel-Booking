@@ -345,7 +345,7 @@ export default function DetailsScreen({ navigation, route }) {
 
 const styles = StyleSheet.create({
   headerImage: {
-    height: 400,
+    height: 350,
     overflow: 'hidden',
     borderBottomLeftRadius: 15,
     borderBottomRightRadius: 15,

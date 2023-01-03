@@ -74,7 +74,7 @@
     "notification": "Notification",
     "language": "Language",
     "about-us": "About Us",
-    "terms-and-policy": "Terms and Policy",
+    "terms-and-conditions": "Terms and Conditions",
     "version": "Version",
     "contact-us": "Contact Us",
     "nhin-ra-bien": "View to the sea",
@@ -148,6 +148,11 @@
     "new-password": "New password",
     "confirm-password": "Confirm password",
     "complete": "Complete",
-    "update-success": "Update success"
+    "update-success": "Update success",
+    "contact": "Contact",
+    "support-customer": "Support Customer",
+    "contact-for-cooperation": "Contact for cooperation",
+    "headquarters": "Headquarters",
+    "Hotel-Booking-Viet-Nam-Joint-Stock-Company": "Hotel Booking VIET NAM Joint Stock Company"
   }
 }

@@ -879,7 +879,7 @@ const ListRoom = ({ navigation, route }) => {
           </TouchableOpacity>
         </View>
       </Animated.View>
-      <TouchableOpacity
+      <Pressable
         style={styles.bottomSheet1}
         onPress={() => {
           handleOpenCalendar();
@@ -934,7 +934,7 @@ const ListRoom = ({ navigation, route }) => {
             </View>
           </View>
         </View>
-      </TouchableOpacity>
+      </Pressable>
       <TouchableOpacity
         style={{
           position: 'absolute',
