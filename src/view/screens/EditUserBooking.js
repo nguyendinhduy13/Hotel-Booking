@@ -37,8 +37,8 @@ const EditUserBooking = ({ navigation }) => {
   const [birthday, setBirthday] = useState('');
   const [email, setEmail] = useState('');
   return (
-    <View>
-      <CustomHeader title={'Thông tin người đặt phòng'} />
+    <View style={{ backgroundColor: 'white' }}>
+      <CustomHeader title={'information-user-booking'} />
       <TextInput
         placeholder={t('name')}
         style={{
@@ -74,7 +74,7 @@ const EditUserBooking = ({ navigation }) => {
         onChangeText={(text) => setPhone(text)}
       />
       <TextInput
-        placeholder={t('date-of-birth')}
+        placeholder={t('age')}
         style={{
           borderWidth: 1,
           borderRadius: 10,

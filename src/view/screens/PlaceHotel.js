@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Animated,
   Dimensions,
@@ -27,6 +28,8 @@ const DRAG_THRESHOLD = 50;
 
 const PlaceHotel = ({ navigation, route }) => {
   const { data, name } = route.params;
+  const { t } = useTranslation();
+
   const currentPosition = useSelector((state) => state.currentPosition);
   const position =
     data.length > 0
@@ -149,6 +152,8 @@ const PlaceHotel = ({ navigation, route }) => {
             alignItems: 'center',
             width: '100%',
             justifyContent: 'space-between',
+            position: 'relative',
+            zIndex: 2,
           }}
         >
           <Icon
@@ -241,7 +246,7 @@ const PlaceHotel = ({ navigation, route }) => {
                   color: 'black',
                 }}
               >
-                Có {data.length} khách sạn
+                {t('have')} {data.length} {t('ho-tel')}
               </Text>
               {data.length > 0 ? (
                 <View
@@ -463,7 +468,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    zIndex: 2,
+    zIndex: 1,
     elevation: 10,
     borderWidth: 1,
     borderColor: '#eeeeee',

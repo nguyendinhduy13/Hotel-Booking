@@ -8,6 +8,7 @@ import {
   Dimensions,
   FlatList,
   Image,
+  Keyboard,
   Modal,
   Pressable,
   SafeAreaView,
@@ -520,7 +521,7 @@ export default function HomeScreen({ navigation }) {
                 paddingLeft: 10,
               }}
             >
-              {t('find-place-and-hotel')}
+              {t('search')}
             </Text>
           </View>
         </TouchableOpacity>
@@ -690,7 +691,12 @@ export default function HomeScreen({ navigation }) {
         }}
       >
         <View style={styles.centeredView}>
-          <View style={styles.modalView}>
+          <Pressable
+            style={styles.modalView}
+            onPress={() => {
+              Keyboard.dismiss();
+            }}
+          >
             <View style={styles.generalView}>
               <View
                 style={{
@@ -727,7 +733,7 @@ export default function HomeScreen({ navigation }) {
                       fontSize: 17,
                       paddingLeft: 10,
                     }}
-                    placeholder={t('find-place-and-hotel')}
+                    placeholder={t('search')}
                     autoFocus={true}
                     ref={textInput}
                     value={search}
@@ -901,7 +907,7 @@ export default function HomeScreen({ navigation }) {
                 <></>
               )}
             </View>
-          </View>
+          </Pressable>
         </View>
       </Modal>
     </SafeAreaView>

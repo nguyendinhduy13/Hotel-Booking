@@ -76,7 +76,7 @@ export default function EditBenefit({ navigation, route }) {
 
   return (
     <View style={{ flex: 1 }}>
-      <CustomHeader title={'Danh sách tiện ích'} />
+      <CustomHeader title={'list-benefits'} />
       <ScrollView
         contentContainerStyle={{
           paddingTop: 20,

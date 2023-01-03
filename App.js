@@ -156,6 +156,7 @@ export default function App() {
     ],
   };
   const handleCalculate = async (data) => {
+    if (data.length === 0) return;
     let nameHotel = data[0].hotelinfo.name;
     let total = 0;
     await data.forEach((item) => {

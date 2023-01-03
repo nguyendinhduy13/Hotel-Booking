@@ -658,20 +658,6 @@ const ListRoom = ({ navigation, route }) => {
               >
                 {t('description')}
               </Text>
-              <TouchableOpacity
-                onPress={() => {
-                  handleShow();
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 15,
-                    color: COLORS.primary,
-                  }}
-                >
-                  {t('show')}
-                </Text>
-              </TouchableOpacity>
             </View>
             <Text
               style={{
@@ -943,7 +929,7 @@ const ListRoom = ({ navigation, route }) => {
               }}
             >
               <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'red' }}>
-                Đổi ngày
+                {t('change-day')}
               </Text>
             </View>
           </View>

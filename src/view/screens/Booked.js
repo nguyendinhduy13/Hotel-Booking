@@ -79,7 +79,9 @@ export default function Booked({ navigation, route }) {
       !userbooking.email
     ) {
       Alert.alert(
-        'Bạn chưa nhập thông tin cá nhân, vui lòng nhập đầy đủ thông tin',
+        t('you-have-not-entered-personal-information') +
+          ', ' +
+          t('please-fill-all-information'),
       );
     } else {
       let x =
@@ -251,7 +253,7 @@ export default function Booked({ navigation, route }) {
   };
   return (
     <View style={{ flex: 1 }}>
-      <CustomHeader title={'Thông tin đặt phòng'} />
+      <CustomHeader title={'information-booking'} />
       <ScrollView showsVerticalScrollIndicator={false} style={{}}>
         <View
           style={{
@@ -466,7 +468,7 @@ export default function Booked({ navigation, route }) {
             <Text
               style={{ fontSize: 20, fontWeight: 'bold', color: COLORS.dark }}
             >
-              Thông tin người đặt
+              {t('information-user-booking')}
             </Text>
             <Pressable
               onPress={() => {
@@ -476,7 +478,7 @@ export default function Booked({ navigation, route }) {
               <Text
                 style={{ fontSize: 17, color: 'orange', fontWeight: 'bold' }}
               >
-                Sửa
+                {t('edit')}
               </Text>
             </Pressable>
           </View>
@@ -598,7 +600,7 @@ export default function Booked({ navigation, route }) {
             <Text
               style={{ fontSize: 20, fontWeight: 'bold', color: COLORS.dark }}
             >
-              Thanh toán
+              {t('payment')}
             </Text>
             <View
               style={{
@@ -623,7 +625,7 @@ export default function Booked({ navigation, route }) {
                   marginLeft: 10,
                 }}
               >
-                Thanh toán tại khách sạn
+                {t('payment-at-hotel')}
               </Text>
             </View>
           </View>
@@ -640,7 +642,7 @@ export default function Booked({ navigation, route }) {
             <Text
               style={{ fontSize: 20, fontWeight: 'bold', color: COLORS.dark }}
             >
-              Chi tiết thanh toán
+              {t('payment-details')}
             </Text>
             <View
               style={{
@@ -669,7 +671,7 @@ export default function Booked({ navigation, route }) {
                     marginLeft: 10,
                   }}
                 >
-                  Tiền phòng
+                  {t('cost-of-room')}
                 </Text>
               </View>
               <Text
@@ -700,7 +702,7 @@ export default function Booked({ navigation, route }) {
               <Text
                 style={{ fontSize: 20, color: 'black', fontWeight: 'bold' }}
               >
-                Tổng tiền
+                {t('total')}
               </Text>
               <Text
                 style={{ fontSize: 22, color: 'black', fontWeight: 'bold' }}
@@ -758,7 +760,7 @@ export default function Booked({ navigation, route }) {
                   marginTop: 20,
                 }}
               >
-                Đặt phòng thành công
+                {t('booking-success')}
               </Text>
               <TouchableOpacity
                 style={{
@@ -782,7 +784,7 @@ export default function Booked({ navigation, route }) {
                     marginVertical: 10,
                   }}
                 >
-                  Xem phòng
+                  {t('view-booking')}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -796,6 +798,7 @@ export default function Booked({ navigation, route }) {
                 }}
                 onPress={() => {
                   setModalVisible(false);
+                  navigation.navigate('TabNavigator');
                 }}
               >
                 <Text
@@ -806,7 +809,7 @@ export default function Booked({ navigation, route }) {
                     marginVertical: 10,
                   }}
                 >
-                  Hủy
+                  {t('go-back')}
                 </Text>
               </TouchableOpacity>
             </View>

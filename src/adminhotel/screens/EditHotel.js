@@ -56,7 +56,7 @@ export default function EditHotel({ navigation, route }) {
 
   return (
     <View>
-      <CustomHeader title={'Chỉnh sửa thông tin khách sạn'} />
+      <CustomHeader title={'change-information-hotel'} />
       <TextInput
         placeholder="Tên khách sạn"
         multiline={true}

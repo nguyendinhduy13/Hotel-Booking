@@ -64,7 +64,7 @@ const EditRoom = ({ navigation, route }) => {
   };
   return (
     <View>
-      <CustomHeader title={'Chỉnh sửa thông tin phòng'} />
+      <CustomHeader title={'change-information-room'} />
       <View style={{ alignItems: 'center' }}>
         <TextInput
           placeholder="Tên phòng"

@@ -1,6 +1,9 @@
 import auth, { firebase } from '@react-native-firebase/auth';
 import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
+  Keyboard,
+  Pressable,
   StyleSheet,
   Text,
   TextInput,
@@ -16,7 +19,7 @@ const user = auth().currentUser;
 
 const ChangePassword = ({ navigation }) => {
   const count = useRef(0);
-
+  const { t } = useTranslation();
   const [error, setError] = useState('');
   const [errornew, setErrornew] = useState('');
   const [errorconfirm, setErrorconfirm] = useState('');
@@ -44,11 +47,11 @@ const ChangePassword = ({ navigation }) => {
         setTrueOldPass(true);
       } catch (error) {
         console.log(error);
-        setError('Mật khẩu hiện tại không đúng');
+        setError(t('current-password-not-correct'));
         setTrueOldPass(false);
       }
     } else {
-      setError('Vui lòng nhập mật khẩu hiện tại');
+      setError(t('please-enter-current-password'));
       setTrueOldPass(false);
     }
   };
@@ -72,26 +75,26 @@ const ChangePassword = ({ navigation }) => {
     if (count.current != 0 && password.length > 0 && newPassword.length > 0) {
       if (newPassword.length > 0) {
         if (newPassword.length < 6) {
-          setErrornew('Mật khẩu phải có ít nhất 6 ký tự');
+          setErrornew(t('password-at-least-6-characters'));
           setTrueNewPass(false);
         } else {
           setErrornew('');
           setTrueNewPass(true);
         }
       } else {
-        setErrornew('Vui lòng nhập mật khẩu mới');
+        setErrornew(t('please-enter-new-password'));
         setTrueNewPass(false);
       }
       if (confirmPassword.length > 0) {
         if (confirmPassword != newPassword) {
-          setErrorconfirm('Mật khẩu xác nhận không khớp');
+          setErrorconfirm(t('confirm-password-not-correct'));
           setTrueConfirmPass(false);
         } else {
           setErrorconfirm('');
           setTrueConfirmPass(true);
         }
       } else {
-        setErrorconfirm('Vui lòng nhập mật khẩu xác nhận');
+        setErrorconfirm(t('please-enter-confirm-password'));
         setTrueConfirmPass(false);
       }
     }
@@ -105,7 +108,10 @@ const ChangePassword = ({ navigation }) => {
             .updatePassword(newPassword)
             .then(() => {
               console.log('Password updated!');
-              ToastAndroid.show('Đổi mật khẩu thành công', ToastAndroid.SHORT);
+              ToastAndroid.show(
+                t('change-password-success'),
+                ToastAndroid.SHORT,
+              );
               navigation.goBack();
             })
             .catch((error) => {
@@ -119,12 +125,12 @@ const ChangePassword = ({ navigation }) => {
   };
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
-      <CustomHeader title={'Đổi mật khẩu'} />
-      <View style={{ marginTop: 20 }}>
-        <Text style={{ marginLeft: 22 }}>Mật khẩu hiện tại</Text>
+      <CustomHeader title={'change-password'} />
+      <Pressable style={{ marginTop: 20 }} onPress={() => Keyboard.dismiss()}>
+        <Text style={{ marginLeft: 22 }}>{t('current-password')}</Text>
         <View>
           <TextInput
-            placeholder="Mật khẩu hiện tại"
+            placeholder={t('current-password')}
             style={{
               borderWidth: 1,
               borderRadius: 5,
@@ -161,10 +167,12 @@ const ChangePassword = ({ navigation }) => {
         >
           {error}
         </Text>
-        <Text style={{ marginLeft: 22, marginTop: 20 }}>Mật khẩu mới</Text>
+        <Text style={{ marginLeft: 22, marginTop: 20 }}>
+          {t('new-password')}
+        </Text>
         <View>
           <TextInput
-            placeholder="Mật khẩu mới"
+            placeholder={t('new-password')}
             style={{
               borderWidth: 1,
               borderRadius: 5,
@@ -178,7 +186,7 @@ const ChangePassword = ({ navigation }) => {
             onChangeText={(value) => handleEnterNewPassword(value)}
             onEndEditing={() => {
               if (newPassword.length < 6) {
-                setErrornew('Mật khẩu phải có ít nhất 6 ký tự');
+                setErrornew(t('password-at-least-6-characters'));
                 setTrueNewPass(false);
               } else {
                 setErrornew('');
@@ -206,7 +214,7 @@ const ChangePassword = ({ navigation }) => {
         </Text>
         <View>
           <TextInput
-            placeholder="Xác nhận mật khẩu mới"
+            placeholder={t('confirm-password')}
             style={{
               borderWidth: 1,
               borderRadius: 5,
@@ -231,7 +239,7 @@ const ChangePassword = ({ navigation }) => {
         >
           {errorconfirm}
         </Text>
-      </View>
+      </Pressable>
       <TouchableOpacity
         onPress={() => {
           onChangePassword();
@@ -242,7 +250,7 @@ const ChangePassword = ({ navigation }) => {
             : styles.buttonDisable
         }
       >
-        <Text style={styles.text}>Hoàn thành</Text>
+        <Text style={styles.text}>{t('complete')}</Text>
       </TouchableOpacity>
     </View>
   );

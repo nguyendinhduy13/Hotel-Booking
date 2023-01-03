@@ -4,8 +4,9 @@ import React, { useEffect, useState } from 'react';
 import {
   Image,
   Platform,
-  ScrollView, TouchableOpacity,
-  View
+  ScrollView,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -93,7 +94,7 @@ export default function EditImage({ route }) {
   return (
     <View>
       <ScrollView>
-       <CustomHeader title={'Hình của khách sạn'}/>
+        <CustomHeader title={'image-hotel'} />
         <View
           style={{
             flex: 1,

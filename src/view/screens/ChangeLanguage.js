@@ -15,7 +15,7 @@ const ChangeLanguage = ({ navigation }) => {
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
       <View>
-        <CustomHeader title={'Đổi ngôn ngữ'} />
+        <CustomHeader title={'change-language'} />
         <View style={{ paddingHorizontal: 20, height: '100%', width: '100%' }}>
           <TouchableOpacity
             onPress={() => {
@@ -43,7 +43,7 @@ const ChangeLanguage = ({ navigation }) => {
                   color: 'orange',
                 }}
               >
-                Tiếng Việt
+                {t('vietnamese')}
               </Text>
             </View>
           </TouchableOpacity>
@@ -74,7 +74,7 @@ const ChangeLanguage = ({ navigation }) => {
                   color: 'orange',
                 }}
               >
-                Tiếng Anh
+                {t('english')}
               </Text>
             </View>
           </TouchableOpacity>
