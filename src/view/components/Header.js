@@ -8,14 +8,13 @@ export default function Header({ name }) {
       style={{
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: 10,
       }}
     >
       <Image
         source={require('../../assets/logo.png')}
         style={{
-          width: 35,
-          height: 35,
+          width: 60,
+          height: 60,
           resizeMode: 'cover',
         }}
       />

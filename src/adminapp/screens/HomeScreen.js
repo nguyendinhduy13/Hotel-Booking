@@ -76,8 +76,8 @@ export default function HomeScreen({ navigation }) {
         <Image
           source={require('../../assets/logo.png')}
           style={{
-            width: 35,
-            height: 35,
+            width: 60,
+            height: 60,
             resizeMode: 'cover',
           }}
         />
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
     width: '100%',
-    marginTop: 20,
+    marginTop: 10,
   },
   item: {
     flexDirection: 'row',

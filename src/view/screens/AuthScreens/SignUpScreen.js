@@ -28,6 +28,7 @@ export default function SignUpScreen({ navigation }) {
 
   async function signUp() {
     try {
+      if (!name || !email || !password) return;
       await auth().createUserWithEmailAndPassword(email, password);
       firestore()
         .collection('Users')
@@ -72,17 +73,17 @@ export default function SignUpScreen({ navigation }) {
         onPress={() => navigation.goBack()}
         name="arrowleft"
         size={30}
-        color={COLORS.dark}
+        color={colors.text}
         style={{ position: 'absolute', top: 20, left: 20, zIndex: 1 }}
       />
       <View>
         <Image
           source={require('../../../assets/Logo1.png')}
           style={{
-            width: 200,
-            height: 200,
+            width: 230,
+            height: 230,
             alignSelf: 'center',
-            marginTop: 50,
+            marginTop: 30,
           }}
         />
       </View>

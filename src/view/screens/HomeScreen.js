@@ -373,7 +373,7 @@ export default function HomeScreen({ navigation }) {
       </View>
       <ScrollView
         showsHorizontalScrollIndicator={false}
-        style={{ height: '100%', marginTop: 10 }}
+        style={{ height: '100%' }}
         onScroll={(e) => {
           const currentOffset = e.nativeEvent.contentOffset.y;
           animatedValue.setValue(currentOffset);

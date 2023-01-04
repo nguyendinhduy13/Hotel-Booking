@@ -171,7 +171,10 @@ export default function Profile({ navigation }) {
           >
             {t('setting')}
           </Text>
-          <View style={[styles.view, { justifyContent: 'space-between' }]}>
+          <TouchableOpacity
+            style={[styles.view, { justifyContent: 'space-between' }]}
+            onPress={() => navigation.navigate('ChangeLanguage')}
+          >
             <View style={{ flexDirection: 'row' }}>
               <Icon1 name="language" size={25} color={colors.icon} />
               <Text
@@ -192,9 +195,8 @@ export default function Profile({ navigation }) {
                 width: 30,
                 textAlign: 'right',
               }}
-              onPress={() => navigation.navigate('ChangeLanguage')}
             />
-          </View>
+          </TouchableOpacity>
           <Text
             style={{
               fontSize: 20,
@@ -226,9 +228,7 @@ export default function Profile({ navigation }) {
               {t('terms-and-conditions')}
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.view, { justifyContent: 'space-between' }]}
-          >
+          <View style={[styles.view, { justifyContent: 'space-between' }]}>
             <View style={{ flexDirection: 'row' }}>
               <Icon1 name="phonelink-setup" size={25} color={colors.icon} />
               <Text
@@ -251,7 +251,7 @@ export default function Profile({ navigation }) {
             >
               14.3.1
             </Text>
-          </TouchableOpacity>
+          </View>
           <TouchableOpacity
             style={styles.view}
             onPress={() => {

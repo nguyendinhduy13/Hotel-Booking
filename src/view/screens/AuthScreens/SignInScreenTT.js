@@ -253,10 +253,10 @@ export default function SignInScreenTT({ navigation }) {
         <Image
           source={require('../../../assets/Logo1.png')}
           style={{
-            width: 200,
-            height: 200,
+            width: 230,
+            height: 230,
             alignSelf: 'center',
-            marginTop: 50,
+            marginTop: 30,
           }}
         />
       </View>

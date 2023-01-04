@@ -1,23 +1,35 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, ScrollView, Text, View } from 'react-native';
-import COLORS from '../../consts/colors';
+import { useTheme } from 'react-native-paper';
 import CustomHeader from '../components/CustomHeader';
 export default function InfoBooking({ navigation, route }) {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const item = route.params.item;
   const user = route.params.user;
   const Format = (prices) => {
     return prices.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
   };
+  const FormatName1 = (name) => {
+    if (name.length > 55) {
+      return name.substring(0, 55) + '...';
+    }
+    return name;
+  };
   return (
     <View style={{ flex: 1 }}>
       <CustomHeader title={t('booking-infomation')} />
-      <ScrollView showsVerticalScrollIndicator={false} style={{}}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{
+          backgroundColor: colors.special,
+        }}
+      >
         <View
           style={{
             width: '100%',
-            backgroundColor: COLORS.white,
+            backgroundColor: colors.bg,
             marginTop: 10,
           }}
         >
@@ -39,19 +51,26 @@ export default function InfoBooking({ navigation, route }) {
                   source={{ uri: item.image }}
                 />
                 <View style={{ marginLeft: 10 }}>
-                  <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontWeight: 'bold',
+                      color: colors.icon,
+                    }}
+                  >
                     {item.name}
                   </Text>
                   <Text
                     style={{
                       fontSize: 20,
                       fontWeight: 'bold',
-                      color: 'black',
-                      width: '100%',
-                      height: 30,
+                      color: colors.text,
+                      width: 200,
+                      height: 'auto',
+                      marginTop: 5,
                     }}
                   >
-                    {item.roomname}
+                    {FormatName1(item.roomname)}
                   </Text>
                 </View>
               </View>
@@ -68,7 +87,7 @@ export default function InfoBooking({ navigation, route }) {
         </View>
         <View
           style={{
-            backgroundColor: COLORS.white,
+            backgroundColor: colors.bg,
             height: 'auto',
             width: '100%',
             alignSelf: 'center',
@@ -83,14 +102,16 @@ export default function InfoBooking({ navigation, route }) {
               paddingHorizontal: 15,
             }}
           >
-            <Text style={{ fontWeight: '500', fontSize: 17 }}>
+            <Text
+              style={{ fontWeight: '500', fontSize: 17, color: colors.icon }}
+            >
               {t('check-in')}
             </Text>
             <Text
               style={{
                 fontWeight: 'bold',
                 fontSize: 17,
-                color: COLORS.dark,
+                color: colors.text,
               }}
             >
               {item.checkin}
@@ -106,14 +127,16 @@ export default function InfoBooking({ navigation, route }) {
               marginTop: 10,
             }}
           >
-            <Text style={{ fontWeight: '500', fontSize: 17 }}>
+            <Text
+              style={{ fontWeight: '500', fontSize: 17, color: colors.icon }}
+            >
               {t('check-out')}
             </Text>
             <Text
               style={{
                 fontWeight: 'bold',
                 fontSize: 17,
-                color: COLORS.dark,
+                color: colors.text,
               }}
             >
               {item.checkout}
@@ -130,7 +153,9 @@ export default function InfoBooking({ navigation, route }) {
               marginBottom: 20,
             }}
           >
-            <Text style={{ fontWeight: '500', fontSize: 17 }}>
+            <Text
+              style={{ fontWeight: '500', fontSize: 17, color: colors.icon }}
+            >
               {t('number-people')}
             </Text>
             <View
@@ -144,7 +169,7 @@ export default function InfoBooking({ navigation, route }) {
                 style={{
                   fontWeight: 'bold',
                   fontSize: 17,
-                  color: COLORS.dark,
+                  color: colors.text,
                   marginHorizontal: 10,
                 }}
               >
@@ -155,7 +180,7 @@ export default function InfoBooking({ navigation, route }) {
         </View>
         <View
           style={{
-            backgroundColor: COLORS.white,
+            backgroundColor: colors.bg,
             height: 190,
             width: '100%',
             marginTop: 10,
@@ -170,7 +195,7 @@ export default function InfoBooking({ navigation, route }) {
             }}
           >
             <Text
-              style={{ fontSize: 20, fontWeight: 'bold', color: COLORS.dark }}
+              style={{ fontSize: 20, fontWeight: 'bold', color: colors.text }}
             >
               {t('booker-information')}
             </Text>
@@ -187,7 +212,7 @@ export default function InfoBooking({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 17,
-                  color: 'gray',
+                  color: colors.icon,
                 }}
               >
                 {t('name')}
@@ -195,7 +220,7 @@ export default function InfoBooking({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 17,
-                  color: COLORS.dark,
+                  color: colors.text,
                   fontWeight: 'bold',
                 }}
               >
@@ -213,7 +238,7 @@ export default function InfoBooking({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 17,
-                  color: 'gray',
+                  color: colors.icon,
                 }}
               >
                 {t('phone')}
@@ -221,7 +246,7 @@ export default function InfoBooking({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 17,
-                  color: COLORS.dark,
+                  color: colors.text,
                   fontWeight: 'bold',
                 }}
               >
@@ -239,7 +264,7 @@ export default function InfoBooking({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 17,
-                  color: 'gray',
+                  color: colors.icon,
                 }}
               >
                 {t('email')}
@@ -247,7 +272,7 @@ export default function InfoBooking({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 17,
-                  color: COLORS.dark,
+                  color: colors.text,
                   fontWeight: 'bold',
                 }}
               >
@@ -265,7 +290,7 @@ export default function InfoBooking({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 17,
-                  color: 'gray',
+                  color: colors.icon,
                 }}
               >
                 {t('age')}
@@ -273,7 +298,7 @@ export default function InfoBooking({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 17,
-                  color: COLORS.dark,
+                  color: colors.text,
                   fontWeight: 'bold',
                 }}
               >
@@ -285,13 +310,13 @@ export default function InfoBooking({ navigation, route }) {
         <View style={{ marginTop: 10 }}>
           <View
             style={{
-              backgroundColor: COLORS.white,
+              backgroundColor: colors.bg,
               width: '100%',
               padding: 15,
             }}
           >
             <Text
-              style={{ fontSize: 20, fontWeight: 'bold', color: COLORS.dark }}
+              style={{ fontSize: 20, fontWeight: 'bold', color: colors.text }}
             >
               {t('payment')}
             </Text>
@@ -314,7 +339,7 @@ export default function InfoBooking({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 17,
-                  color: 'black',
+                  color: colors.text,
                   marginLeft: 10,
                 }}
               >
@@ -326,14 +351,14 @@ export default function InfoBooking({ navigation, route }) {
         <View style={{ marginTop: 10 }}>
           <View
             style={{
-              backgroundColor: COLORS.white,
+              backgroundColor: colors.bg,
               width: '100%',
               padding: 15,
               marginBottom: 10,
             }}
           >
             <Text
-              style={{ fontSize: 20, fontWeight: 'bold', color: COLORS.dark }}
+              style={{ fontSize: 20, fontWeight: 'bold', color: colors.text }}
             >
               {t('payment-details')}
             </Text>
@@ -360,7 +385,7 @@ export default function InfoBooking({ navigation, route }) {
                 <Text
                   style={{
                     fontSize: 17,
-                    color: 'black',
+                    color: colors.text,
                     marginLeft: 10,
                   }}
                 >
@@ -370,7 +395,7 @@ export default function InfoBooking({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 17,
-                  color: 'black',
+                  color: colors.text,
                 }}
               >
                 {Format(item.price)}
@@ -393,12 +418,12 @@ export default function InfoBooking({ navigation, route }) {
               }}
             >
               <Text
-                style={{ fontSize: 20, color: 'black', fontWeight: 'bold' }}
+                style={{ fontSize: 20, color: colors.text, fontWeight: 'bold' }}
               >
                 {t('total')}
               </Text>
               <Text
-                style={{ fontSize: 22, color: 'black', fontWeight: 'bold' }}
+                style={{ fontSize: 22, color: colors.text, fontWeight: 'bold' }}
               >
                 {' '}
                 {Format(item.price)} đ

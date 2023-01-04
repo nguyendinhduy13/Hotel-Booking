@@ -11,11 +11,14 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import Icon2 from 'react-native-vector-icons/AntDesign';
 import Icon1 from 'react-native-vector-icons/Ionicons';
 import COLORS from '../../consts/colors';
+import Header from '../components/Header';
 export default function Booking() {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const [button, setbutton] = useState(1);
   const [modalVisible, setModalVisible] = useState(false);
   const [data, setdata] = useState([]);
@@ -42,6 +45,13 @@ export default function Booking() {
 
   const Format = (prices) => {
     return prices.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+  };
+  const FormatName = (name) => {
+    //regex if name too long
+    if (name.length > 55) {
+      return name.substring(0, 55) + '...';
+    }
+    return name;
   };
 
   useEffect(() => {
@@ -82,148 +92,144 @@ export default function Booking() {
       <View
         key={index}
         style={{
-          marginTop: 5,
+          backgroundColor: colors.box,
+          borderRadius: 15,
+          marginTop: 10,
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+          elevation: 5,
           width: '93%',
-          justifyContent: 'center',
-          padding: 10,
-          borderRadius: 20,
-          backgroundColor: COLORS.white,
           alignSelf: 'center',
-          height: 210,
         }}
       >
-        <View
-          style={{
-            flexDirection: 'row',
-          }}
-        >
+        <View style={{ flexDirection: 'row', padding: 10 }}>
           <Image
             source={{ uri: item.image }}
-            style={{ width: 120, height: 120, borderRadius: 20 }}
+            style={{ width: 100, height: 100, borderRadius: 15 }}
           />
-          <View
-            style={{
-              marginLeft: 15,
-              justifyContent: 'space-between',
-            }}
-          >
-            <View>
-              <Text
-                style={{
-                  fontSize: 20,
-                  color: COLORS.dark,
-                  fontWeight: '600',
-                }}
-              >
-                {item.name}
-              </Text>
-              <Text
-                style={{
-                  width: 215,
-                  fontWeight: '400',
-                  color: COLORS.dark,
-                  fontSize: 15,
-                  marginVertical: 2,
-                }}
-              >
-                {item.roomname}
-              </Text>
-            </View>
-            <View
+          <View style={{ marginLeft: 10, width: '100%' }}>
+            <Text
               style={{
-                bottom: 3,
+                fontSize: 20,
+                color: colors.text,
+                fontWeight: 'bold',
               }}
             >
-              <Text style={{ fontSize: 18, fontWeight: '700' }}>
-                {Format(item.total)} VNĐ
-              </Text>
-            </View>
+              {item.name}
+            </Text>
+            <Text
+              style={{
+                marginTop: 5,
+                width: 220,
+                fontSize: 15,
+                color: colors.icon,
+              }}
+            >
+              {FormatName(item.roomname)}
+            </Text>
             <View
               style={{
-                backgroundColor: COLORS.blurprimary,
-                width: 90,
-                height: 25,
-                borderRadius: 10,
+                flexDirection: 'row',
+                marginTop: 'auto',
                 alignItems: 'center',
-                justifyContent: 'center',
-                bottom: 3,
+                justifyContent: 'space-between',
+                width: 230,
               }}
             >
               <Text
+                style={{ fontSize: 18, fontWeight: '700', color: colors.text }}
+              >
+                {Format(item.total)} <Text style={{ fontSize: 13 }}>VNĐ</Text>
+              </Text>
+              <View
                 style={{
-                  fontWeight: '700',
-                  color: COLORS.primary,
+                  padding: 5,
+                  borderRadius: 10,
+                  borderWidth: 1,
+                  borderColor: COLORS.primary,
                 }}
               >
-                {t('ongoing')}
-              </Text>
+                <Text
+                  style={{
+                    fontSize: 13,
+                    color: COLORS.primary,
+                  }}
+                >
+                  {t('ongoing')}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
         <View
           style={{
-            borderWidth: 1,
-            height: 0,
-            width: 350,
-            borderColor: '#f2f2f2',
-            marginTop: 8,
-          }}
-        />
-        <View
-          style={{
             flexDirection: 'row',
+            paddingHorizontal: 10,
+            paddingBottom: 10,
+            width: '100%',
+            alignItems: 'center',
             justifyContent: 'space-between',
-            marginTop: 15,
           }}
         >
-          <TouchableOpacity
+          <View>
+            <Text style={{ fontSize: 13, color: colors.icon }}>
+              {t('check-in')}:{' '}
+              <Text style={{ fontWeight: 'bold', color: colors.text }}>
+                {item.checkin}
+              </Text>
+            </Text>
+            <Text style={{ fontSize: 13, color: colors.icon }}>
+              {t('check-out')}:{' '}
+              <Text style={{ fontWeight: 'bold', color: colors.text }}>
+                {item.checkout}
+              </Text>
+            </Text>
+          </View>
+          <View
             style={{
-              borderWidth: 2,
-              borderColor: COLORS.primary,
-              borderRadius: 20,
-              width: 160,
-              height: 37,
-              justifyContent: 'center',
+              flexDirection: 'row',
               alignItems: 'center',
-            }}
-            onPress={() => {
-              setModalVisible(true);
-              setidroom(item.id);
+              justifyContent: 'space-between',
             }}
           >
-            <Text
+            <TouchableOpacity
               style={{
-                fontSize: 16,
-                fontWeight: 'bold',
-                color: COLORS.primary,
+                backgroundColor: COLORS.primary,
+                padding: 10,
+                borderRadius: 10,
+                width: 90,
+                marginRight: 20,
+              }}
+              onPress={() => {
+                setModalVisible(true);
+                setidroom(item.id);
               }}
             >
-              {t('Cancel-booking')}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              backgroundColor: COLORS.primary,
-              borderRadius: 20,
-              width: 160,
-              height: 37,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-            onPress={() => {
-              navigation.navigate('InfoBooking', { item: item, user: user });
-            }}
-          >
-            <Text
+              <Text style={{ color: COLORS.white, textAlign: 'center' }}>
+                {t('cancel')}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
               style={{
-                fontSize: 16,
-                fontWeight: 'bold',
-                color: COLORS.white,
+                backgroundColor: COLORS.primary,
+                padding: 10,
+                borderRadius: 10,
+                width: 90,
+              }}
+              onPress={() => {
+                navigation.navigate('InfoBooking', { item: item, user: user });
               }}
             >
-              {t('see-information')}
-            </Text>
-          </TouchableOpacity>
+              <Text style={{ color: COLORS.white, textAlign: 'center' }}>
+                {t('detail')}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     );
@@ -234,104 +240,89 @@ export default function Booking() {
       <View
         key={index}
         style={{
-          marginTop: 5,
+          backgroundColor: colors.box,
+          borderRadius: 15,
+          marginTop: 10,
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+          elevation: 5,
           width: '93%',
-          justifyContent: 'center',
-          padding: 10,
-          borderRadius: 20,
-          backgroundColor: COLORS.white,
           alignSelf: 'center',
         }}
       >
-        <View
-          style={{
-            flexDirection: 'row',
-          }}
-        >
+        <View style={{ flexDirection: 'row', padding: 10 }}>
           <Image
             source={{ uri: item.image }}
-            style={{ width: 120, height: 120, borderRadius: 20 }}
+            style={{ width: 100, height: 100, borderRadius: 15 }}
           />
-          <View
-            style={{
-              marginLeft: 15,
-              justifyContent: 'space-between',
-            }}
-          >
-            <View>
-              <Text
-                style={{
-                  fontSize: 20,
-                  color: COLORS.dark,
-                  fontWeight: '600',
-                }}
-              >
-                {item.name}
-              </Text>
-              <Text
-                style={{
-                  width: 215,
-                  fontWeight: '400',
-                  color: COLORS.dark,
-                  fontSize: 15,
-                  marginVertical: 2,
-                }}
-              >
-                {item.roomname}
-              </Text>
-            </View>
-            <View
+          <View style={{ marginLeft: 10, width: '100%' }}>
+            <Text
               style={{
-                bottom: 3,
+                fontSize: 20,
+                color: colors.text,
+                fontWeight: 'bold',
               }}
             >
-              <Text style={{ fontSize: 18, fontWeight: '700' }}>
-                {Format(item.total)} VNĐ
-              </Text>
-            </View>
+              {item.name}
+            </Text>
+            <Text
+              style={{
+                marginTop: 5,
+                width: 220,
+                fontSize: 15,
+                color: colors.icon,
+              }}
+            >
+              {FormatName(item.roomname)}
+            </Text>
             <View
               style={{
-                backgroundColor: COLORS.blurprimary,
-                width: 90,
-                height: 25,
-                borderRadius: 10,
+                flexDirection: 'row',
+                marginTop: 'auto',
                 alignItems: 'center',
-                justifyContent: 'center',
-                bottom: 3,
+                justifyContent: 'space-between',
+                width: 230,
               }}
             >
               <Text
+                style={{ fontSize: 18, fontWeight: '700', color: colors.text }}
+              >
+                {Format(item.total)} <Text style={{ fontSize: 13 }}>VNĐ</Text>
+              </Text>
+              <View
                 style={{
-                  fontWeight: '700',
-                  color: COLORS.primary,
+                  padding: 5,
+                  borderRadius: 10,
+                  borderWidth: 1,
+                  borderColor: COLORS.primary,
                 }}
               >
-                {t('completed')}
-              </Text>
+                <Text
+                  style={{
+                    fontSize: 13,
+                    color: COLORS.primary,
+                  }}
+                >
+                  {t('completed')}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
         <View
           style={{
-            borderWidth: 1,
-            height: 0,
-            width: 350,
-            borderColor: '#f2f2f2',
-            marginTop: 8,
-          }}
-        />
-        <View
-          style={{
             backgroundColor: COLORS.blurprimary,
-            width: '95%',
-            borderRadius: 10,
-            alignSelf: 'center',
-            height: 35,
-            marginVertical: 15,
-            top: 5,
+            padding: 10,
+            borderRadius: 15,
+            marginHorizontal: 10,
+            marginBottom: 10,
             flexDirection: 'row',
             alignItems: 'center',
-            paddingLeft: 10,
           }}
         >
           <Icon1 size={20} name="checkbox" color={COLORS.primary} />
@@ -355,104 +346,89 @@ export default function Booking() {
       <View
         key={index}
         style={{
-          marginTop: 5,
+          backgroundColor: colors.box,
+          borderRadius: 15,
+          marginTop: 10,
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+          elevation: 5,
           width: '93%',
-          justifyContent: 'center',
-          padding: 10,
-          borderRadius: 20,
-          backgroundColor: COLORS.white,
           alignSelf: 'center',
         }}
       >
-        <View
-          style={{
-            flexDirection: 'row',
-          }}
-        >
+        <View style={{ flexDirection: 'row', padding: 10 }}>
           <Image
             source={{ uri: item.image }}
-            style={{ width: 120, height: 120, borderRadius: 20 }}
+            style={{ width: 100, height: 100, borderRadius: 15 }}
           />
-          <View
-            style={{
-              marginLeft: 15,
-              justifyContent: 'space-between',
-            }}
-          >
-            <View>
-              <Text
-                style={{
-                  fontSize: 20,
-                  color: COLORS.dark,
-                  fontWeight: '600',
-                }}
-              >
-                {item.name}
-              </Text>
-              <Text
-                style={{
-                  width: 215,
-                  fontWeight: '400',
-                  color: COLORS.dark,
-                  fontSize: 15,
-                  marginVertical: 2,
-                }}
-              >
-                {item.roomname}
-              </Text>
-            </View>
-            <View
+          <View style={{ marginLeft: 10, width: '100%' }}>
+            <Text
               style={{
-                bottom: 3,
+                fontSize: 20,
+                color: colors.text,
+                fontWeight: 'bold',
               }}
             >
-              <Text style={{ fontSize: 18, fontWeight: '700' }}>
-                {Format(item.total)} VNĐ
-              </Text>
-            </View>
+              {item.name}
+            </Text>
+            <Text
+              style={{
+                marginTop: 5,
+                width: 220,
+                fontSize: 15,
+                color: colors.icon,
+              }}
+            >
+              {FormatName(item.roomname)}
+            </Text>
             <View
               style={{
-                backgroundColor: '#fddbdb',
-                width: 90,
-                height: 25,
-                borderRadius: 10,
+                flexDirection: 'row',
+                marginTop: 'auto',
                 alignItems: 'center',
-                justifyContent: 'center',
-                bottom: 3,
+                justifyContent: 'space-between',
+                width: 230,
               }}
             >
               <Text
+                style={{ fontSize: 18, fontWeight: '700', color: colors.text }}
+              >
+                {Format(item.total)} <Text style={{ fontSize: 13 }}>VNĐ</Text>
+              </Text>
+              <View
                 style={{
-                  fontWeight: '700',
-                  color: '#f76e64',
+                  padding: 5,
+                  borderRadius: 10,
+                  borderWidth: 1,
+                  borderColor: '#f76e64',
                 }}
               >
-                {t('cancelled')}
-              </Text>
+                <Text
+                  style={{
+                    fontSize: 13,
+                    color: '#f76e64',
+                  }}
+                >
+                  {t('cancelled')}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
         <View
           style={{
-            borderWidth: 1,
-            height: 0,
-            width: 350,
-            borderColor: '#f2f2f2',
-            marginTop: 8,
-          }}
-        />
-        <View
-          style={{
             backgroundColor: '#fddbdb',
-            width: '95%',
-            borderRadius: 10,
-            alignSelf: 'center',
-            height: 35,
-            marginVertical: 15,
-            top: 5,
+            padding: 10,
+            borderRadius: 15,
+            marginHorizontal: 10,
+            marginBottom: 10,
             flexDirection: 'row',
             alignItems: 'center',
-            paddingLeft: 10,
           }}
         >
           <Icon2 size={20} name="exclamationcircle" color="#f76e64" />
@@ -471,31 +447,14 @@ export default function Booking() {
     );
   };
   return (
-    <View style={{ flex: 1 }}>
-      <ScrollView>
-        <View
-          style={{
-            paddingTop: '4%',
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: '700',
-              alignSelf: 'center',
-              textAlign: 'center',
-              color: COLORS.black,
-            }}
-          >
-            {t('my-booking')}
-          </Text>
-        </View>
+    <View style={{ flex: 1, backgroundColor: colors.bg }}>
+      <View style={{ paddingHorizontal: 20 }}>
+        <Header name={t('my-booking')} />
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
-            width: 320,
-            alignSelf: 'center',
+            paddingBottom: 10,
             marginTop: 10,
           }}
         >
@@ -504,18 +463,18 @@ export default function Booking() {
               button === 1
                 ? {
                     backgroundColor: COLORS.primary,
-                    borderRadius: 20,
-                    width: 95,
-                    height: 37,
+                    borderRadius: 10,
+                    width: '30%',
+                    height: 40,
                     justifyContent: 'center',
                     alignItems: 'center',
                   }
                 : {
                     borderWidth: 2,
                     borderColor: COLORS.primary,
-                    borderRadius: 20,
-                    width: 95,
-                    height: 37,
+                    borderRadius: 10,
+                    width: '30%',
+                    height: 40,
                     justifyContent: 'center',
                     alignItems: 'center',
                   }
@@ -546,18 +505,18 @@ export default function Booking() {
               button === 2
                 ? {
                     backgroundColor: COLORS.primary,
-                    borderRadius: 20,
-                    width: 95,
-                    height: 37,
+                    borderRadius: 10,
+                    width: '30%',
+                    height: 40,
                     justifyContent: 'center',
                     alignItems: 'center',
                   }
                 : {
                     borderWidth: 2,
                     borderColor: COLORS.primary,
-                    borderRadius: 20,
-                    width: 95,
-                    height: 37,
+                    borderRadius: 10,
+                    width: '30%',
+                    height: 40,
                     justifyContent: 'center',
                     alignItems: 'center',
                   }
@@ -588,18 +547,18 @@ export default function Booking() {
               button === 3
                 ? {
                     backgroundColor: COLORS.primary,
-                    borderRadius: 20,
-                    width: 95,
-                    height: 37,
+                    borderRadius: 10,
+                    width: '30%',
+                    height: 40,
                     justifyContent: 'center',
                     alignItems: 'center',
                   }
                 : {
                     borderWidth: 2,
                     borderColor: COLORS.primary,
-                    borderRadius: 20,
-                    width: 95,
-                    height: 37,
+                    borderRadius: 10,
+                    width: '30%',
+                    height: 40,
                     justifyContent: 'center',
                     alignItems: 'center',
                   }
@@ -625,10 +584,11 @@ export default function Booking() {
             </Text>
           </TouchableOpacity>
         </View>
-
+      </View>
+      <ScrollView showsVerticalScrollIndicator={false}>
         {data.map((item, index) =>
           item.hotelinfo.status === 'ongoing' && button === 1 ? (
-            <View key={index} style={{ paddingVertical: 10 }}>
+            <View key={index} style={{ paddingVertical: 5 }}>
               <CardBooking
                 item={item.hotelinfo}
                 user={item.userinfo}
@@ -636,11 +596,11 @@ export default function Booking() {
               />
             </View>
           ) : item.hotelinfo.status === 'completed' && button === 2 ? (
-            <View key={index} style={{ paddingVertical: 10 }}>
+            <View key={index} style={{ paddingVertical: 5 }}>
               <CardCompleted item={item.hotelinfo} index={index} />
             </View>
           ) : item.hotelinfo.status === 'cancelled' && button === 3 ? (
-            <View key={index} style={{ paddingVertical: 10 }}>
+            <View key={index} style={{ paddingVertical: 5 }}>
               <CardCancelled item={item.hotelinfo} index={index} />
             </View>
           ) : null,
@@ -667,7 +627,7 @@ export default function Booking() {
               height: '38%',
               borderTopLeftRadius: 30,
               borderTopRightRadius: 30,
-              backgroundColor: 'white',
+              backgroundColor: colors.box,
               elevation: 15,
               shadowColor: '#000',
               shadowOffset: {
@@ -683,11 +643,11 @@ export default function Booking() {
           >
             <TouchableOpacity
               style={{
-                width: '15%',
+                width: '20%',
                 borderRadius: 20,
-                backgroundColor: '#bcbcbc',
+                backgroundColor: '#fff',
                 height: 5,
-                top: 5,
+                top: 10,
               }}
               onPress={() => setModalVisible(!modalVisible)}
             />
@@ -702,14 +662,14 @@ export default function Booking() {
               {t('Cancel-booking')}
             </Text>
             <TouchableOpacity
-              style={{ width: '90%', height: 2, backgroundColor: '#f3f6f4' }}
+              style={{ width: '90%', height: 2, backgroundColor: '#fff' }}
             />
             <Text
               style={{
                 marginVertical: 10,
                 fontSize: 18,
                 fontWeight: '600',
-                color: '#5b5b5b',
+                color: colors.text,
                 textAlign: 'center',
               }}
             >
@@ -720,6 +680,7 @@ export default function Booking() {
                 fontSize: 14,
                 fontWeight: '500',
                 textAlign: 'center',
+                color: colors.icon,
               }}
             >
               {t(
@@ -737,11 +698,11 @@ export default function Booking() {
               <TouchableOpacity
                 style={{
                   backgroundColor: COLORS.blurprimary,
-                  width: 160,
+                  width: 140,
                   alignItems: 'center',
                   justifyContent: 'center',
                   height: 50,
-                  borderRadius: 25,
+                  borderRadius: 15,
                 }}
                 onPress={() => {
                   setModalVisible(!modalVisible);
@@ -760,11 +721,11 @@ export default function Booking() {
               <TouchableOpacity
                 style={{
                   backgroundColor: COLORS.primary,
-                  width: 160,
+                  width: 140,
                   alignItems: 'center',
                   justifyContent: 'center',
                   height: 50,
-                  borderRadius: 25,
+                  borderRadius: 15,
                 }}
                 onPress={() => {
                   CancelBooking(idroom);

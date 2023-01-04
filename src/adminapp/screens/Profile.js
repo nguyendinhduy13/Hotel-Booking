@@ -9,11 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Switch } from 'react-native-elements';
 import Icon5 from 'react-native-vector-icons/AntDesign';
-import Icon3 from 'react-native-vector-icons/Entypo';
-import Icon from 'react-native-vector-icons/Ionicons';
-import Icon1 from 'react-native-vector-icons/MaterialIcons';
 import { useDispatch } from 'react-redux';
 import { SignInContext } from '../../contexts/authContext';
 import { setAsyncStorage } from '../../functions/asyncStorageFunctions';
@@ -62,30 +58,6 @@ export default function Profile({ navigation }) {
                 Admin
               </Text>
             </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              {isEnabled ? (
-                <Icon3
-                  name="moon"
-                  size={25}
-                  color="#767577"
-                  style={{ marginRight: 5 }}
-                />
-              ) : (
-                <Icon3
-                  name="light-up"
-                  size={25}
-                  color="#f5dd4b"
-                  style={{ marginRight: 5 }}
-                />
-              )}
-              <Switch
-                trackColor={{ false: '#81b0ff', true: '#767577' }}
-                thumbColor={isEnabled ? '#f4f3f4' : '#f5dd4b'}
-                ios_backgroundColor="#3e3e3e"
-                onValueChange={toggleSwitch}
-                value={isEnabled}
-              />
-            </View>
           </View>
           <Text style={{ color: 'black', fontSize: 15, paddingTop: 5 }}>
             0976124912
@@ -98,44 +70,6 @@ export default function Profile({ navigation }) {
       <ScrollView style={{ backgroundColor: 'white', marginVertical: 10 }}>
         <View style={styles.bodyProfile}>
           <Text style={styles.tittle}>Thông tin</Text>
-          <TouchableOpacity style={styles.view}>
-            <Icon name="shield-checkmark-outline" size={25} />
-            <Text
-              style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}
-            >
-              Điều khoản & Chính sách bảo mật
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.view, { justifyContent: 'space-between' }]}
-          >
-            <View style={{ flexDirection: 'row' }}>
-              <Icon1 name="phonelink-setup" size={25} />
-              <Text
-                style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}
-              >
-                Phiên bản
-              </Text>
-            </View>
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: 'bold',
-                paddingHorizontal: 15,
-                color: 'orange',
-              }}
-            >
-              14.3.1
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.view}>
-            <Icon1 name="info-outline" size={25} />
-            <Text
-              style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}
-            >
-              Liên hệ
-            </Text>
-          </TouchableOpacity>
           <TouchableOpacity
             style={styles.view}
             onPress={() => {

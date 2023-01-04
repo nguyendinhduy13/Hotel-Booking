@@ -42,8 +42,8 @@ const Report = () => {
         <Image
           source={require('../../assets/logo.png')}
           style={{
-            width: 35,
-            height: 35,
+            width: 60,
+            height: 60,
             resizeMode: 'cover',
           }}
         />
@@ -61,7 +61,6 @@ const Report = () => {
             fontSize: 20,
             fontWeight: 'bold',
             marginLeft: 10,
-            marginTop: 10,
             color: 'black',
           }}
         >

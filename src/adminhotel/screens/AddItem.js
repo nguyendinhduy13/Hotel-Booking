@@ -79,6 +79,7 @@ export default function AddItem({ navigation }) {
                 width: 120,
                 alignSelf: 'center',
                 borderRadius: 15,
+                left: 5,
               }}
             />
             <View style={{ top: 10, left: 15 }}>
