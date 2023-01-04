@@ -11,7 +11,7 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import uuid from 'react-native-uuid';
@@ -761,6 +761,7 @@ export default function Booked({ navigation, route }) {
               backgroundColor: 'rgba(0,0,0,0.5)',
               alignItems: 'center',
               justifyContent: 'center',
+              flex: 1,
             }}
             onPress={() => setModalVisible(false)}
           >
