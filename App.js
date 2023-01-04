@@ -1,8 +1,9 @@
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
+import Lottie from 'lottie-react-native';
 import React, { useEffect, useState } from 'react';
-import { LogBox, PermissionsAndroid, View } from 'react-native';
+import { LogBox, View } from 'react-native';
 import 'react-native-gesture-handler';
 import { useDispatch } from 'react-redux';
 import { SignInContextProvider } from './src/contexts/authContext';
@@ -18,24 +19,7 @@ LogBox.ignoreAllLogs(); //Ignore all log notifications
 console.disableYellowBox = true;
 export default function App() {
   const dispatch = useDispatch();
-  const requestLocation = async () => {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-          title: 'Location Permission',
-          message:
-            'Hotel Booking App needs access to your location ' +
-            'so you can see your current location.',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-    } catch (err) {
-      console.warn(err);
-    }
-  };
+  const [wait, setWait] = useState(true);
   useEffect(() => {
     auth().onAuthStateChanged((user) => {
       if (user) {
@@ -59,7 +43,6 @@ export default function App() {
     });
   }, []);
 
-  const [wait, setWait] = useState(true);
   getAsyncStorage('isShow').then((value) => {
     if (value) {
       dispatch(Globalreducer.actions.setisShowStartScreen(value));
@@ -202,23 +185,16 @@ export default function App() {
     });
   }, []);
 
-  const [theme, setTheme] = useState('');
   useEffect(() => {
     getAsyncStorage('theme').then((theme) => {
       if (theme) {
         console.log('theme: ' + theme);
         dispatch(Globalreducer.actions.setTheme(theme));
-        setTheme(theme);
       } else {
-        setTheme('light');
         console.log('no theme');
         setAsyncStorage('theme', 'light');
       }
     });
-  }, []);
-
-  useEffect(() => {
-    requestLocation();
   }, []);
 
   return (
@@ -230,7 +206,15 @@ export default function App() {
           </View>
         </>
       ) : (
-        <></>
+        <>
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <Lottie
+              source={require('./src/assets/animations/loading-circle.json')}
+              autoPlay
+              loop
+            />
+          </View>
+        </>
       )}
     </SignInContextProvider>
   );

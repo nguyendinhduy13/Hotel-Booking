@@ -3,7 +3,6 @@ import { createSlice } from '@reduxjs/toolkit';
 const today = new Date().toISOString().split('T')[0];
 const tomorrow = new Date();
 tomorrow.setDate(tomorrow.getDate() + 1);
-console.log(today + ' ' + tomorrow.toISOString().split('T')[0]);
 const initialState = {
   dayamount: 1,
   startday: today,

@@ -106,7 +106,7 @@ export default function AddHotel({ navigation, route }) {
       tag.district === ''
     ) {
       ToastAndroid.show('Vui lòng nhập đầy đủ thông tin', ToastAndroid.SHORT);
-    } else if (checkAccount()) {
+    } else {
       try {
         await auth()
           .createUserWithEmailAndPassword(email, password)
@@ -162,19 +162,13 @@ export default function AddHotel({ navigation, route }) {
         GoogleSignin.revokeAccess();
         GoogleSignin.signOut();
         await auth().signInWithEmailAndPassword('adminapp@gmail.com', '123456');
-        navigation.navigate('HomeScreen');
+        console.log('Admin: ' + email);
+        console.log('Password: ' + password);
+        navigation.navigate('TabNavigation');
         setNull();
       } catch (error) {
         console.log(error);
       }
-    } else {
-      // ToastAndroid.show(
-      //     'Thông tin khách sạn đã có trên hệ thống vui lòng kiểm tra lại',
-      //     ToastAndroid.SHORT,
-      // );
-      console.log(
-        'Thông tin khách sạn đã có trên hệ thống vui lòng kiểm tra lại',
-      );
     }
   };
   const selectImage = () => {
@@ -474,95 +468,94 @@ export default function AddHotel({ navigation, route }) {
                   </View>
                 </View>
               </View>
+              <View>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    handleAddHotel();
+                  }}
+                >
+                  <Text style={{ color: 'white', fontSize: 18 }}>Thêm</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </ScrollView>
       </View>
-      <View style={styles.footer}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            handleAddHotel();
-          }}
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <Pressable
+          style={styles.centeredView}
+          onPress={() => setModalVisible(false)}
         >
-          <Text style={{ color: 'white', fontSize: 20 }}>Thêm</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.centeredView}>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <Pressable
-            style={styles.centeredView}
-            onPress={() => setModalVisible(false)}
-          >
-            <View style={styles.modalView}>
-              <View>
-                <View
+          <View style={styles.modalView}>
+            <View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  width: '100%',
+                }}
+              >
+                <Text
                   style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    width: '100%',
+                    fontSize: 15,
+                    fontWeight: 'bold',
                   }}
                 >
-                  <Text
-                    style={{
-                      fontSize: 15,
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    Tỉnh
-                  </Text>
-                  <SelectDropdown
-                    data={data}
-                    onSelect={(selectedItem, index) => {
-                      handleSelectProvince({
-                        province: selectedItem,
-                        index,
-                      });
-                    }}
-                    buttonStyle={styles.dropdown2BtnStyle}
-                    buttonTextStyle={styles.dropdown2BtnTxtStyle}
-                  />
-                </View>
-                <View
+                  Tỉnh
+                </Text>
+                <SelectDropdown
+                  data={data}
+                  onSelect={(selectedItem, index) => {
+                    handleSelectProvince({
+                      province: selectedItem,
+                      index,
+                    });
+                  }}
+                  buttonStyle={styles.dropdown2BtnStyle}
+                  buttonTextStyle={styles.dropdown2BtnTxtStyle}
+                />
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  width: '100%',
+                  marginTop: 10,
+                }}
+              >
+                <Text
                   style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    width: '100%',
-                    marginTop: 10,
+                    fontSize: 15,
+                    fontWeight: 'bold',
                   }}
                 >
-                  <Text
-                    style={{
-                      fontSize: 15,
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    Huyện
-                  </Text>
-                  <SelectDropdown
-                    data={dataDistrict}
-                    onSelect={(selectedItem, index) => {
-                      setTag({ ...tag, district: removeName(selectedItem) });
-                    }}
-                    buttonStyle={styles.dropdown2BtnStyle}
-                    buttonTextStyle={styles.dropdown2BtnTxtStyle}
-                  />
-                </View>
+                  Huyện
+                </Text>
+                <SelectDropdown
+                  data={dataDistrict}
+                  onSelect={(selectedItem, index) => {
+                    setTag({ ...tag, district: removeName(selectedItem) });
+                  }}
+                  buttonStyle={styles.dropdown2BtnStyle}
+                  buttonTextStyle={styles.dropdown2BtnTxtStyle}
+                />
               </View>
             </View>
-          </Pressable>
-        </Modal>
-      </View>
+          </View>
+        </Pressable>
+      </Modal>
     </View>
   );
 }
@@ -579,7 +572,7 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: 'white',
     marginTop: 20,
-    marginBottom: 100,
+    marginBottom: 20,
   },
   info: {
     marginTop: 20,
@@ -613,12 +606,14 @@ const styles = StyleSheet.create({
     right: 0,
   },
   button: {
-    width: '90%',
-    height: '80%',
+    width: '100%',
+    height: 40,
     backgroundColor: '#4da7ec',
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: 20,
+    marginBottom: 20,
   },
   centeredView: {
     flex: 1,
