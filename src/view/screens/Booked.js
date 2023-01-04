@@ -1,28 +1,29 @@
 import Auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
+import Lottie from 'lottie-react-native';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Alert,
   Image,
-  Modal,
   Pressable,
   ScrollView,
   Text,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import uuid from 'react-native-uuid';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import COLORS from '../../consts/colors';
 import CustomHeader from '../components/CustomHeader';
 export default function Booked({ navigation, route }) {
   const { t } = useTranslation();
   const { item, hotel } = route.params;
+  const [isLoading, setLoading] = useState(false);
   const { colors } = useTheme();
-  const dispatch = useDispatch();
   const navigate = useNavigation();
   const [Number, setNumber] = useState(1);
   const { dayamount, startday, endday, namehotel, idhotel } = useSelector(
@@ -32,7 +33,6 @@ export default function Booked({ navigation, route }) {
 
   const [checkdata, setcheckdata] = useState(false);
   const [checkdata1, setcheckdata1] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
   const [userbooking, setuserbooking] = useState({});
 
   useEffect(() => {
@@ -72,7 +72,8 @@ export default function Booked({ navigation, route }) {
     };
   }, [navigate]);
 
-  const addbooking = () => {
+  const addbooking = async () => {
+    setLoading(true);
     let id = uuid.v4();
     if (
       !userbooking.name ||
@@ -95,7 +96,7 @@ export default function Booked({ navigation, route }) {
       let y =
         end.getDate() + '/' + (end.getMonth() + 1) + '/' + end.getFullYear();
       if (checkdata) {
-        firestore()
+        await firestore()
           .collection('Booking')
           .doc(user.uid)
           .update({
@@ -125,9 +126,12 @@ export default function Booked({ navigation, route }) {
           })
           .then(() => {
             console.log('Booking true!');
+            setLoading(false);
+            ToastAndroid.show(t('booking-successfully'), ToastAndroid.SHORT);
+            navigation.navigate('Booking');
           });
       } else {
-        firestore()
+        await firestore()
           .collection('Booking')
           .doc(user.uid)
           .set({
@@ -157,10 +161,12 @@ export default function Booked({ navigation, route }) {
           })
           .then(() => {
             console.log('Booking false!');
+            setLoading(false);
+            navigation.navigate('Booking');
           });
       }
       if (checkdata1) {
-        firestore()
+        await firestore()
           .collection('ListBooking')
           .doc(idhotel)
           .update({
@@ -192,7 +198,7 @@ export default function Booked({ navigation, route }) {
             console.log('Booking true!');
           });
       } else {
-        firestore()
+        await firestore()
           .collection('ListBooking')
           .doc(idhotel)
           .set({
@@ -224,7 +230,6 @@ export default function Booked({ navigation, route }) {
             console.log('Booking false!');
           });
       }
-      setModalVisible(true);
     }
   };
 
@@ -254,9 +259,11 @@ export default function Booked({ navigation, route }) {
     }
     return name;
   };
+
   return (
     <View style={{ flex: 1 }}>
       <CustomHeader title={'information-booking'} />
+
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{
@@ -747,98 +754,8 @@ export default function Booked({ navigation, route }) {
             </View>
           </View>
         </View>
-
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <TouchableOpacity
-            style={{
-              backgroundColor: 'rgba(0,0,0,0.5)',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flex: 1,
-            }}
-            onPress={() => setModalVisible(false)}
-          >
-            <View
-              style={{
-                backgroundColor: colors.box,
-                alignItems: 'center',
-                borderRadius: 20,
-                height: 200,
-                width: 300,
-                bottom: 30,
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 18,
-                  fontWeight: '700',
-                  color: COLORS.primary,
-                  marginTop: 20,
-                }}
-              >
-                {t('booking-success')}
-              </Text>
-              <TouchableOpacity
-                style={{
-                  width: '80%',
-                  height: 45,
-                  backgroundColor: COLORS.primary,
-                  borderRadius: 10,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginVertical: 15,
-                }}
-                onPress={() => {
-                  navigation.navigate('Booking');
-                }}
-              >
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 15,
-                    fontWeight: '400',
-                    marginVertical: 10,
-                  }}
-                >
-                  {t('view-booking')}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  width: '80%',
-                  height: 45,
-                  backgroundColor: COLORS.blurprimary,
-                  borderRadius: 10,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-                onPress={() => {
-                  setModalVisible(false);
-                  navigation.navigate('TabNavigator');
-                }}
-              >
-                <Text
-                  style={{
-                    color: COLORS.primary,
-                    fontSize: 15,
-                    fontWeight: 'bold',
-                    marginVertical: 10,
-                  }}
-                >
-                  {t('go-back')}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </TouchableOpacity>
-        </Modal>
       </ScrollView>
+
       <View
         style={{
           width: '100%',
@@ -872,6 +789,28 @@ export default function Booked({ navigation, route }) {
           </Text>
         </TouchableOpacity>
       </View>
+
+      {isLoading ? (
+        <View
+          style={{
+            backgroundColor: 'black',
+            position: 'absolute',
+            opacity: 0.7,
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100%',
+            width: '100%',
+          }}
+        >
+          <Lottie
+            source={require('../../assets/animations/loading.json')}
+            autoPlay
+            loop
+          />
+        </View>
+      ) : (
+        <></>
+      )}
     </View>
   );
 }

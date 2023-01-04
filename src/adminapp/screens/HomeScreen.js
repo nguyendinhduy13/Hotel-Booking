@@ -52,21 +52,19 @@ export default function HomeScreen({ navigation }) {
   }, []);
 
   const loadAccount1 = async (item) => {
-    await firestore()
-      .collection('AdminAccounts')
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((documentSnapshot) => {
-          dataAccountFireBase.push(documentSnapshot.data());
+    if (item.image.split('.')[1] === 'jpg') {
+      await storage()
+        .ref(item.id + '/' + item.image)
+        .getDownloadURL()
+        .then((url) => {
+          item.image = url;
         });
-      });
+    }
     navigation.navigate('InfoHotel', {
       data: item,
-      account: dataAccountFireBase,
     });
     console.log({
       data: item,
-      account: dataAccountFireBase,
     });
   };
 

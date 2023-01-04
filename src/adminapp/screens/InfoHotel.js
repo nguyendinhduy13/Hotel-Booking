@@ -36,7 +36,6 @@ const SHEET_MIN_HEIGHT = WINDOW_HEIGHT * 0.1;
 const InfoHotel = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const item = route.params.data;
-  const acc = route.params.account;
 
   const { t } = useTranslation();
   const mapRef = useRef(null);

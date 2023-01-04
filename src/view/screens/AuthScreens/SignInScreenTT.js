@@ -3,6 +3,7 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import Lottie from 'lottie-react-native';
 import React, { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -26,7 +27,6 @@ import { setAsyncStorage } from '../../../functions/asyncStorageFunctions';
 import BookingHotel from '../../../redux/BookingHotel';
 import CurrentPosition from '../../../redux/CurrentPosition';
 import Globalreducer from '../../../redux/Globalreducer';
-
 GoogleSignin.configure({
   webClientId:
     '769620033857-f8q7uohvdpb5hcan4tlir04iusgc27jd.apps.googleusercontent.com',
@@ -34,6 +34,7 @@ GoogleSignin.configure({
 export default function SignInScreenTT({ navigation }) {
   const { dispatchSignedIn } = useContext(SignInContext);
   const [getVisible, setVisible] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const { colors } = useTheme();
   let dataAccount = [];
   const dispatch = useDispatch();
@@ -49,6 +50,7 @@ export default function SignInScreenTT({ navigation }) {
       // Sign-in the user with the credential
       const user = await auth().signInWithCredential(googleCredential);
       if (user) {
+        setLoading(true);
         if (user.additionalUserInfo.isNewUser) {
           firestore()
             .collection('Users')
@@ -69,6 +71,7 @@ export default function SignInScreenTT({ navigation }) {
               });
             });
         }
+        setLoading(false);
         dispatchSignedIn({
           type: 'UPDATE_SIGN_IN',
           payload: { userToken: 'user' },
@@ -76,6 +79,7 @@ export default function SignInScreenTT({ navigation }) {
       }
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   }
   const componentDidMount = () => {
@@ -130,6 +134,7 @@ export default function SignInScreenTT({ navigation }) {
       });
 
     if (count == 0) {
+      setLoading(false);
       dispatchSignedIn({
         type: 'UPDATE_SIGN_IN',
         payload: { userToken: 'signed-In', _id: '' },
@@ -140,20 +145,24 @@ export default function SignInScreenTT({ navigation }) {
         .doc(idks)
         .get()
         .then((documentSnapshot) => {
-          const data = documentSnapshot.data().Room;
-          data.map((item1) => {
-            item1.image.map(async (item2, index) => {
-              const url = await storage()
-                .ref(idks + '/' + item1.id + '/' + item2)
-                .getDownloadURL();
-              item1.image[index] = url;
+          let data = [];
+          if (documentSnapshot.data() != undefined) {
+            data = documentSnapshot.data().Room;
+            data.map((item1) => {
+              item1.image.map(async (item2, index) => {
+                const url = await storage()
+                  .ref(idks + '/' + item1.id + '/' + item2)
+                  .getDownloadURL();
+                item1.image[index] = url;
+              });
             });
-          });
+          }
           setTimeout(() => {
             dispatch(BookingHotel.actions.addRoom(data));
           }, 3000);
         });
       setTimeout(() => {
+        setLoading(false);
         dispatchSignedIn({
           type: 'UPDATE_SIGN_IN',
           payload: {
@@ -166,6 +175,7 @@ export default function SignInScreenTT({ navigation }) {
   };
   useEffect(() => {
     if (emailHasSignIn != 'none') {
+      setLoading(true);
       getAdminAccount();
     } else {
       dispatchSignedIn({
@@ -176,7 +186,9 @@ export default function SignInScreenTT({ navigation }) {
   }, []);
   async function signIn({ email, password }) {
     try {
+      setLoading(true);
       if (email == '' || password == '') {
+        setLoading(false);
         ToastAndroid.show(t('please-fill-all-information'), ToastAndroid.SHORT);
       } else {
         const user = await auth().signInWithEmailAndPassword(email, password);
@@ -203,15 +215,18 @@ export default function SignInScreenTT({ navigation }) {
           .doc(id)
           .get()
           .then((documentSnapshot) => {
-            const data = documentSnapshot.data().Room;
-            data.map((item1) => {
-              item1.image.map(async (item2, index) => {
-                const url = await storage()
-                  .ref(id + '/' + item1.id + '/' + item2)
-                  .getDownloadURL();
-                item1.image[index] = url;
+            let data = [];
+            if (documentSnapshot.data() != undefined) {
+              data = documentSnapshot.data().Room;
+              data.map((item1) => {
+                item1.image.map(async (item2, index) => {
+                  const url = await storage()
+                    .ref(id + '/' + item1.id + '/' + item2)
+                    .getDownloadURL();
+                  item1.image[index] = url;
+                });
               });
-            });
+            }
             setTimeout(() => {
               dispatch(BookingHotel.actions.addRoom(data));
             }, 3000);
@@ -222,6 +237,7 @@ export default function SignInScreenTT({ navigation }) {
           dispatch(Globalreducer.actions.setadminuid(adminuid));
           setAsyncStorage('userToken', roll + '-' + id);
           if (user) {
+            setLoading(false);
             dispatchSignedIn({
               type: 'UPDATE_SIGN_IN',
               payload: { userToken: roll, _id: id },
@@ -230,6 +246,7 @@ export default function SignInScreenTT({ navigation }) {
         }, 3000);
       }
     } catch (error) {
+      setLoading(false);
       if (error.code == 'auth/user-not-found') {
         ToastAndroid.show(t('email-not-found'), ToastAndroid.SHORT);
       } else if (error.code == 'auth/wrong-password') {
@@ -403,7 +420,7 @@ export default function SignInScreenTT({ navigation }) {
               alignSelf: 'center',
               alignContent: 'center',
               justifyContent: 'center',
-              backgroundColor: colors.box,
+              backgroundColor: colors.special,
             }}
             onPress={() => onGoogleButtonPress()}
           >
@@ -461,6 +478,27 @@ export default function SignInScreenTT({ navigation }) {
           </Text>
         </TouchableOpacity>
       </View>
+      {isLoading ? (
+        <View
+          style={{
+            position: 'absolute',
+            opacity: 0.7,
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100%',
+            width: '100%',
+            backgroundColor: 'white',
+          }}
+        >
+          <Lottie
+            source={require('../../../assets/animations/edupia-loading.json')}
+            autoPlay
+            loop
+          />
+        </View>
+      ) : (
+        <></>
+      )}
     </Pressable>
   );
 }

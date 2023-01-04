@@ -1,16 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
-  View,
+  ImageBackground,
+  PermissionsAndroid,
+  StatusBar,
   StyleSheet,
   Text,
-  ImageBackground,
-  StatusBar,
   TouchableOpacity,
+  View,
 } from 'react-native';
-import COLORS from '../../../consts/colors';
-import { useTranslation } from 'react-i18next';
-import { setAsyncStorage } from '../../../functions/asyncStorageFunctions';
 import { useDispatch } from 'react-redux';
+import COLORS from '../../../consts/colors';
+import { setAsyncStorage } from '../../../functions/asyncStorageFunctions';
 import Globalreducer from '../../../redux/Globalreducer';
 const SignInWelcomeScreen = ({ navigation }) => {
   const { t } = useTranslation();
@@ -20,6 +21,27 @@ const SignInWelcomeScreen = ({ navigation }) => {
     dispatch(Globalreducer.actions.setisShowStartScreen('false'));
     navigation.navigate('SignInScreenTT');
   };
+  const requestLocation = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Location Permission',
+          message:
+            'Hotel Booking App needs access to your location ' +
+            'so you can see your current location.',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+  useEffect(() => {
+    requestLocation();
+  }, []);
   return (
     <View style={{ flex: 1 }}>
       <StatusBar translucent backgroundColor="rgba(0,0,0,0)" />
