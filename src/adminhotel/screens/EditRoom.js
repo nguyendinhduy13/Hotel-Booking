@@ -61,15 +61,30 @@ const EditRoom = ({ navigation, route }) => {
       Room: newRoom,
     });
     dispatch(BookingHotel.actions.addRoom(newRoom));
+    navigation.goBack();
   };
   return (
-    <View>
+    <View style={{ backgroundColor: 'white' }}>
       <CustomHeader title={'change-information-room'} />
       <View style={{ alignItems: 'center' }}>
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: '700',
+            marginTop: 20,
+            alignSelf: 'flex-start',
+            marginHorizontal: 10,
+            color: COLORS.dark,
+          }}
+        >
+          Tên phòng
+        </Text>
         <TextInput
           placeholder="Tên phòng"
           style={{
             height: 50,
+            borderWidth: 1,
+            borderColor: COLORS.grey,
             backgroundColor: 'white',
             width: '95%',
             borderRadius: 15,
@@ -78,9 +93,23 @@ const EditRoom = ({ navigation, route }) => {
           value={name}
           onChangeText={(text) => setName(text)}
         />
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: '700',
+            marginTop: 10,
+            alignSelf: 'flex-start',
+            marginHorizontal: 10,
+            color: COLORS.dark,
+          }}
+        >
+          Giá phòng
+        </Text>
         <TextInput
           placeholder="Giá phòng"
           style={{
+            borderWidth: 1,
+            borderColor: COLORS.grey,
             height: 50,
             width: '95%',
             borderRadius: 15,
@@ -90,10 +119,23 @@ const EditRoom = ({ navigation, route }) => {
           value={price}
           onChangeText={(text) => setPrice(text)}
         />
-
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: '700',
+            marginTop: 10,
+            alignSelf: 'flex-start',
+            marginHorizontal: 10,
+            color: COLORS.dark,
+          }}
+        >
+          Diện tích phòng
+        </Text>
         <TextInput
           placeholder="Diện tích phòng"
           style={{
+            borderWidth: 1,
+            borderColor: COLORS.grey,
             height: 50,
             width: '95%',
             borderRadius: 15,
@@ -105,9 +147,23 @@ const EditRoom = ({ navigation, route }) => {
           value={are}
           onChangeText={(text) => setArea(text)}
         />
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: '700',
+            marginTop: 10,
+            alignSelf: 'flex-start',
+            marginHorizontal: 10,
+            color: COLORS.dark,
+          }}
+        >
+          Mô tả
+        </Text>
         <TextInput
           placeholder="Mô tả"
           style={{
+            borderWidth: 1,
+            borderColor: COLORS.grey,
             textAlignVertical: 'top',
             width: '95%',
             flexWrap: 'wrap',

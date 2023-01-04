@@ -196,6 +196,7 @@ export default function SignInScreenTT({ navigation }) {
             roll = item.roll;
             id = item.id;
             adminuid = item.adminuid;
+            dispatch(Globalreducer.actions.setEmailAdmin(item.email));
           }
         });
         firestore()

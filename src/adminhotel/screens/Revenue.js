@@ -92,11 +92,16 @@ export default function Revenue({ navigation }) {
     );
   };
   return (
-    <View>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: COLORS.white,
+      }}
+    >
       <Text
         style={{
           fontSize: 20,
-          color: COLORS.primary,
+          color: COLORS.dark,
           fontWeight: '700',
           justifyContent: 'center',
           alignSelf: 'center',
@@ -140,7 +145,7 @@ export default function Revenue({ navigation }) {
           style={{
             fontSize: 18,
             marginHorizontal: 10,
-            color: COLORS.primary,
+            color: COLORS.dark,
             fontWeight: '700',
           }}
         >

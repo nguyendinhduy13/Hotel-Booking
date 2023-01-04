@@ -1,6 +1,15 @@
 import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
 import React, { useEffect, useState } from 'react';
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import {
+  Platform,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { launchImageLibrary } from 'react-native-image-picker';
+import Icon from 'react-native-vector-icons/AntDesign';
 import { useDispatch, useSelector } from 'react-redux';
 import COLORS from '../../consts/colors';
 import CustomHeader from '../../view/components/CustomHeader';
@@ -33,6 +42,35 @@ export default function EditHotel({ navigation, route }) {
     setImage(hotel[0].image);
   }, []);
 
+  const selectImage = async () => {
+    const options = {
+      maxWidth: 2000,
+      maxHeight: 2000,
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    const result = await launchImageLibrary(options);
+    setImage(result.assets[0].uri);
+  };
+
+  const uploadImage = async () => {
+    const filename = image.substring(image.lastIndexOf('/') + 1);
+    const uploadUri =
+      Platform.OS === 'ios' ? image.replace('file://', '') : image;
+    setImage(null);
+    const task = storage()
+      .ref(id_ks + '/' + filename)
+      .putFile(uploadUri);
+    // set progress state
+    try {
+      await task;
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const UpdateHotel = () => {
     Listhotel.map((item) => {
       if (item.id === id_ks) {
@@ -51,12 +89,24 @@ export default function EditHotel({ navigation, route }) {
       .then(() => {
         console.log('User updated!');
       });
+    uploadImage();
     navigation.goBack();
   };
 
   return (
-    <View>
+    <View style={{ flex: 1, backgroundColor: 'white' }}>
       <CustomHeader title={'change-information-hotel'} />
+      <Text
+        style={{
+          fontSize: 16,
+          fontWeight: '700',
+          marginTop: 20,
+          marginHorizontal: 10,
+          color: COLORS.dark,
+        }}
+      >
+        Tên khách sạn
+      </Text>
       <TextInput
         placeholder="Tên khách sạn"
         multiline={true}
@@ -71,6 +121,18 @@ export default function EditHotel({ navigation, route }) {
           backgroundColor: '#fff',
         }}
       />
+      <Text
+        style={{
+          fontSize: 16,
+          fontWeight: '700',
+          marginTop: 10,
+          alignSelf: 'flex-start',
+          marginHorizontal: 10,
+          color: COLORS.dark,
+        }}
+      >
+        Thuận lợi
+      </Text>
       <TextInput
         placeholder="Thuận lợi"
         multiline={true}
@@ -85,22 +147,61 @@ export default function EditHotel({ navigation, route }) {
           backgroundColor: '#fff',
         }}
       />
-      <TextInput
-        placeholder="Hình khách sạn"
-        multiline={true}
-        value={image}
-        onChangeText={(text) => setImage(text)}
+      <Text
         style={{
-          borderWidth: 1,
-          borderColor: '#ccc',
-          padding: 10,
-          margin: 10,
-          borderRadius: 15,
-          backgroundColor: '#fff',
+          fontSize: 16,
+          fontWeight: '700',
+          marginTop: 10,
+          alignSelf: 'flex-start',
+          marginHorizontal: 10,
+          color: COLORS.dark,
         }}
-      />
+      >
+        Hình ảnh
+      </Text>
+      <View
+        style={{
+          flexDirection: 'row',
+          width: '100%',
+          justifyContent: 'space-between',
+        }}
+      >
+        <TextInput
+          placeholder="Hình phòng"
+          style={{
+            height: 50,
+            borderWidth: 1,
+            borderColor: COLORS.grey,
+            width: '95%',
+            borderRadius: 15,
+            alignSelf: 'flex-start',
+            backgroundColor: 'white',
+            marginTop: 15,
+            marginHorizontal: 10,
+          }}
+          value={image}
+        />
+        <Icon
+          name="clouduploado"
+          size={30}
+          style={{ position: 'absolute', top: 25, zIndex: 1, right: 25 }}
+          onPress={selectImage}
+        />
+      </View>
+      <Text
+        style={{
+          fontSize: 16,
+          fontWeight: '700',
+          marginTop: 10,
+          alignSelf: 'flex-start',
+          marginHorizontal: 10,
+          color: COLORS.dark,
+        }}
+      >
+        Mô tả
+      </Text>
       <TextInput
-        placeholder="Tên khách sạn"
+        placeholder="Mô tả"
         multiline={true}
         value={description}
         onChangeText={(text) => setDescription(text)}

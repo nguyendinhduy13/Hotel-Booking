@@ -25,6 +25,8 @@ const initialState = {
   dataReport: [],
   dataRevenue: [],
   theme: '',
+  dataconfirm: [],
+  emailadmin: '',
 };
 
 export default createSlice({
@@ -97,6 +99,12 @@ export default createSlice({
     },
     setTheme(state, action) {
       state.theme = action.payload;
+    },
+    setDataConfirm(state, action) {
+      state.dataconfirm = action.payload;
+    },
+    setEmailAdmin(state, action) {
+      state.emailadmin = action.payload;
     },
   },
 });

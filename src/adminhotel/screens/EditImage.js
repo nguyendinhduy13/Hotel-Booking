@@ -92,7 +92,7 @@ export default function EditImage({ route }) {
   };
 
   return (
-    <View>
+    <View style={{ backgroundColor: 'white' }}>
       <ScrollView>
         <CustomHeader title={'image-hotel'} />
         <View

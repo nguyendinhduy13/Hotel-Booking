@@ -1,7 +1,14 @@
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import React, { useEffect, useState } from 'react';
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import SelectDropdown from 'react-native-select-dropdown';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -90,7 +97,6 @@ const ItemInfo = ({ navigation }) => {
         }),
       });
     const image = [];
-    console.log(listimage);
     new Promise((resolve, reject) => {
       listimage.map(async (item) => {
         const url = await storage()
@@ -120,13 +126,30 @@ const ItemInfo = ({ navigation }) => {
   };
 
   return (
-    <View>
+    <View style={{ flex: 1, backgroundColor: 'white' }}>
       <CustomHeader title={'add-information-room'} />
-      <View style={{ alignItems: 'center' }}>
+      <KeyboardAvoidingView
+        behavior="height"
+        style={{ alignItems: 'center', flex: 1 }}
+      >
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: '700',
+            marginTop: 20,
+            alignSelf: 'flex-start',
+            marginHorizontal: 10,
+            color: COLORS.dark,
+          }}
+        >
+          Tên Phòng
+        </Text>
         <TextInput
           placeholder="Tên phòng"
           style={{
             height: 50,
+            borderWidth: 1,
+            borderColor: COLORS.grey,
             backgroundColor: 'white',
             width: '95%',
             borderRadius: 15,
@@ -135,11 +158,25 @@ const ItemInfo = ({ navigation }) => {
           value={name}
           onChangeText={(text) => setName(text)}
         />
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: '700',
+            marginTop: 10,
+            alignSelf: 'flex-start',
+            marginHorizontal: 10,
+            color: COLORS.dark,
+          }}
+        >
+          Giá Phòng
+        </Text>
         <TextInput
           placeholder="Giá phòng"
           style={{
             height: 50,
             width: '95%',
+            borderWidth: 1,
+            borderColor: COLORS.grey,
             borderRadius: 15,
             backgroundColor: 'white',
             marginTop: 15,
@@ -147,11 +184,25 @@ const ItemInfo = ({ navigation }) => {
           value={price}
           onChangeText={(text) => setPrice(text)}
         />
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: '700',
+            marginTop: 10,
+            alignSelf: 'flex-start',
+            marginHorizontal: 10,
+            color: COLORS.dark,
+          }}
+        >
+          Hình Phòng
+        </Text>
         <View style={{ flexDirection: 'row', width: '100%' }}>
           <TextInput
             placeholder="Hình phòng"
             style={{
               height: 50,
+              borderWidth: 1,
+              borderColor: COLORS.grey,
               width: '70%',
               borderRadius: 15,
               alignSelf: 'flex-start',
@@ -185,10 +236,24 @@ const ItemInfo = ({ navigation }) => {
             </Text>
           </TouchableOpacity>
         </View>
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: '700',
+            marginTop: 10,
+            alignSelf: 'flex-start',
+            marginHorizontal: 10,
+            color: COLORS.dark,
+          }}
+        >
+          Diện tích phòng
+        </Text>
         <TextInput
           placeholder="Diện tích phòng"
           style={{
             height: 50,
+            borderWidth: 1,
+            borderColor: COLORS.grey,
             width: '95%',
             borderRadius: 15,
             alignSelf: 'flex-start',
@@ -199,13 +264,26 @@ const ItemInfo = ({ navigation }) => {
           value={area}
           onChangeText={(text) => setArea(text)}
         />
-        <View style={{ flexDirection: 'row', width: '100%' }}></View>
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: '700',
+            marginTop: 10,
+            alignSelf: 'flex-start',
+            marginHorizontal: 10,
+            color: COLORS.dark,
+          }}
+        >
+          Tiện ích
+        </Text>
         <View
           style={{
             justifyContent: 'space-between',
             marginHorizontal: 10,
             backgroundColor: 'white',
             borderRadius: 15,
+            borderWidth: 1,
+            borderColor: COLORS.grey,
             width: '95%',
             marginTop: 10,
             flexDirection: 'row',
@@ -243,11 +321,25 @@ const ItemInfo = ({ navigation }) => {
             style={{ position: 'absolute', right: 15 }}
           />
         </View>
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: '700',
+            marginTop: 10,
+            alignSelf: 'flex-start',
+            marginHorizontal: 10,
+            color: COLORS.dark,
+          }}
+        >
+          Mô tả
+        </Text>
         <TextInput
           placeholder="Mô tả"
           style={{
             height: 50,
             width: '95%',
+            borderWidth: 1,
+            borderColor: COLORS.grey,
             borderRadius: 15,
             backgroundColor: 'white',
             marginTop: 15,
@@ -255,24 +347,25 @@ const ItemInfo = ({ navigation }) => {
           value={description}
           onChangeText={(text) => setDescription(text)}
         />
-      </View>
-      <TouchableOpacity
-        style={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: COLORS.primary,
-          height: 50,
-          borderRadius: 15,
-          width: '90%',
-          alignSelf: 'center',
-          marginTop: 25,
-        }}
-        onPress={addroom}
-      >
-        <Text style={{ fontSize: 15, color: 'white', fontWeight: '700' }}>
-          Thêm phòng
-        </Text>
-      </TouchableOpacity>
+
+        <TouchableOpacity
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: COLORS.primary,
+            height: 50,
+            borderRadius: 15,
+            width: '90%',
+            alignSelf: 'center',
+            marginTop: 25,
+          }}
+          onPress={addroom}
+        >
+          <Text style={{ fontSize: 15, color: 'white', fontWeight: '700' }}>
+            Thêm phòng
+          </Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
     </View>
   );
 };

@@ -37,8 +37,21 @@ export default function AddItem({ navigation }) {
     });
     return unsubscribe;
   }, [navigation]);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      firestore()
+        .collection('ListBooking')
+        .doc(id_ks)
+        .get()
+        .then((documentSnapshot) => {
+          const data = documentSnapshot.data();
+          dispatch(Globalreducer.actions.setDataConfirm(data.data));
+        });
+    });
+    return unsubscribe;
+  }, [navigation]);
   return (
-    <View>
+    <View style={{ backgroundColor: 'white' }}>
       <Text
         style={{
           fontSize: 18,
@@ -65,6 +78,7 @@ export default function AddItem({ navigation }) {
               flexDirection: 'row',
               backgroundColor: 'white',
               marginTop: 15,
+              elevation: 5,
               alignSelf: 'center',
               borderRadius: 20,
             }}

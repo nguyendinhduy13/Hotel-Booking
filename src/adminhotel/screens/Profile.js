@@ -18,7 +18,7 @@ import { setAsyncStorage } from '../../functions/asyncStorageFunctions';
 import Globalreducer from '../../redux/Globalreducer';
 export default function Profile({ navigation }) {
   const { dispatchSignedIn } = useContext(SignInContext);
-  const { id_ks } = useSelector((state) => state.Globalreducer);
+  const { id_ks, emailadmin } = useSelector((state) => state.Globalreducer);
   const dispatch = useDispatch();
   const [hotel, setHotel] = useState([]);
   useEffect(() => {
@@ -80,7 +80,7 @@ export default function Profile({ navigation }) {
             </View>
           </View>
           <Text style={{ color: 'black', fontSize: 15, paddingTop: 5 }}>
-            {auth()?.currentUser.email}
+            {emailadmin}
           </Text>
         </View>
       </View>

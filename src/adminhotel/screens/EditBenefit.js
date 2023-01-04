@@ -75,7 +75,7 @@ export default function EditBenefit({ navigation, route }) {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: 'white' }}>
       <CustomHeader title={'list-benefits'} />
       <ScrollView
         contentContainerStyle={{
