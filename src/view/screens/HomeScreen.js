@@ -8,6 +8,7 @@ import {
   Dimensions,
   FlatList,
   Image,
+  ImageBackground,
   Keyboard,
   Modal,
   Pressable,
@@ -20,6 +21,7 @@ import {
   View,
 } from 'react-native';
 import { useTheme } from 'react-native-paper';
+import Swiper from 'react-native-swiper';
 import Icon3 from 'react-native-vector-icons/AntDesign';
 import Icon5 from 'react-native-vector-icons/EvilIcons';
 import Icon4 from 'react-native-vector-icons/Ionicons';
@@ -37,6 +39,7 @@ export default function HomeScreen({ navigation }) {
   const { dataHotel, dataProvince } = useSelector(
     (state) => state.Globalreducer,
   );
+  const ranHotel = [1, 2, 4];
 
   const dataExplore = [
     {
@@ -447,6 +450,7 @@ export default function HomeScreen({ navigation }) {
               }}
             />
           </Pressable>
+
           <Text
             style={{
               fontWeight: 'bold',
@@ -492,6 +496,7 @@ export default function HomeScreen({ navigation }) {
             snapToInterval={cardWidth}
           />
         </View>
+
         <View
           style={{
             flexDirection: 'row',
@@ -532,6 +537,178 @@ export default function HomeScreen({ navigation }) {
           horizontal
           showsHorizontalScrollIndicator={false}
         />
+        <View>
+          <Swiper
+            activeDot={
+              <View
+                style={{
+                  backgroundColor: '#FF6347',
+                  width: 10,
+                  height: 10,
+                  borderRadius: 7,
+                  marginLeft: 7,
+                  marginRight: 7,
+                }}
+              />
+            }
+            autoplay={true}
+            style={{
+              marginTop: 10,
+              paddingHorizontal: 20,
+              height: 250,
+              alignSelf: 'center',
+            }}
+          >
+            <View
+              style={{
+                height: 200,
+                width: 348,
+                borderRadius: 10,
+                overflow: 'hidden',
+              }}
+            >
+              <Image
+                source={{
+                  uri: 'https://www.vietnambooking.com/wp-content/uploads/2019/12/website-dat-phong-khach-san-1.png',
+                }}
+                style={{ height: '100%', width: '100%' }}
+              />
+            </View>
+            <View
+              style={{
+                height: 200,
+                width: 348,
+                borderRadius: 10,
+                overflow: 'hidden',
+              }}
+            >
+              <Image
+                source={{
+                  uri: 'https://go2joy.s3.ap-southeast-1.amazonaws.com/blog/wp-content/uploads/2022/12/30143402/sansale-t1-2023-55-sidebar-banner.jpg',
+                }}
+                style={{ height: '100%', width: '100%' }}
+              />
+            </View>
+            <View
+              style={{
+                height: 200,
+                width: 348,
+                borderRadius: 10,
+                overflow: 'hidden',
+              }}
+            >
+              <Image
+                source={{
+                  uri: 'https://media.vietteltelecom.vn/upload/ckfinder/images/142.jpg',
+                }}
+                style={{ height: '100%', width: '100%' }}
+              />
+            </View>
+          </Swiper>
+        </View>
+        <Text
+          style={{
+            fontWeight: 'bold',
+            color: colors.text,
+            fontSize: 18,
+            paddingHorizontal: 20,
+          }}
+        >
+          {t('suggest-for-you')}
+        </Text>
+        {ranHotel.map((item, index) => {
+          return (
+            <View
+              key={index}
+              style={{
+                paddingHorizontal: 20,
+                marginTop: 20,
+              }}
+            >
+              <Pressable
+                onPress={() => navigation.navigate('ListRoom', dataHotel[item])}
+              >
+                <ImageBackground
+                  source={{ uri: dataHotel[item].image }}
+                  style={{
+                    width: '100%',
+                    height: 150,
+                  }}
+                >
+                  <View
+                    style={{
+                      padding: 10,
+                      position: 'absolute',
+                      bottom: 0,
+                      backgroundColor: 'rgba(0,0,0,0.1)',
+                      width: '100%',
+                    }}
+                  >
+                    <View>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                        }}
+                      >
+                        <Text style={{ color: 'white', fontSize: 18 }}>
+                          {dataHotel[item].name}
+                        </Text>
+                        <View
+                          style={{ flexDirection: 'row', alignItems: 'center' }}
+                        >
+                          <Text
+                            style={{
+                              color: 'white',
+                              fontSize: 13,
+                            }}
+                          >
+                            {dataHotel[item].tag.split(',')[0]}
+                          </Text>
+                          <Icon4
+                            name="md-location-sharp"
+                            size={15}
+                            color="orange"
+                            style={{}}
+                          />
+                        </View>
+                      </View>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          marginTop: 5,
+                        }}
+                      >
+                        <Text style={{ color: 'white' }}>
+                          {dataHotel[item].advantage}
+                        </Text>
+                        <View
+                          style={{ flexDirection: 'row', alignItems: 'center' }}
+                        >
+                          <Text
+                            style={{
+                              color: 'white',
+                              fontWeight: 'bold',
+                            }}
+                          >
+                            {TotalStar(dataHotel[item].star)}
+                            {' ('}
+                            {dataHotel[item].star.length}
+                            {')'}
+                          </Text>
+                          <Icon name="star" size={15} color={COLORS.orange} />
+                        </View>
+                      </View>
+                    </View>
+                  </View>
+                </ImageBackground>
+              </Pressable>
+            </View>
+          );
+        })}
       </ScrollView>
       <Modal
         animationType="slide"
@@ -814,20 +991,20 @@ const styles = StyleSheet.create({
   card: {
     height: 280,
     width: cardWidth,
-    elevation: 15,
+    elevation: 5,
     marginRight: 20,
-    borderRadius: 35,
+    borderRadius: 25,
     backgroundColor: COLORS.white,
   },
   cardImage: {
     height: '100%',
     width: '100%',
-    borderRadius: 35,
+    borderRadius: 25,
   },
   priceTag: {
     paddingHorizontal: 10,
     paddingVertical: 5,
-    borderRadius: 35,
+    borderRadius: 25,
     backgroundColor: COLORS.primary,
     position: 'absolute',
     zIndex: 1,
@@ -852,7 +1029,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 100,
     width: cardWidth,
-    borderRadius: 35,
+    borderRadius: 25,
   },
   topHotelCard: {
     height: 180,
