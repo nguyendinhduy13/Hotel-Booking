@@ -15,6 +15,13 @@ export default function Revenue({ navigation }) {
   const [data, setData] = React.useState([]);
   const [total, setTotal] = React.useState(0);
   const [exists, setExists] = React.useState(true);
+
+  useEffect(() => {
+    if (dataRevenue.datasets[0].data[0] === 0) {
+      setExists(false);
+    }
+  }, []);
+
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       let a = 0;
@@ -33,7 +40,6 @@ export default function Revenue({ navigation }) {
             setData(data1);
             await data1.forEach((item) => {
               if (item.hotelinfo.status === 'completed') {
-                count++;
                 total += item.hotelinfo.price;
                 if (item.hotelinfo.price > a) {
                   a = item.hotelinfo.price;
@@ -50,9 +56,6 @@ export default function Revenue({ navigation }) {
             setNamebest(name);
             setNameworst(name1);
             setWorst(b);
-            if (count <= 0) {
-              setExists(false);
-            }
           } else {
             setExists(false);
           }
