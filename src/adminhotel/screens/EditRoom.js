@@ -26,17 +26,32 @@ const EditRoom = ({ navigation, route }) => {
   const [price, setPrice] = useState(0);
   const [description, setDescription] = useState('');
   const [are, setArea] = useState('');
+  const [Room, setRoom] = useState([]);
   const { room } = useSelector((state) => state.BookingHotel);
-
+  const ImageDefault = (image) => {
+    const parts = image.split('/');
+    const fileName = decodeURIComponent(parts[parts.length - 1].split('?')[0]);
+    const fileExtension = fileName.split('/');
+    return fileExtension[2];
+  };
   useEffect(() => {
     setName(item.name);
     setPrice(item.price + '');
     setArea(item.tienich[0]);
     setDescription(item.description);
+    let newRoom1 = room.map((item) => {
+      let newImage = [...item.image];
+      newImage = newImage.map((item1) => {
+        let temp = ImageDefault(item1);
+        return temp;
+      });
+      return { ...item, image: newImage };
+    });
+    setRoom(newRoom1);
   }, []);
 
   const EditRoom = () => {
-    const EditRoom = room.map((item1) => {
+    const EditRoom = Room.map((item1) => {
       if (item1.id === item.id) {
         let newBenefit = [...item1.tienich];
         newBenefit.splice(0, 1, are);
@@ -50,17 +65,33 @@ const EditRoom = ({ navigation, route }) => {
       }
       return item1;
     });
-    dispatch(BookingHotel.actions.addRoom(EditRoom));
+
+    const EditRoom1 = room.map((item1) => {
+      if (item1.id === item.id) {
+        let newBenefit = [...item1.tienich];
+        newBenefit.splice(0, 1, are);
+        return {
+          ...item1,
+          tienich: newBenefit,
+          name: name,
+          price: price,
+          description: description,
+        };
+      }
+      return item1;
+    });
+    dispatch(BookingHotel.actions.addRoom(EditRoom1));
     firestore().collection('HotelList').doc(id_ks).set({
       Room: EditRoom,
     });
   };
   const deleteRoom = () => {
-    const newRoom = room.filter((item1) => item1.id !== item.id);
+    const newRoom = Room.filter((item1) => item1.id !== item.id);
+    const newRoom1 = room.filter((item1) => item1.id !== item.id);
     firestore().collection('HotelList').doc(id_ks).set({
       Room: newRoom,
     });
-    dispatch(BookingHotel.actions.addRoom(newRoom));
+    dispatch(BookingHotel.actions.addRoom(newRoom1));
     navigation.goBack();
   };
   return (

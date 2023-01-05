@@ -1,5 +1,5 @@
 import firestore from '@react-native-firebase/firestore';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import COLORS from '../../consts/colors';
@@ -8,7 +8,19 @@ import Globalreducer from '../../redux/Globalreducer';
 const ConfirmBooking = () => {
   const { id_ks, dataconfirm } = useSelector((state) => state.Globalreducer);
   const dispatch = useDispatch();
+  const [exists, setExists] = useState(true);
 
+  useEffect(() => {
+    let count = 0;
+    dataconfirm.map((item) => {
+      if (item.hotelinfo.status !== 'cancelled') {
+        count++;
+      }
+    });
+    if (count <= 0) {
+      setExists(false);
+    }
+  }, []);
   const ConfirmBooking = (roomname, useruid) => {
     let databooking = dataconfirm.map((item) => {
       if (
@@ -263,25 +275,43 @@ const ConfirmBooking = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
-      <Text
-        style={{
-          fontSize: 18,
-          color: COLORS.dark,
-          fontWeight: '600',
-          justifyContent: 'center',
-          alignSelf: 'center',
-          marginTop: 10,
-        }}
-      >
-        Xác nhận đặt phòng
-      </Text>
-      <FlatList
-        data={dataconfirm}
-        renderItem={({ item, index }) => renderConfirm(item, index)}
-        keyExtractor={(item) => {
-          item.hotelinfo.userid;
-        }}
-      />
+      {exists ? (
+        <View>
+          <Text
+            style={{
+              fontSize: 18,
+              color: COLORS.dark,
+              fontWeight: '600',
+              justifyContent: 'center',
+              alignSelf: 'center',
+              marginTop: 10,
+            }}
+          >
+            Xác nhận đặt phòng
+          </Text>
+          <FlatList
+            data={dataconfirm}
+            renderItem={({ item, index }) => renderConfirm(item, index)}
+            keyExtractor={(item) => {
+              item.hotelinfo.userid;
+            }}
+          />
+        </View>
+      ) : (
+        <View
+          style={{ alignItems: 'center', justifyContent: 'center', top: '50%' }}
+        >
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: 'black',
+            }}
+          >
+            Hiện chưa có đơn đặt phòng
+          </Text>
+        </View>
+      )}
     </View>
   );
 };

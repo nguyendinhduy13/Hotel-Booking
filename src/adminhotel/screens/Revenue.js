@@ -7,17 +7,20 @@ import COLORS from '../../consts/colors';
 
 export default function Revenue({ navigation }) {
   const { dataRevenue, id_ks } = useSelector((state) => state.Globalreducer);
+  //tao bang dât khác = datarevenue nếu k thì cho 1 cái dât temp
   const [best, setBest] = React.useState(0);
   const [worst, setWorst] = React.useState(0);
   const [namebest, setNamebest] = React.useState('');
   const [nameworst, setNameworst] = React.useState('');
   const [data, setData] = React.useState([]);
   const [total, setTotal] = React.useState(0);
+  const [exists, setExists] = React.useState(true);
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       let a = 0;
       let b = 1000000000000000;
       let name = '';
+      let count = 0;
       let name1 = '';
       let total = 0;
       firestore()
@@ -30,6 +33,7 @@ export default function Revenue({ navigation }) {
             setData(data1);
             await data1.forEach((item) => {
               if (item.hotelinfo.status === 'completed') {
+                count++;
                 total += item.hotelinfo.price;
                 if (item.hotelinfo.price > a) {
                   a = item.hotelinfo.price;
@@ -41,12 +45,17 @@ export default function Revenue({ navigation }) {
                 }
               }
             });
+            setTotal(total);
+            setBest(a);
+            setNamebest(name);
+            setNameworst(name1);
+            setWorst(b);
+            if (count <= 0) {
+              setExists(false);
+            }
+          } else {
+            setExists(false);
           }
-          setTotal(total);
-          setBest(a);
-          setNamebest(name);
-          setNameworst(name1);
-          setWorst(b);
         });
     });
     return unsubscribe;
@@ -98,179 +107,201 @@ export default function Revenue({ navigation }) {
         backgroundColor: COLORS.white,
       }}
     >
-      <Text
-        style={{
-          fontSize: 20,
-          color: COLORS.dark,
-          fontWeight: '700',
-          justifyContent: 'center',
-          alignSelf: 'center',
-          marginTop: 10,
-        }}
-      >
-        Doanh thu trong một tháng vừa qua{' '}
-      </Text>
-      <ScrollView>
-        <LineChart
-          data={dataRevenue}
-          width={380} // from react-native
-          height={220}
-          yAxisLabel="$"
-          yAxisSuffix="k"
-          yAxisInterval={1} // optional, defaults to 1
-          chartConfig={{
-            backgroundColor: '#e26a00',
-            backgroundGradientFrom: COLORS.primary,
-            backgroundGradientTo: COLORS.primary,
-            decimalPlaces: 2, // optional, defaults to 2dp
-            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            style: {
-              borderRadius: 16,
-            },
-            propsForDots: {
-              r: '6',
-              strokeWidth: '2',
-              stroke: '#ffa726',
-            },
-          }}
-          bezier
-          style={{
-            alignSelf: 'center',
-            marginVertical: 20,
-            borderRadius: 16,
-          }}
-        />
-        <Text
-          style={{
-            fontSize: 18,
-            marginHorizontal: 10,
-            color: COLORS.dark,
-            fontWeight: '700',
-          }}
-        >
-          Tổng doanh thu của tháng này
-        </Text>
+      {exists ? (
+        <View>
+          <Text
+            style={{
+              fontSize: 20,
+              color: COLORS.dark,
+              fontWeight: '700',
+              justifyContent: 'center',
+              alignSelf: 'center',
+              marginTop: 10,
+            }}
+          >
+            Doanh thu trong một tháng vừa qua{' '}
+          </Text>
+          <ScrollView>
+            <LineChart
+              data={dataRevenue}
+              width={380} // from react-native
+              height={220}
+              yAxisLabel="$"
+              yAxisSuffix="k"
+              yAxisInterval={1} // optional, defaults to 1
+              chartConfig={{
+                backgroundColor: '#e26a00',
+                backgroundGradientFrom: COLORS.primary,
+                backgroundGradientTo: COLORS.primary,
+                decimalPlaces: 2, // optional, defaults to 2dp
+                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                style: {
+                  borderRadius: 16,
+                },
+                propsForDots: {
+                  r: '6',
+                  strokeWidth: '2',
+                  stroke: '#ffa726',
+                },
+              }}
+              bezier
+              style={{
+                alignSelf: 'center',
+                marginVertical: 20,
+                borderRadius: 16,
+              }}
+            />
+            <Text
+              style={{
+                fontSize: 18,
+                marginHorizontal: 10,
+                color: COLORS.dark,
+                fontWeight: '700',
+              }}
+            >
+              Tổng doanh thu của tháng này
+            </Text>
+            <View
+              style={{
+                width: '98%',
+                borderWidth: 1,
+                borderRadius: 10,
+                height: 50,
+                marginVertical: 10,
+                alignSelf: 'center',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontWeight: 'bold',
+                  color: 'black',
+                }}
+              >
+                {total}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                borderWidth: 1,
+                width: '98%',
+                alignSelf: 'center',
+                height: 120,
+                marginTop: 10,
+                borderRadius: 10,
+              }}
+            >
+              <View
+                style={{
+                  width: '50%',
+                  padding: 10,
+                  alignItems: 'center',
+                  borderRightWidth: 1,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                    color: 'black',
+                  }}
+                >
+                  Cao nhất
+                </Text>
+                <View
+                  style={{
+                    alignItems: 'center',
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                      color: 'orange',
+                    }}
+                  >
+                    {namebest}
+                  </Text>
+                  <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
+                    {best}
+                  </Text>
+                </View>
+              </View>
+              <View
+                style={{
+                  width: '50%',
+                  padding: 10,
+                  alignItems: 'center',
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                    color: 'black',
+                  }}
+                >
+                  Thấp nhất
+                </Text>
+                <View
+                  style={{
+                    alignItems: 'center',
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                      color: 'orange',
+                    }}
+                  >
+                    {nameworst}
+                  </Text>
+                  <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
+                    {worst}
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                marginLeft: 10,
+                color: 'black',
+                marginTop: 10,
+              }}
+            >
+              Danh sách phòng
+            </Text>
+            <FlatList
+              style={{ paddingBottom: 40 }}
+              showsHorizontalScrollIndicator={false}
+              data={data}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id}
+            />
+          </ScrollView>
+        </View>
+      ) : (
         <View
-          style={{
-            width: '98%',
-            borderWidth: 1,
-            borderRadius: 10,
-            height: 50,
-            marginVertical: 10,
-            alignSelf: 'center',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
+          style={{ alignItems: 'center', justifyContent: 'center', top: '50%' }}
         >
           <Text
             style={{
-              fontSize: 18,
+              fontSize: 20,
               fontWeight: 'bold',
               color: 'black',
             }}
           >
-            {total}
+            Hiện khách sạn chưa có doanh thu
           </Text>
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            borderWidth: 1,
-            width: '98%',
-            alignSelf: 'center',
-            height: 120,
-            marginTop: 10,
-            borderRadius: 10,
-          }}
-        >
-          <View
-            style={{
-              width: '50%',
-              padding: 10,
-              alignItems: 'center',
-              borderRightWidth: 1,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 18,
-                fontWeight: 'bold',
-                color: 'black',
-              }}
-            >
-              Cao nhất
-            </Text>
-            <View
-              style={{
-                alignItems: 'center',
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 18,
-                  fontWeight: 'bold',
-                  color: 'orange',
-                }}
-              >
-                {namebest}
-              </Text>
-              <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{best}</Text>
-            </View>
-          </View>
-          <View
-            style={{
-              width: '50%',
-              padding: 10,
-              alignItems: 'center',
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 18,
-                fontWeight: 'bold',
-                color: 'black',
-              }}
-            >
-              Thấp nhất
-            </Text>
-            <View
-              style={{
-                alignItems: 'center',
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 18,
-                  fontWeight: 'bold',
-                  color: 'orange',
-                }}
-              >
-                {nameworst}
-              </Text>
-              <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{worst}</Text>
-            </View>
-          </View>
-        </View>
-        <Text
-          style={{
-            fontSize: 20,
-            fontWeight: 'bold',
-            marginLeft: 10,
-            color: 'black',
-            marginTop: 10,
-          }}
-        >
-          Danh sách phòng
-        </Text>
-        <FlatList
-          style={{ paddingBottom: 40 }}
-          showsHorizontalScrollIndicator={false}
-          data={data}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-        />
-      </ScrollView>
+      )}
     </View>
   );
 }

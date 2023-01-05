@@ -18,6 +18,7 @@ export default function AddItem({ navigation }) {
   };
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
+      let count = 0;
       firestore()
         .collection('ListBooking')
         .doc(id_ks)
@@ -29,9 +30,15 @@ export default function AddItem({ navigation }) {
               if (item.hotelinfo.status === 'completed') {
                 let a = Math.trunc(item.hotelinfo.price / 1000);
                 arr.datasets[0].data.push(a);
+                count++;
               }
             });
-            dispatch(Globalreducer.actions.setDataRevenue(arr));
+            if (count > 0) {
+              dispatch(Globalreducer.actions.setDataRevenue(arr));
+            } else {
+              arr.datasets[0].data.push(0);
+              dispatch(Globalreducer.actions.setDataRevenue(arr));
+            }
           }
         });
     });

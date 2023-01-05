@@ -20,9 +20,27 @@ export default function EditImage({ route }) {
   const { id_ks } = useSelector((state) => state.Globalreducer);
   const dispatch = useDispatch();
   const [DataImage, setDataImage] = useState([]);
+  const [Room, setRoom] = useState([]);
+
+  const ImageDefault = (image) => {
+    const parts = image.split('/');
+    const fileName = decodeURIComponent(parts[parts.length - 1].split('?')[0]);
+    const fileExtension = fileName.split('/');
+    return fileExtension[2];
+  };
+
   useEffect(() => {
     const newRoom = room.filter((item) => item.id === data.id);
     setDataImage(newRoom);
+    let newRoom1 = room.map((item) => {
+      let newImage = [...item.image];
+      newImage = newImage.map((item1) => {
+        let temp = ImageDefault(item1);
+        return temp;
+      });
+      return { ...item, image: newImage };
+    });
+    setRoom(newRoom1);
   }, []);
 
   const editimage = (id, index) => {
@@ -34,7 +52,15 @@ export default function EditImage({ route }) {
       }
       return item;
     });
-    let newRoom1 = room.map((item) => {
+    let newRoom1 = Room.map((item) => {
+      if (item.id === id) {
+        let newImage = [...item.image];
+        newImage.splice(index, 1);
+        return { ...item, image: newImage };
+      }
+      return item;
+    });
+    let newRoom2 = room.map((item) => {
       if (item.id === id) {
         let newImage = [...item.image];
         newImage.splice(index, 1);
@@ -43,7 +69,7 @@ export default function EditImage({ route }) {
       return item;
     });
     firestore().collection('HotelList').doc(id_ks).set({ Room: newRoom1 });
-    dispatch(BookingHotel.actions.addRoom(newRoom1));
+    dispatch(BookingHotel.actions.addRoom(newRoom2));
     setDataImage(newRoom);
   };
   const addImage = async () => {
@@ -77,7 +103,7 @@ export default function EditImage({ route }) {
       return item;
     });
 
-    let newRoom1 = room.map((item) => {
+    let newRoom1 = Room.map((item) => {
       if (item.id === data.id) {
         let newImage = [...item.image];
         newImage.push(image);
@@ -86,7 +112,16 @@ export default function EditImage({ route }) {
       return item;
     });
 
-    dispatch(BookingHotel.actions.addRoom(newRoom1));
+    let newRoom2 = room.map((item) => {
+      if (item.id === data.id) {
+        let newImage = [...item.image];
+        newImage.push(image);
+        return { ...item, image: newImage };
+      }
+      return item;
+    });
+
+    dispatch(BookingHotel.actions.addRoom(newRoom2));
     firestore().collection('HotelList').doc(id_ks).set({ Room: newRoom1 });
     setDataImage(newRoom);
   };

@@ -24,12 +24,28 @@ export default function EditBenefit({ navigation, route }) {
   ];
   const [DataBenefit, setDataBenefit] = useState([]);
   const [benefit, setBenefit] = useState('');
+  const [Room, setRoom] = useState([]);
   const data = route.params.item;
   const dispatch = useDispatch();
   const { id_ks } = useSelector((state) => state.Globalreducer);
+  const ImageDefault = (image) => {
+    const parts = image.split('/');
+    const fileName = decodeURIComponent(parts[parts.length - 1].split('?')[0]);
+    const fileExtension = fileName.split('/');
+    return fileExtension[2];
+  };
   useEffect(() => {
     const newRoom = room.filter((item) => item.id === data.id);
     setDataBenefit(newRoom);
+    let newRoom1 = room.map((item) => {
+      let newImage = [...item.image];
+      newImage = newImage.map((item1) => {
+        let temp = ImageDefault(item1);
+        return temp;
+      });
+      return { ...item, image: newImage };
+    });
+    setRoom(newRoom1);
   }, []);
   const deleteBenefit = (id, index) => {
     let newRoom = DataBenefit.map((item) => {
@@ -40,7 +56,15 @@ export default function EditBenefit({ navigation, route }) {
       }
       return item;
     });
-    let newRoom1 = room.map((item) => {
+    let newRoom1 = Room.map((item) => {
+      if (item.id === id) {
+        let newBenefit = [...item.tienich];
+        newBenefit.splice(index, 1);
+        return { ...item, tienich: newBenefit };
+      }
+      return item;
+    });
+    let newRoom2 = room.map((item) => {
       if (item.id === id) {
         let newBenefit = [...item.tienich];
         newBenefit.splice(index, 1);
@@ -49,7 +73,7 @@ export default function EditBenefit({ navigation, route }) {
       return item;
     });
     firestore().collection('HotelList').doc(id_ks).set({ Room: newRoom1 });
-    dispatch(BookingHotel.actions.addRoom(newRoom1));
+    dispatch(BookingHotel.actions.addRoom(newRoom2));
     setDataBenefit(newRoom);
   };
 
@@ -61,7 +85,15 @@ export default function EditBenefit({ navigation, route }) {
       }
       return item;
     });
-    let newRoom1 = room.map((item) => {
+    let newRoom1 = Room.map((item) => {
+      if (item.id === data.id) {
+        let newBenefit = [...item.tienich, benefit];
+        return { ...item, tienich: newBenefit };
+      }
+      return item;
+    });
+
+    let newRoom2 = room.map((item) => {
       if (item.id === data.id) {
         let newBenefit = [...item.tienich, benefit];
         return { ...item, tienich: newBenefit };
@@ -70,7 +102,7 @@ export default function EditBenefit({ navigation, route }) {
     });
 
     firestore().collection('HotelList').doc(id_ks).set({ Room: newRoom1 });
-    dispatch(BookingHotel.actions.addRoom(newRoom1));
+    dispatch(BookingHotel.actions.addRoom(newRoom2));
     setDataBenefit(newRoom);
   };
 
