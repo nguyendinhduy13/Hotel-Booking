@@ -149,7 +149,12 @@ export default function Profile({ navigation }) {
           >
             {t('my-booking')}
           </Text>
-          <TouchableOpacity style={styles.view}>
+          <TouchableOpacity
+            style={styles.view}
+            onPress={() => {
+              navigation.navigate('Booking');
+            }}
+          >
             <Icon3 name="back-in-time" size={25} color={colors.icon} />
             <Text
               style={{

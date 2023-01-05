@@ -8,6 +8,7 @@ import {
   Modal,
   ScrollView,
   Text,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -73,9 +74,16 @@ export default function Booking() {
         setidhotel(item.hotelinfo.idhotel);
       }
     });
-    firestore().collection('Booking').doc(user.uid).set({
-      data: data,
-    });
+    firestore()
+      .collection('Booking')
+      .doc(user.uid)
+      .set({
+        data: data,
+      })
+      .then(() => {
+        setbutton(3);
+        ToastAndroid.show(t('cancel-booking successfully'), ToastAndroid.SHORT);
+      });
     data1.filter((item) => {
       if (item.hotelinfo.id === id) {
         item.hotelinfo.status = 'cancelled';

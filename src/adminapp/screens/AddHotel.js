@@ -2,6 +2,7 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import Lottie from 'lottie-react-native';
 import React, { useEffect, useState } from 'react';
 import {
   Image,
@@ -20,10 +21,10 @@ import SelectDropdown from 'react-native-select-dropdown';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useSelector } from 'react-redux';
 
-export default function AddHotel({ navigation, route }) {
-  const dataAccountFireBase = route.params.data;
+export default function AddHotel({ navigation }) {
   const { dataProvince } = useSelector((state) => state.Globalreducer);
   const [modalVisible, setModalVisible] = useState(false);
+  const [isLoading, setLoading] = useState(false);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -58,16 +59,6 @@ export default function AddHotel({ navigation, route }) {
     setData(data);
   }, []);
 
-  const checkAccount = () => {
-    let check = true;
-    dataAccountFireBase.forEach((item) => {
-      if (item.email === email || item._id === id) {
-        check = false;
-      }
-    });
-    return check;
-  };
-
   const setNull = () => {
     setEmail('');
     setPassword('');
@@ -90,6 +81,17 @@ export default function AddHotel({ navigation, route }) {
       district: '',
     });
   };
+
+  const CheckFormatEmail = (email1) => {
+    //regex format email
+    let regex = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
+    if (regex.test(email1) === false) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
   const handleAddHotel = async () => {
     if (
       email === '' ||
@@ -106,8 +108,13 @@ export default function AddHotel({ navigation, route }) {
       tag.district === ''
     ) {
       ToastAndroid.show('Vui lòng nhập đầy đủ thông tin', ToastAndroid.SHORT);
+    } else if (CheckFormatEmail(email) === false) {
+      ToastAndroid.show('Email không đúng định dạng', ToastAndroid.SHORT);
+    } else if (password.length < 6) {
+      ToastAndroid.show('Mật khẩu phải có ít nhất 6 kí tự', ToastAndroid.SHORT);
     } else {
       try {
+        setLoading(true);
         await auth()
           .createUserWithEmailAndPassword(email, password)
           .then(() => {
@@ -117,7 +124,7 @@ export default function AddHotel({ navigation, route }) {
             console.log(error);
           });
         let dataAccount = {
-          _id: id,
+          id: id,
           email: email,
           roll: roll,
           uid: auth().currentUser.uid,
@@ -164,10 +171,14 @@ export default function AddHotel({ navigation, route }) {
         await auth().signInWithEmailAndPassword('adminapp@gmail.com', '123456');
         console.log('Admin: ' + email);
         console.log('Password: ' + password);
+        setLoading(false);
         navigation.navigate('TabNavigation');
         setNull();
       } catch (error) {
         console.log(error);
+        navigation.navigate('TabNavigation');
+        setNull();
+        ToastAndroid.show('Thêm khách sạn thất bại', ToastAndroid.SHORT);
       }
     }
   };
@@ -482,7 +493,27 @@ export default function AddHotel({ navigation, route }) {
           </View>
         </ScrollView>
       </View>
-
+      {isLoading ? (
+        <View
+          style={{
+            position: 'absolute',
+            opacity: 0.7,
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100%',
+            width: '100%',
+            backgroundColor: 'white',
+          }}
+        >
+          <Lottie
+            source={require('../../assets/animations/edupia-loading.json')}
+            autoPlay
+            loop
+          />
+        </View>
+      ) : (
+        <></>
+      )}
       <Modal
         animationType="slide"
         transparent={true}

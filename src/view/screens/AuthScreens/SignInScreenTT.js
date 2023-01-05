@@ -351,7 +351,11 @@ export default function SignInScreenTT({ navigation }) {
               />
             </View>
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('ForgotPassword');
+            }}
+          >
             <Text
               style={{
                 color: '#37a2f2',
