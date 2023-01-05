@@ -1,10 +1,8 @@
-import React, { useEffect } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import SignInWelcomeScreen from '../screens/AuthScreens/SignInWelcomeScreen';
-import SignInScreen from '../screens/AuthScreens/SignInScreen';
-import SignUpScreen from '../screens/AuthScreens/SignUpScreen';
+import React from 'react';
 import SignInScreenTT from '../screens/AuthScreens/SignInScreenTT';
-import { getAsyncStorage } from '../../functions/asyncStorageFunctions';
+import SignInWelcomeScreen from '../screens/AuthScreens/SignInWelcomeScreen';
+import SignUpScreen from '../screens/AuthScreens/SignUpScreen';
 export default function AuthStack() {
   const Stack = createNativeStackNavigator();
   return (
@@ -16,13 +14,6 @@ export default function AuthStack() {
           headerShown: false,
         }}
       />
-      {/* <Stack.Screen
-        name="SignInScreen"
-        component={SignInScreen}
-        options={{
-          headerShown: false,
-        }}
-      /> */}
       <Stack.Screen
         name="SignInScreenTT"
         component={SignInScreenTT}

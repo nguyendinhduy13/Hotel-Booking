@@ -174,6 +174,11 @@
     "rate-now": "Đánh giá ngay",
     "later": "Để sau",
     "detail": "Chi tiết",
-    "booking-successfully": "Đặt phòng thành công"
+    "booking-successfully": "Đặt phòng thành công",
+    "cancel-booking successfully": "Hủy đặt phòng thành công",
+    "forgot-password1": "Quên mật khẩu",
+    "input-your-email": "Nhập email của bạn",
+    "we-can-not-change-password-of-google-account": "Chúng tôi không thể thay đổi mật khẩu của tài khoản Google",
+    "have-sent-email-change-password-to-you-please-check-your-email": "Chúng tôi đã gửi email thay đổi mật khẩu cho bạn, vui lòng kiểm tra email của bạn"
   }
 }
