@@ -10,6 +10,7 @@ import {
   View,
 } from 'react-native';
 import Icon5 from 'react-native-vector-icons/AntDesign';
+import Icon1 from 'react-native-vector-icons/MaterialIcons';
 import { useDispatch } from 'react-redux';
 import { SignInContext } from '../../contexts/authContext';
 import { setAsyncStorage } from '../../functions/asyncStorageFunctions';
@@ -70,6 +71,26 @@ export default function Profile({ navigation }) {
       <ScrollView style={{ backgroundColor: 'white', marginVertical: 10 }}>
         <View style={styles.bodyProfile}>
           <Text style={styles.tittle}>Thông tin</Text>
+          <View style={[styles.view, { justifyContent: 'space-between' }]}>
+            <View style={{ flexDirection: 'row' }}>
+              <Icon1 name="phonelink-setup" size={25} />
+              <Text
+                style={{ fontSize: 16, paddingHorizontal: 15, color: 'black' }}
+              >
+                Phiên bản
+              </Text>
+            </View>
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: 'bold',
+                paddingHorizontal: 15,
+                color: 'orange',
+              }}
+            >
+              14.3.1
+            </Text>
+          </View>
           <TouchableOpacity
             style={styles.view}
             onPress={() => {

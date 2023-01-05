@@ -87,8 +87,15 @@ const EditUserBooking = ({ navigation }) => {
           marginVertical: 30,
         }}
         value={phone}
-        onChangeText={(text) => setPhone(text)}
+        onChangeText={(text) => {
+          const text1 = text.replace(/\s/g, '');
+          if (isNaN(text1)) {
+            return;
+          }
+          setPhone(text1);
+        }}
         color={colors.text}
+        keyboardType="numeric"
       />
       <TextInput
         placeholder={t('age')}
@@ -105,8 +112,16 @@ const EditUserBooking = ({ navigation }) => {
           backgroundColor: colors.box,
         }}
         value={birthday}
-        onChangeText={(text) => setBirthday(text)}
+        onChangeText={(text) => {
+          //remove space and check if it is number
+          const text1 = text.replace(/\s/g, '');
+          if (isNaN(text1)) {
+            return;
+          }
+          setBirthday(text1);
+        }}
         color={colors.text}
+        keyboardType="numeric"
       />
       <TextInput
         placeholder={t('email')}

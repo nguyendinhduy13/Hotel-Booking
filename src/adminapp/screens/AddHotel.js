@@ -334,44 +334,51 @@ export default function AddHotel({ navigation }) {
                   }}
                 >
                   <Text style={styles.text}>Ảnh bìa</Text>
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  {image.name && image.uri && (
+                    <View style={{ width: 100, height: 100, marginRight: 10 }}>
+                      <Image
+                        source={{ uri: image.uri }}
+                        style={{ width: 100, height: 100 }}
+                      />
+                      <View
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          right: 5,
+                        }}
+                      >
+                        <Pressable
+                          onPress={() =>
+                            setImage({
+                              name: '',
+                              uri: '',
+                            })
+                          }
+                        >
+                          <Text
+                            style={{
+                              color: 'red',
+                              fontSize: 15,
+                              fontWeight: 'bold',
+                            }}
+                          >
+                            x
+                          </Text>
+                        </Pressable>
+                      </View>
+                    </View>
+                  )}
                   <Pressable onPress={selectImage}>
-                    <Text style={styles.text}>Add</Text>
+                    <Image
+                      source={{
+                        uri: 'https://cdn1.iconfinder.com/data/icons/image-1-0-1/1024/upload_image-256.png',
+                      }}
+                      style={{ width: 80, height: 80 }}
+                    />
                   </Pressable>
                 </View>
-                {image.name && image.uri && (
-                  <View style={{ width: 100, height: 100 }}>
-                    <Image
-                      source={{ uri: image.uri }}
-                      style={{ width: 100, height: 100 }}
-                    />
-                    <View
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        right: 5,
-                      }}
-                    >
-                      <Pressable
-                        onPress={() =>
-                          setImage({
-                            name: '',
-                            uri: '',
-                          })
-                        }
-                      >
-                        <Text
-                          style={{
-                            color: 'white',
-                            fontSize: 15,
-                            fontWeight: 'bold',
-                          }}
-                        >
-                          x
-                        </Text>
-                      </Pressable>
-                    </View>
-                  </View>
-                )}
               </View>
               <View>
                 <Text style={styles.text}>Nhập địa chỉ</Text>

@@ -168,6 +168,7 @@ export default function EditBenefit({ navigation, route }) {
           elevation: 15,
           bottom: 75,
           position: 'absolute',
+          paddingHorizontal: 10,
         }}
         data={countries}
         onSelect={(selectedItem, index) => {

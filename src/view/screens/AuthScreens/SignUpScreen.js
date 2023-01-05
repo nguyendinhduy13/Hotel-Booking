@@ -3,13 +3,13 @@ import firestore from '@react-native-firebase/firestore';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  Alert,
   Image,
   Keyboard,
   Pressable,
   StyleSheet,
   Text,
   TextInput,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -51,12 +51,15 @@ export default function SignUpScreen({ navigation }) {
         });
     } catch (error) {
       if (error.code == 'auth/email-already-in-use') {
-        Alert.alert('That email address is already inuse');
+        ToastAndroid.show(
+          'That email address is already in use!',
+          ToastAndroid.SHORT,
+        );
       }
       if (error.code == 'auth/invalid-email') {
-        Alert.alert('That email address is invalid');
+        ToastAndroid.show('That email address is invalid!', ToastAndroid.SHORT);
       } else {
-        Alert.alert(error.code);
+        console.error(error);
       }
     }
   }

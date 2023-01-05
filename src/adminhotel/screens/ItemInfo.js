@@ -2,8 +2,9 @@ import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import React, { useEffect, useState } from 'react';
 import {
-  KeyboardAvoidingView,
+  Keyboard,
   Platform,
+  Pressable,
   Text,
   TextInput,
   TouchableOpacity,
@@ -128,8 +129,10 @@ const ItemInfo = ({ navigation }) => {
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
       <CustomHeader title={'add-information-room'} />
-      <KeyboardAvoidingView
-        behavior="height"
+      <Pressable
+        onPress={() => {
+          Keyboard.dismiss();
+        }}
         style={{ alignItems: 'center', flex: 1 }}
       >
         <Text
@@ -154,6 +157,7 @@ const ItemInfo = ({ navigation }) => {
             width: '95%',
             borderRadius: 15,
             marginTop: 10,
+            paddingHorizontal: 10,
           }}
           value={name}
           onChangeText={(text) => setName(text)}
@@ -180,6 +184,7 @@ const ItemInfo = ({ navigation }) => {
             borderRadius: 15,
             backgroundColor: 'white',
             marginTop: 15,
+            paddingHorizontal: 10,
           }}
           value={price}
           onChangeText={(text) => setPrice(text)}
@@ -209,6 +214,7 @@ const ItemInfo = ({ navigation }) => {
               backgroundColor: 'white',
               marginTop: 15,
               marginHorizontal: 10,
+              paddingHorizontal: 10,
             }}
             value={image}
           />
@@ -260,6 +266,7 @@ const ItemInfo = ({ navigation }) => {
             backgroundColor: 'white',
             marginTop: 15,
             marginHorizontal: 10,
+            paddingHorizontal: 10,
           }}
           value={area}
           onChangeText={(text) => setArea(text)}
@@ -343,6 +350,7 @@ const ItemInfo = ({ navigation }) => {
             borderRadius: 15,
             backgroundColor: 'white',
             marginTop: 15,
+            paddingHorizontal: 10,
           }}
           value={description}
           onChangeText={(text) => setDescription(text)}
@@ -365,7 +373,7 @@ const ItemInfo = ({ navigation }) => {
             Thêm phòng
           </Text>
         </TouchableOpacity>
-      </KeyboardAvoidingView>
+      </Pressable>
     </View>
   );
 };

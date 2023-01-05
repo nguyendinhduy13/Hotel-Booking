@@ -426,7 +426,7 @@ export default function InfoBooking({ navigation, route }) {
                 style={{ fontSize: 22, color: colors.text, fontWeight: 'bold' }}
               >
                 {' '}
-                {Format(item.price)} đ
+                {Format(item.total)} đ
               </Text>
             </View>
           </View>

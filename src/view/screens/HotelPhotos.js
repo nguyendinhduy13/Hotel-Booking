@@ -26,29 +26,31 @@ export default function HotelPhotos({ route, navigation }) {
     >
       <CustomHeader title={'gallery-photos'} />
 
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-        {!modalVisible &&
-          item.image.map((image, index) => (
-            <TouchableOpacity
-              onPress={() => {
-                setModalVisible(!modalVisible),
-                  setitemzoom(item),
-                  setIndex(index);
-              }}
-            >
-              <Image
-                source={{ uri: image }}
-                style={{
-                  width: 160,
-                  height: 150,
-                  marginTop: 20,
-                  marginHorizontal: 15,
-                  borderRadius: 20,
+      <ScrollView>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+          {!modalVisible &&
+            item.image.map((image, index) => (
+              <TouchableOpacity
+                onPress={() => {
+                  setModalVisible(!modalVisible),
+                    setitemzoom(item),
+                    setIndex(index);
                 }}
-              />
-            </TouchableOpacity>
-          ))}
-      </View>
+              >
+                <Image
+                  source={{ uri: image }}
+                  style={{
+                    width: 160,
+                    height: 150,
+                    marginTop: 20,
+                    marginHorizontal: 15,
+                    borderRadius: 20,
+                  }}
+                />
+              </TouchableOpacity>
+            ))}
+        </View>
+      </ScrollView>
       <Modal
         transparent={true}
         visible={modalVisible}
