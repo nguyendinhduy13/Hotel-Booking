@@ -19,6 +19,8 @@ export default function Revenue({ navigation }) {
   useEffect(() => {
     if (dataRevenue.datasets[0].data[0] === 0) {
       setExists(false);
+    } else {
+      setExists(true);
     }
   }, []);
 
@@ -27,7 +29,6 @@ export default function Revenue({ navigation }) {
       let a = 0;
       let b = 1000000000000000;
       let name = '';
-      let count = 0;
       let name1 = '';
       let total = 0;
       firestore()

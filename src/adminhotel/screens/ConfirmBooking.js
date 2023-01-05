@@ -9,7 +9,6 @@ const ConfirmBooking = () => {
   const { id_ks, dataconfirm } = useSelector((state) => state.Globalreducer);
   const dispatch = useDispatch();
   const [exists, setExists] = useState(true);
-
   useEffect(() => {
     let count = 0;
     dataconfirm.map((item) => {
@@ -19,6 +18,8 @@ const ConfirmBooking = () => {
     });
     if (count <= 0) {
       setExists(false);
+    } else {
+      setExists(true);
     }
   }, []);
   const ConfirmBooking = (roomname, useruid) => {

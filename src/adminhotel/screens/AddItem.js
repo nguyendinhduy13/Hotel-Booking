@@ -28,12 +28,14 @@ export default function AddItem({ navigation }) {
             const data1 = documentSnapshot.data().data;
             await data1.forEach((item) => {
               if (item.hotelinfo.status === 'completed') {
+                console.log(item.hotelinfo.price);
                 let a = Math.trunc(item.hotelinfo.price / 1000);
                 arr.datasets[0].data.push(a);
                 count++;
               }
             });
             if (count > 0) {
+              console.log(arr.datasets[0].data[0]);
               dispatch(Globalreducer.actions.setDataRevenue(arr));
             } else {
               arr.datasets[0].data.push(0);

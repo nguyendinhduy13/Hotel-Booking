@@ -65,9 +65,9 @@ const ItemInfo = ({ navigation }) => {
 
   const uploadImage = async () => {
     const filename = image.substring(image.lastIndexOf('/') + 1);
-    listimage.push(filename);
     const uploadUri =
       Platform.OS === 'ios' ? image.replace('file://', '') : image;
+    listimage.push(filename);
     setImage(null);
     const task = storage()
       .ref(id_ks + '/' + (count + 1) + '/' + filename)
@@ -92,7 +92,7 @@ const ItemInfo = ({ navigation }) => {
           image: listimage,
           isAvailable: true,
           name: name,
-          price: price,
+          price: parseInt(price),
           tienich: benefit,
         }),
       });
@@ -115,7 +115,7 @@ const ItemInfo = ({ navigation }) => {
         image: image,
         isAvailable: true,
         name: name,
-        price: price,
+        price: parseInt(price),
         tienich: benefit,
       };
       dispatch(BookingHotel.actions.pushRoom(newarr));

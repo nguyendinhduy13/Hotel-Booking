@@ -59,7 +59,7 @@ const EditRoom = ({ navigation, route }) => {
           ...item1,
           tienich: newBenefit,
           name: name,
-          price: price,
+          price: parseInt(price),
           description: description,
         };
       }
@@ -74,7 +74,7 @@ const EditRoom = ({ navigation, route }) => {
           ...item1,
           tienich: newBenefit,
           name: name,
-          price: price,
+          price: parseInt(price),
           description: description,
         };
       }
@@ -84,6 +84,7 @@ const EditRoom = ({ navigation, route }) => {
     firestore().collection('HotelList').doc(id_ks).set({
       Room: EditRoom,
     });
+    navigation.goBack();
   };
   const deleteRoom = () => {
     const newRoom = Room.filter((item1) => item1.id !== item.id);

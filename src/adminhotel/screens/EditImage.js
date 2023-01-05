@@ -127,12 +127,11 @@ export default function EditImage({ route }) {
   };
 
   return (
-    <View style={{ backgroundColor: 'white' }}>
+    <View style={{ flex: 1, backgroundColor: 'white' }}>
+      <CustomHeader title={'image-hotel'} />
       <ScrollView>
-        <CustomHeader title={'image-hotel'} />
         <View
           style={{
-            flex: 1,
             flexWrap: 'wrap',
             flexDirection: 'row',
           }}
