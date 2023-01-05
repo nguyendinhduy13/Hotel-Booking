@@ -16,6 +16,14 @@ export default function AddItem({ navigation }) {
       },
     ],
   };
+  const arr1 = {
+    labels: ['December', 'January'],
+    datasets: [
+      {
+        data: [],
+      },
+    ],
+  };
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       let count = 0;
@@ -41,6 +49,8 @@ export default function AddItem({ navigation }) {
               arr.datasets[0].data.push(0);
               dispatch(Globalreducer.actions.setDataRevenue(arr));
             }
+          } else {
+            dispatch(Globalreducer.actions.setDataRevenue(arr1));
           }
         });
     });
@@ -53,8 +63,12 @@ export default function AddItem({ navigation }) {
         .doc(id_ks)
         .get()
         .then((documentSnapshot) => {
-          const data = documentSnapshot.data();
-          dispatch(Globalreducer.actions.setDataConfirm(data.data));
+          if (documentSnapshot.exists) {
+            const data = documentSnapshot.data();
+            dispatch(Globalreducer.actions.setDataConfirm(data.data));
+          } else {
+            dispatch(Globalreducer.actions.setDataConfirm([]));
+          }
         });
     });
     return unsubscribe;
@@ -86,7 +100,7 @@ export default function AddItem({ navigation }) {
               width: '95%',
               flexDirection: 'row',
               backgroundColor: 'white',
-              marginTop: 15,
+              marginVertical: 10,
               elevation: 5,
               alignSelf: 'center',
               borderRadius: 20,

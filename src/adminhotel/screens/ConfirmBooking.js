@@ -147,6 +147,15 @@ const ConfirmBooking = () => {
       });
   };
 
+  const FormatName = (name) => {
+    //regex length of name > 10
+    if (name.length > 20) {
+      return name.slice(0, 20) + '...';
+    } else {
+      return name;
+    }
+  };
+
   const renderConfirm = (item, index) => {
     return (
       <View
@@ -187,7 +196,7 @@ const ConfirmBooking = () => {
                   left: 5,
                 }}
               >
-                {item.hotelinfo.roomname}
+                {FormatName(item.hotelinfo.roomname)}
               </Text>
               <Text
                 style={{

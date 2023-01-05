@@ -87,9 +87,7 @@ export default function Profile({ navigation }) {
       <ScrollView style={{ backgroundColor: 'white', marginVertical: 10 }}>
         <View style={styles.bodyProfile}>
           <Text style={styles.tittle}>Thông tin</Text>
-          <TouchableOpacity
-            style={[styles.view, { justifyContent: 'space-between' }]}
-          >
+          <View style={[styles.view, { justifyContent: 'space-between' }]}>
             <View style={{ flexDirection: 'row' }}>
               <Icon1 name="phonelink-setup" size={25} />
               <Text
@@ -108,7 +106,7 @@ export default function Profile({ navigation }) {
             >
               14.3.1
             </Text>
-          </TouchableOpacity>
+          </View>
           <TouchableOpacity
             style={styles.view}
             onPress={() => {

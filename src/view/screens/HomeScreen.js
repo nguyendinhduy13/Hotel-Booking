@@ -551,6 +551,18 @@ export default function HomeScreen({ navigation }) {
                 }}
               />
             }
+            dot={
+              <View
+                style={{
+                  backgroundColor: colors.icon,
+                  width: 10,
+                  height: 10,
+                  borderRadius: 7,
+                  marginLeft: 7,
+                  marginRight: 7,
+                }}
+              />
+            }
             autoplay={true}
             style={{
               marginTop: 10,
@@ -612,6 +624,7 @@ export default function HomeScreen({ navigation }) {
             color: colors.text,
             fontSize: 18,
             paddingHorizontal: 20,
+            paddingBottom: 10,
           }}
         >
           {t('suggest-for-you')}
@@ -622,7 +635,8 @@ export default function HomeScreen({ navigation }) {
               key={index}
               style={{
                 paddingHorizontal: 20,
-                marginTop: 20,
+                marginTop: 10,
+                marginBottom: 10,
               }}
             >
               <Pressable

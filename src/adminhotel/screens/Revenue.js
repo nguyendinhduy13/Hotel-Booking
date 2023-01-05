@@ -7,7 +7,6 @@ import COLORS from '../../consts/colors';
 
 export default function Revenue({ navigation }) {
   const { dataRevenue, id_ks } = useSelector((state) => state.Globalreducer);
-  //tao bang dât khác = datarevenue nếu k thì cho 1 cái dât temp
   const [best, setBest] = React.useState(0);
   const [worst, setWorst] = React.useState(0);
   const [namebest, setNamebest] = React.useState('');
@@ -15,9 +14,8 @@ export default function Revenue({ navigation }) {
   const [data, setData] = React.useState([]);
   const [total, setTotal] = React.useState(0);
   const [exists, setExists] = React.useState(true);
-
   useEffect(() => {
-    if (dataRevenue.datasets[0].data[0] === 0) {
+    if (dataRevenue.datasets[0].data.length === 0) {
       setExists(false);
     } else {
       setExists(true);

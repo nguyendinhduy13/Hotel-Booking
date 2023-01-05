@@ -76,6 +76,7 @@ export default function SignInScreenTT({ navigation }) {
           type: 'UPDATE_SIGN_IN',
           payload: { userToken: 'user' },
         });
+        ToastAndroid.show(t('login-successfully'), ToastAndroid.SHORT);
       }
     } catch (error) {
       console.log(error);
@@ -139,6 +140,7 @@ export default function SignInScreenTT({ navigation }) {
         type: 'UPDATE_SIGN_IN',
         payload: { userToken: 'signed-In', _id: '' },
       });
+      ToastAndroid.show(t('login-successfully'), ToastAndroid.SHORT);
     } else {
       firestore()
         .collection('HotelList')
@@ -170,6 +172,7 @@ export default function SignInScreenTT({ navigation }) {
             _id: idks,
           },
         });
+        ToastAndroid.show(t('login-successfully'), ToastAndroid.SHORT);
       }, 3000);
     }
   };
@@ -243,6 +246,7 @@ export default function SignInScreenTT({ navigation }) {
               type: 'UPDATE_SIGN_IN',
               payload: { userToken: roll, _id: id },
             });
+            ToastAndroid.show(t('login-successfully'), ToastAndroid.SHORT);
           }
         }, 3000);
       }

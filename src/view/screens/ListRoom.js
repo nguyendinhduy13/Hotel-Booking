@@ -125,7 +125,11 @@ const ListRoom = ({ navigation, route }) => {
       .collection('HotelList')
       .doc(item.id)
       .onSnapshot((documentSnapshot) => {
-        handleFilter(documentSnapshot.data().Room);
+        if (documentSnapshot.exists) {
+          handleFilter(documentSnapshot.data().Room);
+        } else {
+          setDataRoom([]);
+        }
       });
   }, []);
 
@@ -354,7 +358,7 @@ const ListRoom = ({ navigation, route }) => {
   };
   const formatDayShow = (day) => {
     if (day != '') {
-      return day.split('-')[2] + t('month') + day.split('-')[1];
+      return day.split('-')[2] + '/' + day.split('-')[1];
     }
     return '';
   };

@@ -121,6 +121,7 @@ const EditRoom = ({ navigation, route }) => {
             width: '95%',
             borderRadius: 15,
             marginTop: 10,
+            paddingHorizontal: 10,
           }}
           value={name}
           onChangeText={(text) => setName(text)}
@@ -147,6 +148,7 @@ const EditRoom = ({ navigation, route }) => {
             borderRadius: 15,
             backgroundColor: 'white',
             marginTop: 15,
+            paddingHorizontal: 10,
           }}
           value={price}
           onChangeText={(text) => setPrice(text)}
@@ -175,6 +177,7 @@ const EditRoom = ({ navigation, route }) => {
             backgroundColor: 'white',
             marginTop: 15,
             marginHorizontal: 10,
+            paddingHorizontal: 10,
           }}
           value={are}
           onChangeText={(text) => setArea(text)}
@@ -202,6 +205,7 @@ const EditRoom = ({ navigation, route }) => {
             borderRadius: 15,
             backgroundColor: 'white',
             marginTop: 15,
+            paddingHorizontal: 10,
           }}
           multiline={true}
           value={description}

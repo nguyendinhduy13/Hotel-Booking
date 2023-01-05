@@ -86,6 +86,7 @@ export default function Booked({ navigation, route }) {
           ', ' +
           t('please-fill-all-information'),
       );
+      setLoading(false);
     } else {
       let x =
         start.getDate() +
