@@ -26,9 +26,8 @@ export default function Booked({ navigation, route }) {
   const { colors } = useTheme();
   const navigate = useNavigation();
   const [Number, setNumber] = useState(1);
-  const { dayamount, startday, endday, namehotel, idhotel } = useSelector(
-    (state) => state.Globalreducer,
-  );
+  const { dayamount, startday, endday, namehotel, idhotel, nameUser } =
+    useSelector((state) => state.Globalreducer);
   const user = Auth().currentUser;
 
   const [checkdata, setcheckdata] = useState(false);
@@ -535,7 +534,7 @@ export default function Booked({ navigation, route }) {
                   fontWeight: 'bold',
                 }}
               >
-                {userbooking.name}
+                {userbooking.name ? userbooking.name : nameUser.name}
               </Text>
             </View>
             <View
@@ -561,7 +560,7 @@ export default function Booked({ navigation, route }) {
                   fontWeight: 'bold',
                 }}
               >
-                {userbooking.phone}
+                {userbooking.phone ? userbooking.phone : nameUser.phone}
               </Text>
             </View>
             <View
@@ -587,7 +586,7 @@ export default function Booked({ navigation, route }) {
                   fontWeight: 'bold',
                 }}
               >
-                {userbooking.email}
+                {userbooking.email ? userbooking.email : nameUser.email}
               </Text>
             </View>
             <View

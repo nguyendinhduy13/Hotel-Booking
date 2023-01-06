@@ -45,7 +45,6 @@ export default function AddItem({ navigation }) {
             if (count > 0) {
               dispatch(Globalreducer.actions.setDataRevenue(arr));
             } else {
-              arr.datasets[0].data.push(0);
               dispatch(Globalreducer.actions.setDataRevenue(arr));
             }
           } else {
