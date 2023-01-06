@@ -10,11 +10,13 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { useTheme } from 'react-native-paper';
+import { useSelector } from 'react-redux';
 import COLORS from '../../consts/colors';
 import CustomHeader from '../components/CustomHeader';
 const EditUserBooking = ({ navigation }) => {
   const { t } = useTranslation();
   const { colors } = useTheme();
+  const { nameUser } = useSelector((state) => state.Globalreducer);
   const userinfo = Auth().currentUser;
   const adduserbooking = () => {
     const a = {
@@ -37,6 +39,10 @@ const EditUserBooking = ({ navigation }) => {
           setPhone(documentSnapshot.data().phone);
           setBirthday(documentSnapshot.data().birthday);
           setEmail(documentSnapshot.data().email);
+        } else {
+          setName(nameUser.name);
+          setEmail(nameUser.email);
+          setPhone(nameUser.phone);
         }
       });
   }, []);
