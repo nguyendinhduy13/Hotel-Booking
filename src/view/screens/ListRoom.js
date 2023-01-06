@@ -819,7 +819,7 @@ const ListRoom = ({ navigation, route }) => {
                                 size={15}
                                 color={COLORS.orange}
                               />
-                              <Text style={{ color: colors.text }}>
+                              <Text style={{ color: 'white' }}>
                                 {items.star[index]}
                               </Text>
                             </View>
