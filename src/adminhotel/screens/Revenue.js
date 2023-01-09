@@ -15,7 +15,7 @@ export default function Revenue({ navigation }) {
   const [total, setTotal] = React.useState(0);
   const [exists, setExists] = React.useState(true);
   useEffect(() => {
-    if (dataRevenue.datasets[0].data.length === 0) {
+    if (dataRevenue.datasets[0].data[0] === 0) {
       setExists(false);
     } else {
       setExists(true);
